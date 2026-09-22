@@ -822,18 +822,54 @@
     const LOCATIONS = ["야탑", "신분당", "정자", "분당", "압구정", "강남", "강동", "강북", "강서", "관악", "광진", "구로", "금천", "노원", "도봉", "동대문", "동작", "마포", "서대문", "서초", "성동", "성북", "송파", "양천", "영등포", "용산", "은평", "종로", "중", "중랑"];
 
     function parseMessages(text) {
-        const lines = text.split('\n').filter(line => line.trim());
-        const messages = [];
-        const pattern = /^(\d{1,2}):(\d{2})\s+(.+?)[\s:：]\s*(.+)$/;
-        lines.forEach(line => {
-            const match = line.match(pattern);
-            if (match) {
-                const [, hour, min, author, content] = match;
-                messages.push({ time: `${hour}:${min}`, author: author.trim(), content: content.trim() });
+    const lines = text.split('\n').filter(line => line.trim());
+    const messages = [];
+    
+    // 새로운 패턴 - 카톡 실제 형식 대응
+    // [지각대] [오전 6:29] 아침 12130
+    // [서정천-영미] [오전 6:29] 신분당 1000
+    const pattern1 = /\[([^\]]+)\]\s*\[([^\]]+)\]\s*(.+)/;
+    
+    // 기존 패턴 유지
+    const pattern2 = /^(\d{1,2}):(\d{2})\s+(.+?)[\s:：]\s*(.+)$/;
+    
+    lines.forEach(line => {
+        let match = line.match(pattern1);
+        
+        if (match) {
+            const [, author, time, content] = match;
+            // 시간 정규화 (오전 6:29 → 06:29)
+            let normalizedTime = time;
+            if (time.includes('오전')) {
+                normalizedTime = time.replace('오전 ', '').padStart(5, '0');
+            } else if (time.includes('오후')) {
+                const timeParts = time.replace('오후 ', '').split(':');
+                const hour = parseInt(timeParts[0]) + 12;
+                normalizedTime = `${hour}:${timeParts[1]}`;
             }
-        });
-        return messages;
-    }
+            
+            messages.push({ 
+                time: normalizedTime, 
+                author: author.trim(), 
+                content: content.trim() 
+            });
+            return;
+        }
+        
+        // 기존 패턴
+        match = line.match(pattern2);
+        if (match) {
+            const [, hour, min, author, content] = match;
+            messages.push({ 
+                time: `${hour}:${min}`, 
+                author: author.trim(), 
+                content: content.trim() 
+            });
+        }
+    });
+    
+    return messages;
+}
 
     function classifyMessage(text) {
         if (/최종|확정|이렇게|이 숫자/.test(text)) return 'final';
