@@ -1,0 +1,1163 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>당일 물량 취합 Agent - 완전판</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #667eea;
+            --secondary: #764ba2;
+            --accent: #f093fb;
+            --success: #2ecc71;
+            --warning: #f39c12;
+            --danger: #e74c3c;
+            --dark: #1a1a2e;
+            --light: #f8f9fa;
+            --border: #e0e0e0;
+            --text-primary: #1a1a2e;
+            --text-secondary: #666;
+            --shadow: 0 10px 40px rgba(0,0,0,0.08);
+            --shadow-lg: 0 20px 60px rgba(0,0,0,0.15);
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            color: var(--text-primary);
+        }
+
+        .header-premium {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            padding: 40px 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header-premium::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            border-radius: 50%;
+            transform: translate(100px, -100px);
+        }
+
+        .header-premium::after {
+            content: '';
+            position: absolute;
+            bottom: -50px;
+            left: 0;
+            width: 100%;
+            height: 100px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            clip-path: polygon(0 50%, 100% 0, 100% 100%, 0 100%);
+        }
+
+        .header-content {
+            position: relative;
+            z-index: 1;
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header-title h1 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 36px;
+            font-weight: 800;
+            margin-bottom: 8px;
+            letter-spacing: -1px;
+        }
+
+        .header-title p {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        .header-stats {
+            display: flex;
+            gap: 30px;
+        }
+
+        .stat-box {
+            text-align: right;
+        }
+
+        .stat-number {
+            font-size: 32px;
+            font-weight: 700;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            opacity: 0.85;
+            margin-top: 4px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: -40px auto 0;
+            padding: 0 20px;
+            position: relative;
+            z-index: 10;
+        }
+
+        .tabs-container {
+            background: white;
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            margin-bottom: 30px;
+        }
+
+        .tabs {
+            display: flex;
+            border-bottom: 2px solid var(--light);
+        }
+
+        .tab-button {
+            flex: 1;
+            padding: 18px 24px;
+            border: none;
+            background: white;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            transition: all 0.3s ease;
+            position: relative;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .tab-button:hover {
+            background: var(--light);
+            color: var(--primary);
+        }
+
+        .tab-button.active {
+            color: white;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.4s ease;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .grid-full {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 16px;
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            box-shadow: var(--shadow-lg);
+            transform: translateY(-4px);
+        }
+
+        .card-header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            padding: 24px;
+            font-size: 16px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            letter-spacing: 0.5px;
+        }
+
+        .card-body {
+            padding: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 24px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: 600;
+            color: var(--text-primary);
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            font-size: 14px;
+            font-family: 'Inter', sans-serif;
+            transition: all 0.3s ease;
+            background: var(--light);
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            background: white;
+            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .form-row.full {
+            grid-template-columns: 1fr;
+        }
+
+        .button {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .button-primary {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .button-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 25px rgba(102, 126, 234, 0.4);
+        }
+
+        .button-secondary {
+            background: var(--light);
+            color: var(--primary);
+            border: 2px solid var(--primary);
+        }
+
+        .button-secondary:hover {
+            background: var(--primary);
+            color: white;
+        }
+
+        .button-danger {
+            background: var(--danger);
+            color: white;
+            box-shadow: 0 4px 15px rgba(231, 76, 60, 0.2);
+            padding: 8px 12px;
+            font-size: 12px;
+        }
+
+        .button-danger:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 25px rgba(231, 76, 60, 0.3);
+        }
+
+        .button-group {
+            display: flex;
+            gap: 12px;
+            margin-top: 28px;
+        }
+
+        .button-group.full {
+            flex-direction: column;
+        }
+
+        .button-group.full .button {
+            justify-content: center;
+            width: 100%;
+        }
+
+        .select-group {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 24px;
+            align-items: flex-end;
+        }
+
+        .select-group select {
+            flex: 1;
+            padding: 12px 16px;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            background: white;
+            cursor: pointer;
+        }
+
+        .select-group select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+        }
+
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+        }
+
+        .table thead tr {
+            background: linear-gradient(135deg, var(--light) 0%, var(--light) 100%);
+            border-bottom: 3px solid var(--primary);
+        }
+
+        .table th {
+            text-align: left;
+            padding: 16px;
+            color: var(--primary);
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-size: 12px;
+        }
+
+        .table td {
+            padding: 14px 16px;
+            border-bottom: 1px solid var(--border);
+            color: var(--text-primary);
+        }
+
+        .table tbody tr:hover {
+            background: var(--light);
+            box-shadow: inset 3px 0 0 var(--primary);
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .badge-primary {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+        }
+
+        .badge-success {
+            background: rgba(46, 204, 113, 0.15);
+            color: var(--success);
+        }
+
+        .badge-warning {
+            background: rgba(243, 156, 18, 0.15);
+            color: var(--warning);
+        }
+
+        .badge-danger {
+            background: rgba(231, 76, 60, 0.15);
+            color: var(--danger);
+        }
+
+        .snapshot-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .snapshot-table thead tr {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+        }
+
+        .snapshot-table th {
+            padding: 18px 16px;
+            font-weight: 700;
+            text-align: center;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-size: 12px;
+        }
+
+        .snapshot-table th:first-child {
+            text-align: left;
+        }
+
+        .snapshot-table td {
+            padding: 14px 16px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .snapshot-table tbody tr:hover {
+            background: linear-gradient(90deg, var(--light) 0%, transparent 100%);
+        }
+
+        .snapshot-location {
+            font-weight: 700;
+            color: var(--primary);
+            font-size: 14px;
+        }
+
+        .snapshot-quantity {
+            font-size: 18px;
+            font-weight: 800;
+            font-family: 'Poppins', sans-serif;
+            color: var(--primary);
+            text-align: center;
+        }
+
+        .snapshot-change {
+            text-align: center;
+            font-weight: 700;
+            padding: 4px 8px;
+            border-radius: 6px;
+        }
+
+        .snapshot-change.increase {
+            background: rgba(231, 76, 60, 0.15);
+            color: var(--danger);
+        }
+
+        .snapshot-change.decrease {
+            background: rgba(46, 204, 113, 0.15);
+            color: var(--success);
+        }
+
+        .snapshot-change.neutral {
+            color: var(--text-secondary);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 40px;
+            color: var(--text-secondary);
+        }
+
+        .empty-state-icon {
+            font-size: 64px;
+            margin-bottom: 20px;
+            opacity: 0.6;
+        }
+
+        .empty-state p {
+            font-size: 16px;
+            margin-bottom: 8px;
+        }
+
+        .empty-state-hint {
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+
+        .alert {
+            padding: 16px 20px;
+            border-radius: 8px;
+            margin-bottom: 24px;
+            display: none;
+            animation: slideIn 0.3s ease;
+            font-weight: 600;
+            font-size: 13px;
+        }
+
+        .alert.show {
+            display: block;
+        }
+
+        .alert-success {
+            background: rgba(46, 204, 113, 0.15);
+            color: var(--success);
+            border-left: 4px solid var(--success);
+        }
+
+        .alert-error {
+            background: rgba(231, 76, 60, 0.15);
+            color: var(--danger);
+            border-left: 4px solid var(--danger);
+        }
+
+        @keyframes slideIn {
+            from { transform: translateY(-10px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.4);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(4px);
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 16px;
+            padding: 40px;
+            max-width: 500px;
+            width: 90%;
+            box-shadow: var(--shadow-lg);
+            animation: modalSlide 0.3s ease;
+        }
+
+        @keyframes modalSlide {
+            from { transform: scale(0.95); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        .modal-header {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 24px;
+            color: var(--text-primary);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-close {
+            font-size: 28px;
+            cursor: pointer;
+            color: var(--text-secondary);
+            background: none;
+            border: none;
+            transition: all 0.2s;
+        }
+
+        .modal-close:hover {
+            color: var(--primary);
+            transform: rotate(90deg);
+        }
+
+        .paste-area {
+            width: 100%;
+            min-height: 120px;
+            padding: 16px;
+            border: 2px dashed var(--border);
+            border-radius: 8px;
+            font-size: 13px;
+            font-family: 'Courier New', monospace;
+            resize: vertical;
+            background: var(--light);
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .paste-area:focus {
+            outline: none;
+            border-color: var(--primary);
+            background: white;
+        }
+
+        .paste-area:hover {
+            border-color: var(--primary);
+        }
+
+        @media (max-width: 768px) {
+            .grid-2 {
+                grid-template-columns: 1fr;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .header-stats {
+                flex-direction: column;
+                align-items: flex-end;
+            }
+
+            .header-title h1 {
+                font-size: 24px;
+            }
+
+            .button-group {
+                flex-direction: column;
+            }
+
+            .button-group .button {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .select-group {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .table {
+                font-size: 12px;
+            }
+
+            .table th,
+            .table td {
+                padding: 10px 8px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 프리미엄 헤더 -->
+    <div class="header-premium">
+        <div class="header-content">
+            <div class="header-title">
+                <h1>🚚 당일 물량 취합 Agent</h1>
+                <p>카톡 자동 수집 · 실시간 분석 · 배차 최적화</p>
+            </div>
+            <div class="header-stats">
+                <div class="stat-box">
+                    <div class="stat-number" id="header-rooms">0</div>
+                    <div class="stat-label">카톡방</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-number" id="header-members">0</div>
+                    <div class="stat-label">멤버</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 메인 컨테이너 -->
+    <div class="container">
+        <!-- 알림 -->
+        <div id="alert" class="alert"></div>
+
+        <!-- 탭 네비게이션 -->
+        <div class="tabs-container">
+            <div class="tabs">
+                <button class="tab-button active" onclick="switchTab('dashboard')">📊 대시보드</button>
+                <button class="tab-button" onclick="switchTab('chatrooms')">💬 카톡방</button>
+                <button class="tab-button" onclick="switchTab('members')">👥 멤버</button>
+                <button class="tab-button" onclick="switchTab('paste')">📋 카톡 붙여넣기</button>
+            </div>
+        </div>
+
+        <!-- TAB 1: 대시보드 -->
+        <div id="dashboard" class="tab-content active">
+            <div class="grid-full">
+                <div class="card">
+                    <div class="card-header">📊 거점별 최종 물량 (Snapshot)</div>
+                    <div class="card-body">
+                        <div class="select-group">
+                            <select id="chatroom-select" onchange="loadSnapshot()">
+                                <option value="">카톡방을 선택하세요</option>
+                            </select>
+                            <button class="button button-primary" onclick="loadSnapshot()">🔄 새로고침</button>
+                        </div>
+                        <div id="snapshot-container"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 2: 카톡방 관리 -->
+        <div id="chatrooms" class="tab-content">
+            <div class="grid-2">
+                <div class="card">
+                    <div class="card-header">➕ 새 카톡방 추가</div>
+                    <div class="card-body">
+                        <form onsubmit="addChatroom(event)">
+                            <div class="form-group">
+                                <label>📱 채팅방 이름 *</label>
+                                <input type="text" id="chatroom-name" placeholder="예: ○○지사 분당A 당일물량방" required>
+                            </div>
+                            <div class="form-group">
+                                <label>🏢 지사/지점 *</label>
+                                <input type="text" id="chatroom-branch" placeholder="예: 분당지사" required>
+                            </div>
+                            <div class="form-group">
+                                <label>📍 Hub (집배점)</label>
+                                <input type="text" id="chatroom-hub" placeholder="예: 야탑 Hub">
+                            </div>
+                            <div class="form-group">
+                                <label>📝 설명</label>
+                                <input type="text" id="chatroom-description" placeholder="선택사항">
+                            </div>
+                            <div class="button-group full">
+                                <button type="submit" class="button button-primary">✓ 추가하기</button>
+                                <button type="reset" class="button button-secondary">↻ 초기화</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">📋 등록된 카톡방 목록</div>
+                    <div class="card-body">
+                        <div id="chatrooms-list"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 3: 멤버 관리 -->
+        <div id="members" class="tab-content">
+            <div class="grid-2">
+                <div class="card">
+                    <div class="card-header">➕ 멤버 추가</div>
+                    <div class="card-body">
+                        <form onsubmit="addMember(event)">
+                            <div class="form-group">
+                                <label>💬 카톡방 선택 *</label>
+                                <select id="member-chatroom" required onchange="loadChatroomInfo()">
+                                    <option value="">카톡방을 선택하세요</option>
+                                </select>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label>👤 이름 *</label>
+                                    <input type="text" id="member-name" placeholder="홍길동" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>🎯 역할 *</label>
+                                    <select id="member-role" required>
+                                        <option value="">선택</option>
+                                        <option value="담당자">배차담당자</option>
+                                        <option value="지역사업">지역사업담당</option>
+                                        <option value="집배">집배점</option>
+                                        <option value="고객사">고객사</option>
+                                        <option value="기타">기타</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label>🏢 회사명</label>
+                                    <input type="text" id="member-company" placeholder="나우로지스틱스">
+                                </div>
+                                <div class="form-group">
+                                    <label>💼 직급/직책</label>
+                                    <input type="text" id="member-position" placeholder="대리, 과장">
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label>📍 지사/지점</label>
+                                    <input type="text" id="member-branch" placeholder="자동 입력" readonly>
+                                </div>
+                                <div class="form-group">
+                                    <label>🎯 Hub</label>
+                                    <input type="text" id="member-hub" placeholder="자동 입력" readonly>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label>📞 전화번호</label>
+                                <input type="tel" id="member-phone" placeholder="010-1234-5678">
+                            </div>
+                            <div class="form-group">
+                                <label>📝 비고</label>
+                                <textarea id="member-notes" placeholder="추가 정보"></textarea>
+                            </div>
+                            <div class="button-group full">
+                                <button type="submit" class="button button-primary">✓ 추가하기</button>
+                                <button type="reset" class="button button-secondary">↻ 초기화</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">👥 멤버 목록</div>
+                    <div class="card-body">
+                        <div class="select-group">
+                            <select id="members-chatroom-filter" onchange="loadMembers()">
+                                <option value="">모든 카톡방</option>
+                            </select>
+                        </div>
+                        <div id="members-list"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 4: 카톡 붙여넣기 -->
+        <div id="paste" class="tab-content">
+            <div class="grid-full">
+                <div class="card">
+                    <div class="card-header">📋 카톡 메시지 붙여넣기 & 분석</div>
+                    <div class="card-body">
+                        <div class="form-group">
+                            <label>카톡 메시지 복사 & 붙여넣기 (Ctrl+V)</label>
+                            <textarea id="paste-area" class="paste-area" placeholder="카톡에서 메시지를 드래그해서 복사 후 여기에 붙여넣으세요&#10;&#10;예시:&#10;08:42 A대리: 야탑 오늘 3,200 정도 예상합니다&#10;09:13 B과장: 신분당 3,500까지 봐야 될 것 같습니다&#10;09:38 B과장: 신분당 다시 확인해보니 3,400입니다&#10;09:45 C대리: 정자 2,800 예상"></textarea>
+                        </div>
+                        <div class="button-group">
+                            <button class="button button-primary" onclick="analyzeMessages()">🔍 분석하기</button>
+                            <button class="button button-secondary" onclick="document.getElementById('paste-area').value = ''">🗑 지우기</button>
+                        </div>
+                        <div id="analysis-result"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const DB = {
+            chatrooms: [],
+            members: [],
+
+            addChatroom(data) {
+                const room = { id: Date.now(), ...data, created_at: new Date().toISOString() };
+                this.chatrooms.push(room);
+                this.save();
+                return room.id;
+            },
+
+            getChatrooms() { return this.chatrooms; },
+            getChatroom(id) { return this.chatrooms.find(r => r.id == id); },
+
+            deleteChatroom(id) {
+                this.chatrooms = this.chatrooms.filter(r => r.id != id);
+                this.members = this.members.filter(m => m.chatroom_id != id);
+                this.save();
+            },
+
+            addMember(data) {
+                const member = { id: Date.now(), ...data, added_at: new Date().toISOString() };
+                this.members.push(member);
+                this.save();
+                return member.id;
+            },
+
+            getMembers(chatroomId) {
+                if (!chatroomId) return this.members;
+                return this.members.filter(m => m.chatroom_id == chatroomId);
+            },
+
+            deleteMember(id) {
+                this.members = this.members.filter(m => m.id != id);
+                this.save();
+            },
+
+            save() {
+                localStorage.setItem('dispatch_db', JSON.stringify({
+                    chatrooms: this.chatrooms,
+                    members: this.members
+                }));
+            },
+
+            load() {
+                const data = localStorage.getItem('dispatch_db');
+                if (data) {
+                    const parsed = JSON.parse(data);
+                    this.chatrooms = parsed.chatrooms || [];
+                    this.members = parsed.members || [];
+                }
+            }
+        };
+
+        DB.load();
+
+        function switchTab(tab) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.tab-button').forEach(el => el.classList.remove('active'));
+            document.getElementById(tab).classList.add('active');
+            event.target.classList.add('active');
+            if (tab === 'chatrooms') loadChatrooms();
+            if (tab === 'members') { loadChatrooms(); loadMembers(); }
+        }
+
+        function showAlert(message, type) {
+            const alert = document.getElementById('alert');
+            alert.textContent = message;
+            alert.className = `alert show alert-${type}`;
+            setTimeout(() => alert.classList.remove('show'), 3000);
+        }
+
+        function loadChatrooms() {
+            const chatrooms = DB.getChatrooms();
+            updateChatroomSelects();
+            renderChatrooms();
+            document.getElementById('header-rooms').textContent = chatrooms.length;
+        }
+
+        function updateChatroomSelects() {
+            const selects = ['chatroom-select', 'member-chatroom', 'members-chatroom-filter'];
+            const chatrooms = DB.getChatrooms();
+            selects.forEach(selectId => {
+                const select = document.getElementById(selectId);
+                if (!select) return;
+                const value = select.value;
+                select.innerHTML = '<option value="">-- 선택하세요 --</option>';
+                chatrooms.forEach(room => {
+                    const option = document.createElement('option');
+                    option.value = room.id;
+                    option.textContent = `${room.name} (${room.branch})`;
+                    select.appendChild(option);
+                });
+                select.value = value;
+            });
+        }
+
+        function renderChatrooms() {
+            const container = document.getElementById('chatrooms-list');
+            const chatrooms = DB.getChatrooms();
+            if (chatrooms.length === 0) {
+                container.innerHTML = '<div class="empty-state"><div class="empty-state-icon">📭</div><p>등록된 카톡방이 없습니다</p></div>';
+                return;
+            }
+            const html = `<table class="table"><thead><tr><th>채팅방</th><th>지사</th><th>Hub</th><th style="text-align: center;">작업</th></tr></thead><tbody>${chatrooms.map(room => `<tr><td><strong>${room.name}</strong></td><td><span class="badge badge-primary">${room.branch}</span></td><td>${room.hub || '—'}</td><td style="text-align: center;"><button class="button button-danger" onclick="deleteChatroom(${room.id})">🗑 삭제</button></td></tr>`).join('')}</tbody></table>`;
+            container.innerHTML = html;
+        }
+
+        function addChatroom(event) {
+            event.preventDefault();
+            const data = {
+                name: document.getElementById('chatroom-name').value,
+                branch: document.getElementById('chatroom-branch').value,
+                hub: document.getElementById('chatroom-hub').value,
+                description: document.getElementById('chatroom-description').value
+            };
+            if (!data.name || !data.branch) {
+                showAlert('필수 정보를 입력해주세요', 'error');
+                return;
+            }
+            DB.addChatroom(data);
+            showAlert('✓ 카톡방이 추가되었습니다', 'success');
+            event.target.reset();
+            loadChatrooms();
+        }
+
+        function deleteChatroom(id) {
+            if (!confirm('정말 삭제하시겠습니까?')) return;
+            DB.deleteChatroom(id);
+            showAlert('✓ 카톡방이 삭제되었습니다', 'success');
+            loadChatrooms();
+        }
+
+        function loadChatroomInfo() {
+            const roomId = document.getElementById('member-chatroom').value;
+            const room = DB.getChatroom(roomId);
+            if (room) {
+                document.getElementById('member-branch').value = room.branch;
+                document.getElementById('member-hub').value = room.hub;
+            }
+        }
+
+        function loadMembers() {
+            const roomId = document.getElementById('members-chatroom-filter').value;
+            const members = DB.getMembers(roomId);
+            if (members.length === 0) {
+                document.getElementById('members-list').innerHTML = '<div class="empty-state"><div class="empty-state-icon">👥</div><p>멤버가 없습니다</p></div>';
+                document.getElementById('header-members').textContent = '0';
+                return;
+            }
+            const roleBadges = {'담당자': 'badge-primary','지역사업': 'badge-success','집배': 'badge-warning','고객사': 'badge-danger'};
+            const html = `<table class="table"><thead><tr><th>이름</th><th>역할</th><th>회사</th><th>직급</th><th>전화</th><th style="text-align: center;">작업</th></tr></thead><tbody>${members.map(m => `<tr><td><strong>${m.name}</strong></td><td><span class="badge ${roleBadges[m.role] || 'badge-primary'}">${m.role}</span></td><td>${m.company || '—'}</td><td>${m.position || '—'}</td><td><code>${m.phone || '—'}</code></td><td style="text-align: center;"><button class="button button-danger" onclick="deleteMember(${m.id})">🗑 삭제</button></td></tr>`).join('')}</tbody></table>`;
+            document.getElementById('members-list').innerHTML = html;
+            document.getElementById('header-members').textContent = members.length;
+        }
+
+        function addMember(event) {
+            event.preventDefault();
+            const roomId = document.getElementById('member-chatroom').value;
+            if (!roomId) {
+                showAlert('카톡방을 선택하세요', 'error');
+                return;
+            }
+            const data = {
+                chatroom_id: parseInt(roomId),
+                name: document.getElementById('member-name').value,
+                role: document.getElementById('member-role').value,
+                company: document.getElementById('member-company').value,
+                position: document.getElementById('member-position').value,
+                branch: document.getElementById('member-branch').value,
+                hub: document.getElementById('member-hub').value,
+                phone: document.getElementById('member-phone').value,
+                notes: document.getElementById('member-notes').value
+            };
+            if (!data.name || !data.role) {
+                showAlert('필수 정보를 입력해주세요', 'error');
+                return;
+            }
+            DB.addMember(data);
+            showAlert('✓ 멤버가 추가되었습니다', 'success');
+            event.target.reset();
+            document.getElementById('member-branch').value = '';
+            document.getElementById('member-hub').value = '';
+            loadMembers();
+        }
+
+        function deleteMember(id) {
+            if (!confirm('정말 삭제하시겠습니까?')) return;
+            DB.deleteMember(id);
+            showAlert('✓ 멤버가 삭제되었습니다', 'success');
+            loadMembers();
+        }
+
+        const LOCATIONS = ["야탑", "신분당", "정자", "분당", "압구정", "강남", "강동", "강북", "강서", "관악", "광진", "구로", "금천", "노원", "도봉", "동대문", "동작", "마포", "서대문", "서초", "성동", "성북", "송파", "양천", "영등포", "용산", "은평", "종로", "중", "중랑"];
+
+        function parseMessages(text) {
+            const lines = text.split('\n').filter(line => line.trim());
+            const messages = [];
+            const pattern = /^(\d{1,2}):(\d{2})\s+(.+?)[\s:：]\s*(.+)$/;
+            lines.forEach(line => {
+                const match = line.match(pattern);
+                if (match) {
+                    const [, hour, min, author, content] = match;
+                    messages.push({ time: `${hour}:${min}`, author: author.trim(), content: content.trim() });
+                }
+            });
+            return messages;
+        }
+
+        function classifyMessage(text) {
+            if (/최종|확정|이렇게|이 숫자로|정했|결정/.test(text)) return 'final';
+            if (/다시|수정|정정|변경|확인해보니|계산해보니|재확인/.test(text)) return 'revision';
+            if (/취소|무시|이전 말|제외|빼주/.test(text)) return 'cancel';
+            return 'new_estimate';
+        }
+
+        function extractNumber(text) {
+            const matches = text.match(/\d{1,5}/g);
+            return matches ? Math.max(...matches.map(Number)) : null;
+        }
+
+        function extractLocation(text) {
+            return LOCATIONS.find(loc => text.includes(loc)) || null;
+        }
+
+        function analyzeMessages() {
+            const text = document.getElementById('paste-area').value;
+            if (!text.trim()) {
+                showAlert('카톡 메시지를 붙여넣어주세요', 'error');
+                return;
+            }
+            const messages = parseMessages(text);
+            if (messages.length === 0) {
+                showAlert('인식할 수 있는 메시지 형식이 없습니다', 'error');
+                return;
+            }
+            const analysis = {};
+            messages.forEach(msg => {
+                const location = extractLocation(msg.content);
+                const classification = classifyMessage(msg.content);
+                const number = extractNumber(msg.content);
+                if (!location || !number) return;
+                if (!analysis[location]) {
+                    analysis[location] = { location, history: [], latestValid: null, firstValue: null };
+                }
+                if (classification !== 'cancel') {
+                    const entry = { time: msg.time, author: msg.author, value: number, type: classification, message: msg.content };
+                    analysis[location].history.push(entry);
+                    if (!analysis[location].firstValue) {
+                        analysis[location].firstValue = number;
+                    }
+                    const priority = { final: 3, revision: 2, new_estimate: 1 };
+                    if (!analysis[location].latestValid || priority[classification] >= priority[analysis[location].latestValid.type]) {
+                        analysis[location].latestValid = entry;
+                    }
+                }
+            });
+            const validAnalysis = Object.values(analysis).filter(a => a.latestValid);
+            if (validAnalysis.length === 0) {
+                showAlert('물량 정보를 찾을 수 없습니다', 'error');
+                return;
+            }
+            renderAnalysis(validAnalysis);
+        }
+
+        function renderAnalysis(analysis) {
+            const resultDiv = document.getElementById('analysis-result');
+            const html = `<div style="margin-top: 30px;"><div style="background: linear-gradient(135deg, var(--success) 0%, #27ae60 100%); color: white; padding: 20px; border-radius: 12px; margin-bottom: 20px;"><div style="font-size: 14px; opacity: 0.9;">최종 당일 예상 물량</div><div style="font-size: 24px; font-weight: 800; margin-top: 10px;">${analysis.map(a => `${a.location} ${a.latestValid.value}대`).join(' · ')}</div></div><table class="snapshot-table"><thead><tr><th>거점</th><th>최초</th><th>최신</th><th>증감</th><th>시각</th><th>상태</th></tr></thead><tbody>${analysis.map(item => {const change = item.latestValid.value - item.firstValue; return `<tr><td><span class="snapshot-location">${item.location}</span></td><td style="text-align:center;">${item.firstValue}</td><td><span class="snapshot-quantity">${item.latestValid.value}</span></td><td><span class="snapshot-change ${change > 0 ? 'increase' : change < 0 ? 'decrease' : 'neutral'}">${change > 0 ? '+' : ''}${change}</span></td><td style="text-align:center;color:var(--text-secondary);">${item.latestValid.time}</td><td style="text-align:center;"><span class="badge ${item.latestValid.type === 'final' ? 'badge-danger' : item.latestValid.type === 'revision' ? 'badge-warning' : 'badge-primary'}">${item.latestValid.type === 'final' ? '최종' : item.latestValid.type === 'revision' ? '수정' : '신규'}</span></td></tr>`;}).join('')}</tbody></table></div>`;
+            resultDiv.innerHTML = html;
+            showAlert('✓ 분석 완료! 최종 물량을 확인하세요', 'success');
+        }
+
+        function loadSnapshot() {
+            const roomId = document.getElementById('chatroom-select').value;
+            if (!roomId) {
+                showAlert('카톡방을 선택하세요', 'error');
+                return;
+            }
+            const demoData = {
+                snapshot_time: new Date().toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit' }),
+                date: new Date().toLocaleDateString('ko-KR'),
+                locations: [
+                    { location: '야탑', first_value: 3200, latest_value: 3200, change: 0, time: '08:42', author: 'A대리', type: 'new_estimate' },
+                    { location: '신분당', first_value: 3500, latest_value: 3400, change: -100, time: '09:38', author: 'B과장', type: 'revision' },
+                    { location: '정자', first_value: 2800, latest_value: 2800, change: 0, time: '09:45', author: 'C대리', type: 'new_estimate' }
+                ]
+            };
+            renderSnapshot(demoData);
+        }
+
+        function renderSnapshot(data) {
+            const container = document.getElementById('snapshot-container');
+            if (!data.locations || data.locations.length === 0) {
+                container.innerHTML = '<div class="empty-state"><div class="empty-state-icon">📭</div><p>아직 수집된 데이터가 없습니다</p></div>';
+                return;
+            }
+            const html = `<table class="snapshot-table"><thead><tr><th>거점</th><th>최초</th><th>최신</th><th>증감</th><th>시각</th><th>작성자</th></tr></thead><tbody>${data.locations.map(loc => `<tr><td><span class="snapshot-location">${loc.location}</span></td><td style="text-align:center;">${loc.first_value}</td><td><span class="snapshot-quantity">${loc.latest_value}</span></td><td><span class="snapshot-change ${loc.change > 0 ? 'increase' : loc.change < 0 ? 'decrease' : 'neutral'}">${loc.change > 0 ? '+' : ''}${loc.change}</span></td><td style="text-align:center;color:var(--text-secondary);">${loc.time}</td><td style="text-align:center;">${loc.author}</td></tr>`).join('')}</tbody></table>`;
+            container.innerHTML = html;
+        }
+
+        loadChatrooms();
+    </script>
+</body>
+</html>
