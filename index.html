@@ -849,104 +849,151 @@
             return null;
         }
 
-        function analyzeMessages() {
-            const text = document.getElementById('paste-area').value;
-            
-            if (!text.trim()) {
-                showAlert('카톡 메시지를 붙여넣어주세요', 'error');
-                return;
-            }
-            
-            const messages = parseMessages(text);
-            
-            if (messages.length === 0) {
-                showAlert('카톡 메시지 형식을 인식할 수 없습니다. [이름] [시간] 내용 형식으로 입력해주세요', 'error');
-                return;
-            }
-            
-            const analysis = {};
-            let validCount = 0;
-            
-            messages.forEach(msg => {
-                const number = extractNumber(msg.content);
-                const location = extractLocation(msg.content);
-                const classification = classifyMessage(msg.content);
-                
-                if (!number) {
-                    return;
-                }
-                if (!location) {
-                    return;
-                }
-
-                validCount++;
-
-                if (!analysis[location]) {
-                    analysis[location] = { location, history: [], latestValid: null, firstValue: null };
-                }
-
-                if (classification !== 'cancel') {
-                    const entry = { time: msg.time, author: msg.author, value: number, type: classification, message: msg.content };
-                    analysis[location].history.push(entry);
-                    
-                    if (!analysis[location].firstValue) {
-                        analysis[location].firstValue = number;
-                    }
-                    
-                    const priority = { final: 3, revision: 2, new_estimate: 1 };
-                    if (!analysis[location].latestValid || priority[classification] >= priority[analysis[location].latestValid.type]) {
-                        analysis[location].latestValid = entry;
-                    }
-                }
-            });
-            
-            const validAnalysis = Object.values(analysis).filter(a => a.latestValid);
-            
-            if (validAnalysis.length === 0) {
-                showAlert('분석할 수 있는 물량 정보를 찾을 수 없습니다. 거점명(야탑, 신분당 등)과 숫자를 포함한 메시지를 입력해주세요', 'error');
-                return;
-            }
-            
-            renderAnalysis(validAnalysis);
-        }
-
-        function renderAnalysis(analysis) {
-            const resultDiv = document.getElementById('analysis-result');
-            const today = new Date().toLocaleDateString('ko-KR');
-            
-            const html = `<div style="margin-top: 30px;"><div style="background: linear-gradient(135deg, #059669 0%, #10b981 100%); color: white; padding: 20px; border-radius: 12px; margin-bottom: 20px; font-weight: 700;"><div style="font-size: 12px; opacity: 0.9; text-transform: uppercase; letter-spacing: 1px;">${today} 최종 당일 예상 물량</div><div style="font-size: 22px; margin-top: 10px;">${analysis.map(a => `${a.location} ${a.latestValid.value}`).join(' · ')}</div></div><table class="snapshot-table"><thead><tr><th>구분</th><th>최초</th><th>최신</th><th>증감</th><th>시각</th><th>상태</th></tr></thead><tbody>${analysis.map(item => {const change = item.latestValid.value - item.firstValue; return `<tr><td>${item.location}</td><td>${item.firstValue}</td><td><span class="snapshot-quantity">${item.latestValid.value}</span></td><td><span class="snapshot-change ${change > 0 ? 'increase' : change < 0 ? 'decrease' : 'neutral'}">${change > 0 ? '+' : ''}${change}</span></td><td>${item.latestValid.time}</td><td><span class="badge ${item.latestValid.type === 'final' ? 'badge-danger' : 'badge-warning'}">${item.latestValid.type === 'final' ? '최종' : '수정'}</span></td></tr>`;}).join('')}</tbody></table></div>`;
-            resultDiv.innerHTML = html;
-            showAlert('성공했습니다! 분석이 완료되었습니다', 'success');
-        }
-
-        function loadSnapshot() {
-            const roomId = document.getElementById('chatroom-select').value;
-            if (!roomId) {
-                showAlert('카톡방을 선택하세요', 'error');
-                return;
-            }
-            const today = new Date().toLocaleDateString('ko-KR');
-            const demoData = {
-                date: today,
-                locations: [
-                    { location: '야탑', first_value: 3200, latest_value: 3200, change: 0, time: '08:42', type: 'new_estimate' },
-                    { location: '신분당', first_value: 3500, latest_value: 3400, change: -100, time: '09:38', type: 'revision' }
-                ]
+       function analyzeMessages() {
+    const text = document.getElementById('paste-area').value;
+    
+    if (!text.trim()) {
+        showAlert('카톡 메시지를 붙여넣어주세요', 'error');
+        return;
+    }
+    
+    const messages = parseMessages(text);
+    
+    if (messages.length === 0) {
+        showAlert('카톡 메시지 형식을 인식할 수 없습니다. [이름] [시간] 내용 형식으로 입력해주세요', 'error');
+        return;
+    }
+    
+    // 시간순으로 정렬
+    messages.sort((a, b) => {
+        const timeA = a.time.split(':').map(Number);
+        const timeB = b.time.split(':').map(Number);
+        return timeA[0] * 60 + timeA[1] - (timeB[0] * 60 + timeB[1]);
+    });
+    
+    const analysis = {};
+    
+    // 메시지를 순서대로 처리
+    messages.forEach(msg => {
+        const number = extractNumber(msg.content);
+        const location = extractLocation(msg.content);
+        const classification = classifyMessage(msg.content);
+        
+        // 숫자가 없으면 스킵
+        if (!number) return;
+        
+        // 거점이 없으면 스킵
+        if (!location) return;
+        
+        // 취소 분류면 스킵
+        if (classification === 'cancel') return;
+        
+        // 거점별 첫 데이터 초기화
+        if (!analysis[location]) {
+            analysis[location] = {
+                location: location,
+                firstValue: number,      // 첫 번째 나온 값
+                firstTime: msg.time,
+                firstAuthor: msg.author,
+                latestValue: number,     // 가장 최신값
+                latestTime: msg.time,
+                latestAuthor: msg.author,
+                latestType: classification,
+                latestMessage: msg.content,
+                allMessages: []
             };
-            renderSnapshot(demoData);
+        } else {
+            // 같은 거점의 다음 메시지는 최신값으로 업데이트
+            analysis[location].latestValue = number;
+            analysis[location].latestTime = msg.time;
+            analysis[location].latestAuthor = msg.author;
+            analysis[location].latestType = classification;
+            analysis[location].latestMessage = msg.content;
         }
+        
+        analysis[location].allMessages.push({
+            time: msg.time,
+            author: msg.author,
+            value: number,
+            type: classification,
+            message: msg.content
+        });
+    });
+    
+    const validAnalysis = Object.values(analysis);
+    
+    if (validAnalysis.length === 0) {
+        showAlert('분석할 수 있는 물량 정보를 찾을 수 없습니다. 거점명(야탑, 신분당 등)과 숫자를 포함한 메시지를 입력해주세요', 'error');
+        return;
+    }
+    
+    renderAnalysis(validAnalysis);
+}
 
-        function renderSnapshot(data) {
-            const container = document.getElementById('snapshot-container');
-            if (!data.locations || data.locations.length === 0) {
-                container.innerHTML = '<div class="empty-state"><div class="empty-state-icon">📭</div><p class="empty-state-text">아직 데이터가 없습니다</p></div>';
-                return;
-            }
-            const html = `<table class="snapshot-table"><thead><tr><th>구분</th><th>최초</th><th>최신</th><th>증감</th><th>시각</th><th>상태</th></tr></thead><tbody>${data.locations.map(loc => `<tr><td>${loc.location}</td><td>${loc.first_value}</td><td><span class="snapshot-quantity">${loc.latest_value}</span></td><td><span class="snapshot-change ${loc.change > 0 ? 'increase' : loc.change < 0 ? 'decrease' : 'neutral'}">${loc.change > 0 ? '+' : ''}${loc.change}</span></td><td>${loc.time}</td><td><span class="badge ${loc.type === 'final' ? 'badge-danger' : 'badge-warning'}">${loc.type === 'final' ? '최종' : '수정'}</span></td></tr>`).join('')}</tbody></table>`;
-            container.innerHTML = html;
-        }
-
-        loadChatrooms();
-    </script>
-</body>
-</html>
+function renderAnalysis(analysis) {
+    const resultDiv = document.getElementById('analysis-result');
+    const today = new Date().toLocaleDateString('ko-KR');
+    
+    // 최신 시간 구하기 (마지막 메시지 시간)
+    const latestTime = Math.max(...analysis.map(a => {
+        const [h, m] = a.latestTime.split(':').map(Number);
+        return h * 60 + m;
+    }));
+    const latestHour = Math.floor(latestTime / 60);
+    const latestMin = latestTime % 60;
+    const latestTimeStr = `${String(latestHour).padStart(2, '0')}:${String(latestMin).padStart(2, '0')}`;
+    
+    // 거점 순서 정렬 (최신값 시간 역순)
+    analysis.sort((a, b) => {
+        const timeA = a.latestTime.split(':').map(Number);
+        const timeB = b.latestTime.split(':').map(Number);
+        const minA = timeA[0] * 60 + timeA[1];
+        const minB = timeB[0] * 60 + timeB[1];
+        return minB - minA;
+    });
+    
+    const snapshotSummary = analysis
+        .map(a => `${a.location} ${a.latestValue}`)
+        .join(' / ');
+    
+    const tableRows = analysis
+        .map(item => {
+            const change = item.latestValue - item.firstValue;
+            const changeStr = change === 0 ? '-' : `${change > 0 ? '+' : ''}${change}`;
+            
+            return `<tr>
+                <td>${item.location}</td>
+                <td>${item.firstValue}</td>
+                <td><span class="snapshot-quantity">${item.latestValue}</span></td>
+                <td><span class="snapshot-change ${change > 0 ? 'increase' : change < 0 ? 'decrease' : 'neutral'}">${changeStr}</span></td>
+                <td>${item.latestTime}</td>
+                <td><span class="badge ${item.latestType === 'final' ? 'badge-danger' : 'badge-warning'}">${item.latestType === 'final' ? '최종' : '수정'}</span></td>
+            </tr>`;
+        })
+        .join('');
+    
+    const html = `<div style="margin-top: 30px;">
+        <div style="background: linear-gradient(135deg, #059669 0%, #10b981 100%); color: white; padding: 20px; border-radius: 12px; margin-bottom: 20px; font-weight: 700;">
+            <div style="font-size: 12px; opacity: 0.9; text-transform: uppercase; letter-spacing: 1px;">${today} ${latestTimeStr} 기준 당일 예상 물량</div>
+            <div style="font-size: 22px; margin-top: 10px;">${snapshotSummary}</div>
+        </div>
+        <table class="snapshot-table">
+            <thead>
+                <tr>
+                    <th>구분</th>
+                    <th>최초</th>
+                    <th>최신</th>
+                    <th>증감</th>
+                    <th>시각</th>
+                    <th>상태</th>
+                </tr>
+            </thead>
+            <tbody>
+                ${tableRows}
+            </tbody>
+        </table>
+    </div>`;
+    
+    resultDiv.innerHTML = html;
+    showAlert('성공했습니다! 분석이 완료되었습니다', 'success');
+}
