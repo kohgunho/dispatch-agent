@@ -305,6 +305,11 @@
         min-width: 150px;
     }
 
+    .filter-group input {
+        flex: 1;
+        min-width: 150px;
+    }
+
     .filter-btn {
         background: #1e3a8a;
         color: white;
@@ -376,7 +381,7 @@
         
         <div style="background: #f8fafc; padding: 16px; border-radius: 8px; margin-bottom: 24px; font-size: 13px; line-height: 1.6; color: #475569;">
             <strong style="color: #1e3a8a;">멤버를 등록하면:</strong><br>
-            분석 탭에서 메시지를 입력할 때, 사람 이름만 있어도 자신의 거점/고객사로 자동 맵핑됩니다.<br>
+            분석 탭에서 메시지를 입력할 때, 사람 이름만 있어도 자신의 집배점/고객사로 자동 맵핑됩니다.<br>
             예: "[거거너] [오전 6:29] 5개" → 거거너가 야탑 담당이면 자동으로 "야탑 5개"로 인식됩니다.
         </div>
 
@@ -389,47 +394,16 @@
             <label>역할</label>
             <select id="memberRole">
                 <option value="">선택해주세요</option>
-                <option value="배송담당">배송담당</option>
+                <option value="배차담당자">배차담당자</option>
+                <option value="지역사업담당">지역사업담당</option>
+                <option value="집배점">집배점</option>
                 <option value="고객사">고객사</option>
-                <option value="관리자">관리자</option>
             </select>
         </div>
 
         <div class="form-group">
-            <label>거점/고객사</label>
-            <select id="memberLocation">
-                <option value="">선택해주세요</option>
-                <option value="야탑">야탑</option>
-                <option value="신분당">신분당</option>
-                <option value="정자">정자</option>
-                <option value="분당">분당</option>
-                <option value="압구정">압구정</option>
-                <option value="강남">강남</option>
-                <option value="강동">강동</option>
-                <option value="강북">강북</option>
-                <option value="강서">강서</option>
-                <option value="관악">관악</option>
-                <option value="광진">광진</option>
-                <option value="구로">구로</option>
-                <option value="금천">금천</option>
-                <option value="노원">노원</option>
-                <option value="도봉">도봉</option>
-                <option value="동대문">동대문</option>
-                <option value="동작">동작</option>
-                <option value="마포">마포</option>
-                <option value="서대문">서대문</option>
-                <option value="서초">서초</option>
-                <option value="성동">성동</option>
-                <option value="성북">성북</option>
-                <option value="송파">송파</option>
-                <option value="양천">양천</option>
-                <option value="영등포">영등포</option>
-                <option value="용산">용산</option>
-                <option value="은평">은평</option>
-                <option value="종로">종로</option>
-                <option value="중">중</option>
-                <option value="중랑">중랑</option>
-            </select>
+            <label>집배점/고객사</label>
+            <input type="text" id="memberLocation" placeholder="예: 야탑, 신분당, 강남 등">
         </div>
 
         <div class="form-group">
@@ -447,19 +421,12 @@
             <div class="filter-group">
                 <select id="filterRole">
                     <option value="">모든 역할</option>
-                    <option value="배송담당">배송담당</option>
+                    <option value="배차담당자">배차담당자</option>
+                    <option value="지역사업담당">지역사업담당</option>
+                    <option value="집배점">집배점</option>
                     <option value="고객사">고객사</option>
-                    <option value="관리자">관리자</option>
                 </select>
-                <select id="filterLocation">
-                    <option value="">모든 거점</option>
-                    <option value="야탑">야탑</option>
-                    <option value="신분당">신분당</option>
-                    <option value="정자">정자</option>
-                    <option value="분당">분당</option>
-                    <option value="압구정">압구정</option>
-                    <option value="강남">강남</option>
-                </select>
+                <input type="text" id="filterLocation" placeholder="거점/고객사로 필터링">
                 <button class="filter-btn" onclick="filterMembers()">필터 적용</button>
                 <button class="filter-btn" style="background: #94a3b8;" onclick="clearFilters()">초기화</button>
             </div>
@@ -470,7 +437,7 @@
                 <tr>
                     <th>이름</th>
                     <th>역할</th>
-                    <th>거점/고객사</th>
+                    <th>집배점/고객사</th>
                     <th>회사</th>
                     <th>작업</th>
                 </tr>
@@ -598,7 +565,7 @@
     function addMember() {
         const name = document.getElementById('memberName').value.trim();
         const role = document.getElementById('memberRole').value;
-        const location = document.getElementById('memberLocation').value;
+        const location = document.getElementById('memberLocation').value.trim();
         const company = document.getElementById('memberCompany').value.trim();
         const successMsg = document.getElementById('successMessageMember');
         const errorMsg = document.getElementById('errorMessageMember');
@@ -607,7 +574,7 @@
         errorMsg.style.display = 'none';
 
         if (!name || !role || !location) {
-            errorMsg.textContent = '이름, 역할, 거점/고객사를 모두 입력해주세요.';
+            errorMsg.textContent = '이름, 역할, 집배점/고객사를 모두 입력해주세요.';
             errorMsg.style.display = 'block';
             return;
         }
@@ -644,11 +611,11 @@
 
     function filterMembers() {
         const role = document.getElementById('filterRole').value;
-        const location = document.getElementById('filterLocation').value;
+        const location = document.getElementById('filterLocation').value.trim();
 
         let filtered = db.members;
         if (role) filtered = filtered.filter(m => m.role === role);
-        if (location) filtered = filtered.filter(m => m.location === location);
+        if (location) filtered = filtered.filter(m => m.location.includes(location));
 
         const tbody = document.getElementById('memberList');
         tbody.innerHTML = '';
@@ -735,7 +702,7 @@
         return 'final';
     }
 
-    // ✨ KEY CHANGE: Member-based location mapping
+    // Member-based location mapping
     function extractLocationAndNumber(name, content) {
         // Find member by name
         const member = db.members.find(m => m.name === name);
