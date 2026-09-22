@@ -1,4 +1,5 @@
-<!DOCTYPE html><html lang="ko">
+<!DOCTYPE html>
+<html lang="ko">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,967 +10,943 @@
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-        }    :root {
-        --primary: #1e3a8a;
-        --secondary: #3b82f6;
-        --dark: #1f2937;
-        --light: #f3f4f6;
-        --border: #e5e7eb;
-    }
-
-    body {
-        font-family: 'Noto Sans KR', sans-serif;
-        background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 100%);
-        min-height: 100vh;
-        padding: 0;
-    }
-
-    /* 헤더 */
-    .header {
-        background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 100%);
-        color: white;
-        padding: 50px 20px 30px;
-        text-align: center;
-        position: relative;
-        overflow: hidden;
-    }
-
-    .header::before {
-        content: '';
-        position: absolute;
-        top: -50%;
-        right: -10%;
-        width: 300px;
-        height: 300px;
-        background: radial-gradient(circle, rgba(255,255,255,0.1), transparent);
-        border-radius: 50%;
-    }
-
-    .header-content {
-        position: relative;
-        z-index: 1;
-        max-width: 1200px;
-        margin: 0 auto;
-    }
-
-    .header-title {
-        font-size: 42px;
-        font-weight: 800;
-        margin-bottom: 8px;
-    }
-
-    .header-subtitle {
-        font-size: 13px;
-        opacity: 0.9;
-        letter-spacing: 0.5px;
-    }
-
-    /* 네비게이션 */
-    .nav-tabs {
-        max-width: 1200px;
-        margin: -15px auto 0;
-        display: flex;
-        gap: 8px;
-        padding: 0 20px;
-        position: relative;
-        z-index: 10;
-        flex-wrap: wrap;
-        justify-content: center;
-    }
-
-    .nav-tab {
-        background: white;
-        border: none;
-        padding: 12px 20px;
-        cursor: pointer;
-        font-size: 13px;
-        font-weight: 600;
-        border-radius: 8px 8px 0 0;
-        transition: all 0.3s;
-        color: #666;
-        font-family: 'Noto Sans KR', sans-serif;
-        box-shadow: 0 -2px 8px rgba(0,0,0,0.08);
-    }
-
-    .nav-tab:hover {
-        background: #f8f9fa;
-        color: var(--primary);
-    }
-
-    .nav-tab.active {
-        background: white;
-        color: white;
-        background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 100%);
-        box-shadow: 0 -4px 12px rgba(30, 58, 138, 0.15);
-    }
-
-    /* 컨테이너 */
-    .container {
-        max-width: 1200px;
-        margin: 0 auto;
-        padding: 20px;
-    }
-
-    .content {
-        background: white;
-        border-radius: 12px;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-        padding: 40px;
-        display: none;
-    }
-
-    .content.active {
-        display: block;
-        animation: slideIn 0.3s ease;
-    }
-
-    @keyframes slideIn {
-        from { opacity: 0; transform: translateY(10px); }
-        to { opacity: 1; transform: translateY(0); }
-    }
-
-    /* 섹션 제목 */
-    .section-title {
-        font-size: 18px;
-        font-weight: 700;
-        color: var(--dark);
-        margin-bottom: 30px;
-        padding-bottom: 15px;
-        border-bottom: 3px solid var(--primary);
-    }
-
-    /* 그리드 */
-    .grid-2 {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 30px;
-        margin-bottom: 30px;
-    }
-
-    /* 카드 */
-    .card {
-        background: var(--light);
-        border: 2px solid var(--border);
-        border-radius: 12px;
-        padding: 24px;
-        transition: all 0.3s;
-    }
-
-    .card:hover {
-        border-color: var(--primary);
-        box-shadow: 0 4px 12px rgba(30, 58, 138, 0.1);
-    }
-
-    .card-header {
-        font-size: 15px;
-        font-weight: 700;
-        color: var(--primary);
-        margin-bottom: 20px;
-        padding-bottom: 12px;
-        border-bottom: 2px solid var(--primary);
-    }
-
-    /* 폼 */
-    .form-group {
-        margin-bottom: 18px;
-    }
-
-    .form-label {
-        display: flex;
-        align-items: center;
-        gap: 6px;
-        font-size: 12px;
-        font-weight: 600;
-        color: var(--dark);
-        margin-bottom: 8px;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-    }
-
-    .form-input,
-    .form-select,
-    .form-textarea {
-        width: 100%;
-        padding: 11px 14px;
-        border: 2px solid var(--border);
-        border-radius: 8px;
-        font-family: 'Noto Sans KR', sans-serif;
-        font-size: 13px;
-        transition: all 0.3s;
-        background: white;
-    }
-
-    .form-input:focus,
-    .form-select:focus,
-    .form-textarea:focus {
-        outline: none;
-        border-color: var(--primary);
-        box-shadow: 0 0 0 3px rgba(30, 58, 138, 0.1);
-    }
-
-    .form-textarea {
-        resize: vertical;
-        min-height: 120px;
-    }
-
-    .form-row {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 15px;
-    }
-
-    .form-row.full {
-        grid-template-columns: 1fr;
-    }
-
-    /* 버튼 */
-    .button-group {
-        display: flex;
-        gap: 12px;
-        margin-top: 24px;
-    }
-
-    .button {
-        flex: 1;
-        padding: 12px 20px;
-        border: none;
-        border-radius: 8px;
-        font-weight: 600;
-        cursor: pointer;
-        font-size: 12px;
-        transition: all 0.3s;
-        font-family: 'Noto Sans KR', sans-serif;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-    }
-
-    .button-primary {
-        background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 100%);
-        color: white;
-        box-shadow: 0 4px 12px rgba(30, 58, 138, 0.3);
-    }
-
-    .button-primary:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 6px 16px rgba(30, 58, 138, 0.4);
-    }
-
-    .button-secondary {
-        background: white;
-        color: var(--primary);
-        border: 2px solid var(--primary);
-    }
-
-    .button-secondary:hover {
-        background: var(--light);
-    }
-
-    .button-danger {
-        background: #dc2626;
-        color: white;
-        padding: 8px 12px;
-        font-size: 11px;
-        flex: none;
-    }
-
-    .button-danger:hover {
-        opacity: 0.9;
-    }
-
-    /* 선택 그룹 */
-    .select-group {
-        display: flex;
-        gap: 10px;
-        margin-bottom: 20px;
-    }
-
-    .select-group select {
-        flex: 1;
-        padding: 11px 14px;
-        border: 2px solid var(--border);
-        border-radius: 8px;
-        font-size: 13px;
-        cursor: pointer;
-    }
-
-    /* 테이블 */
-    .table {
-        width: 100%;
-        border-collapse: collapse;
-        margin-top: 20px;
-    }
-
-    .table thead {
-        background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 100%);
-        color: white;
-    }
-
-    .table th {
-        padding: 14px;
-        text-align: left;
-        font-weight: 600;
-        font-size: 12px;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-    }
-
-    .table td {
-        padding: 12px 14px;
-        border-bottom: 1px solid var(--border);
-        font-size: 13px;
-    }
-
-    .table tbody tr:hover {
-        background: var(--light);
-    }
-
-    /* 배지 */
-    .badge {
-        display: inline-block;
-        padding: 4px 10px;
-        border-radius: 20px;
-        font-size: 11px;
-        font-weight: 600;
-        text-transform: uppercase;
-        letter-spacing: 0.3px;
-        background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 100%);
-        color: white;
-    }
-
-    .badge-success {
-        background: rgba(34, 197, 94, 0.15);
-        color: #22c55e;
-    }
-
-    .badge-warning {
-        background: rgba(249, 115, 22, 0.15);
-        color: #f97316;
-    }
-
-    .badge-danger {
-        background: rgba(220, 38, 38, 0.15);
-        color: #dc2626;
-    }
-
-    /* 빈 상태 */
-    .empty-state {
-        text-align: center;
-        padding: 50px 20px;
-        color: #999;
-    }
-
-    .empty-state-icon {
-        font-size: 48px;
-        margin-bottom: 15px;
-        opacity: 0.6;
-    }
-
-    .empty-state-text {
-        font-size: 14px;
-        margin-bottom: 8px;
-    }
-
-    /* 알림 */
-    .alert {
-        padding: 14px 18px;
-        border-radius: 8px;
-        margin-bottom: 20px;
-        display: none;
-        font-weight: 500;
-        font-size: 13px;
-        border-left: 4px solid;
-    }
-
-    .alert.show {
-        display: block;
-        animation: slideIn 0.3s ease;
-    }
-
-    .alert-success {
-        background: rgba(34, 197, 94, 0.1);
-        color: #22c55e;
-        border-left-color: #22c55e;
-    }
-
-    .alert-error {
-        background: rgba(220, 38, 38, 0.1);
-        color: #dc2626;
-        border-left-color: #dc2626;
-    }
-
-    /* 스냅샷 테이블 */
-    .snapshot-table {
-        width: 100%;
-        border-collapse: collapse;
-        margin-top: 20px;
-    }
-
-    .snapshot-table thead {
-        background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 100%);
-        color: white;
-    }
-
-    .snapshot-table th {
-        padding: 16px;
-        text-align: center;
-        font-weight: 600;
-        font-size: 12px;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-    }
-
-    .snapshot-table th:first-child {
-        text-align: left;
-    }
-
-    .snapshot-table td {
-        padding: 14px 16px;
-        border-bottom: 1px solid var(--border);
-        text-align: center;
-    }
-
-    .snapshot-table td:first-child {
-        text-align: left;
-        font-weight: 600;
-        color: var(--primary);
-    }
-
-    .snapshot-quantity {
-        font-size: 18px;
-        font-weight: 800;
-        color: var(--primary);
-    }
-
-    .snapshot-change {
-        font-weight: 700;
-        padding: 4px 8px;
-        border-radius: 4px;
-        font-size: 12px;
-    }
-
-    .snapshot-change.increase {
-        background: rgba(220, 38, 38, 0.15);
-        color: #dc2626;
-    }
-
-    .snapshot-change.decrease {
-        background: rgba(34, 197, 94, 0.15);
-        color: #22c55e;
-    }
-
-    .snapshot-change.neutral {
-        color: #999;
-    }
-
-    /* 반응형 */
-    @media (max-width: 768px) {
-        .grid-2 {
-            grid-template-columns: 1fr;
         }
 
-        .form-row {
-            grid-template-columns: 1fr;
+        :root {
+            --primary: #1e3a8a;
+            --secondary: #3b82f6;
+            --dark: #1f2937;
+            --light: #f3f4f6;
+            --border: #e5e7eb;
+        }
+
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 100%);
+            min-height: 100vh;
+            padding: 0;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 100%);
+            color: white;
+            padding: 50px 20px 30px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -10%;
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(255,255,255,0.1), transparent);
+            border-radius: 50%;
+        }
+
+        .header-content {
+            position: relative;
+            z-index: 1;
+            max-width: 1200px;
+            margin: 0 auto;
         }
 
         .header-title {
-            font-size: 28px;
+            font-size: 42px;
+            font-weight: 800;
+            margin-bottom: 8px;
+        }
+
+        .header-subtitle {
+            font-size: 13px;
+            opacity: 0.9;
+            letter-spacing: 0.5px;
         }
 
         .nav-tabs {
+            max-width: 1200px;
+            margin: -15px auto 0;
+            display: flex;
+            gap: 8px;
+            padding: 0 20px;
+            position: relative;
+            z-index: 10;
             flex-wrap: wrap;
+            justify-content: center;
         }
 
         .nav-tab {
-            flex: 1;
-            min-width: 80px;
+            background: white;
+            border: none;
+            padding: 12px 20px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 600;
+            border-radius: 8px 8px 0 0;
+            transition: all 0.3s;
+            color: #666;
+            font-family: 'Noto Sans KR', sans-serif;
+            box-shadow: 0 -2px 8px rgba(0,0,0,0.08);
         }
-    }
-</style>
+
+        .nav-tab:hover {
+            background: #f8f9fa;
+            color: var(--primary);
+        }
+
+        .nav-tab.active {
+            background: white;
+            color: white;
+            background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 100%);
+            box-shadow: 0 -4px 12px rgba(30, 58, 138, 0.15);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .content {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            padding: 40px;
+            display: none;
+        }
+
+        .content.active {
+            display: block;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .section-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--dark);
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 3px solid var(--primary);
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .card {
+            background: var(--light);
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            padding: 24px;
+            transition: all 0.3s;
+        }
+
+        .card:hover {
+            border-color: var(--primary);
+            box-shadow: 0 4px 12px rgba(30, 58, 138, 0.1);
+        }
+
+        .card-header {
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 20px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid var(--primary);
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        .form-label {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--dark);
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .form-input,
+        .form-select,
+        .form-textarea {
+            width: 100%;
+            padding: 11px 14px;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            font-family: 'Noto Sans KR', sans-serif;
+            font-size: 13px;
+            transition: all 0.3s;
+            background: white;
+        }
+
+        .form-input:focus,
+        .form-select:focus,
+        .form-textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(30, 58, 138, 0.1);
+        }
+
+        .form-textarea {
+            resize: vertical;
+            min-height: 120px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .form-row.full {
+            grid-template-columns: 1fr;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 12px;
+            margin-top: 24px;
+        }
+
+        .button {
+            flex: 1;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 12px;
+            transition: all 0.3s;
+            font-family: 'Noto Sans KR', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .button-primary {
+            background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 100%);
+            color: white;
+            box-shadow: 0 4px 12px rgba(30, 58, 138, 0.3);
+        }
+
+        .button-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(30, 58, 138, 0.4);
+        }
+
+        .button-secondary {
+            background: white;
+            color: var(--primary);
+            border: 2px solid var(--primary);
+        }
+
+        .button-secondary:hover {
+            background: var(--light);
+        }
+
+        .button-danger {
+            background: #dc2626;
+            color: white;
+            padding: 8px 12px;
+            font-size: 11px;
+            flex: none;
+        }
+
+        .button-danger:hover {
+            opacity: 0.9;
+        }
+
+        .select-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .select-group select {
+            flex: 1;
+            padding: 11px 14px;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            font-size: 13px;
+            cursor: pointer;
+        }
+
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        .table thead {
+            background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 100%);
+            color: white;
+        }
+
+        .table th {
+            padding: 14px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .table td {
+            padding: 12px 14px;
+            border-bottom: 1px solid var(--border);
+            font-size: 13px;
+        }
+
+        .table tbody tr:hover {
+            background: var(--light);
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+            background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 100%);
+            color: white;
+        }
+
+        .badge-success {
+            background: rgba(34, 197, 94, 0.15);
+            color: #22c55e;
+        }
+
+        .badge-warning {
+            background: rgba(249, 115, 22, 0.15);
+            color: #f97316;
+        }
+
+        .badge-danger {
+            background: rgba(220, 38, 38, 0.15);
+            color: #dc2626;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 50px 20px;
+            color: #999;
+        }
+
+        .empty-state-icon {
+            font-size: 48px;
+            margin-bottom: 15px;
+            opacity: 0.6;
+        }
+
+        .empty-state-text {
+            font-size: 14px;
+            margin-bottom: 8px;
+        }
+
+        .alert {
+            padding: 14px 18px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: none;
+            font-weight: 500;
+            font-size: 13px;
+            border-left: 4px solid;
+        }
+
+        .alert.show {
+            display: block;
+            animation: slideIn 0.3s ease;
+        }
+
+        .alert-success {
+            background: rgba(34, 197, 94, 0.1);
+            color: #22c55e;
+            border-left-color: #22c55e;
+        }
+
+        .alert-error {
+            background: rgba(220, 38, 38, 0.1);
+            color: #dc2626;
+            border-left-color: #dc2626;
+        }
+
+        .snapshot-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        .snapshot-table thead {
+            background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 100%);
+            color: white;
+        }
+
+        .snapshot-table th {
+            padding: 16px;
+            text-align: center;
+            font-weight: 600;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .snapshot-table th:first-child {
+            text-align: left;
+        }
+
+        .snapshot-table td {
+            padding: 14px 16px;
+            border-bottom: 1px solid var(--border);
+            text-align: center;
+        }
+
+        .snapshot-table td:first-child {
+            text-align: left;
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        .snapshot-quantity {
+            font-size: 18px;
+            font-weight: 800;
+            color: var(--primary);
+        }
+
+        .snapshot-change {
+            font-weight: 700;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+        }
+
+        .snapshot-change.increase {
+            background: rgba(220, 38, 38, 0.15);
+            color: #dc2626;
+        }
+
+        .snapshot-change.decrease {
+            background: rgba(34, 197, 94, 0.15);
+            color: #22c55e;
+        }
+
+        .snapshot-change.neutral {
+            color: #999;
+        }
+
+        @media (max-width: 768px) {
+            .grid-2 {
+                grid-template-columns: 1fr;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .header-title {
+                font-size: 28px;
+            }
+
+            .nav-tabs {
+                flex-wrap: wrap;
+            }
+
+            .nav-tab {
+                flex: 1;
+                min-width: 80px;
+            }
+        }
+    </style>
 </head>
 <body>
-    <!-- 헤더 -->
     <div class="header">
         <div class="header-content">
             <div class="header-title">당일 물량 취합 Agent</div>
             <div class="header-subtitle">카톡 자동 수집 · 실시간 분석 · 배차 최적화</div>
         </div>
-    </div><!-- 네비게이션 -->
-<div class="nav-tabs">
-    <button class="nav-tab active" onclick="switchTab('dashboard')">대시보드</button>
-    <button class="nav-tab" onclick="switchTab('chatrooms')">카톡방</button>
-    <button class="nav-tab" onclick="switchTab('members')">멤버</button>
-    <button class="nav-tab" onclick="switchTab('paste')">붙여넣기</button>
-</div>
-
-<!-- 컨테이너 -->
-<div class="container">
-    <div id="alert" class="alert"></div>
-
-    <!-- TAB 1: 대시보드 -->
-    <div id="dashboard" class="content active">
-        <div class="section-title">거점별 최종 물량 Snapshot</div>
-
-        <div class="select-group">
-            <select id="chatroom-select" onchange="loadSnapshot()">
-                <option value="">카톡방을 선택하세요</option>
-            </select>
-            <button class="button button-primary" onclick="loadSnapshot()" style="flex: 0 0 auto; padding: 11px 20px;">새로고침</button>
-        </div>
-
-        <div id="snapshot-container"></div>
     </div>
 
-    <!-- TAB 2: 카톡방 관리 -->
-    <div id="chatrooms" class="content">
-        <div class="section-title">카톡방 관리</div>
-
-        <div class="grid-2">
-            <div class="card">
-                <div class="card-header">새 카톡방 추가</div>
-                <form onsubmit="addChatroom(event)">
-                    <div class="form-group">
-                        <label class="form-label">채팅방 이름</label>
-                        <input type="text" class="form-input" id="chatroom-name" placeholder="경기광주 경기광주SUB" required>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">지점 (SUB)</label>
-                        <input type="text" class="form-input" id="chatroom-branch" placeholder="경기광주SUB" required>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">설명</label>
-                        <input type="text" class="form-input" id="chatroom-description" placeholder="선택사항">
-                    </div>
-                    <div class="button-group">
-                        <button type="submit" class="button button-primary">추가하기</button>
-                        <button type="reset" class="button button-secondary">초기화</button>
-                    </div>
-                </form>
-            </div>
-
-            <div class="card">
-                <div class="card-header">등록된 카톡방</div>
-                <div id="chatrooms-list"></div>
-            </div>
-        </div>
+    <div class="nav-tabs">
+        <button class="nav-tab active" onclick="switchTab('dashboard')">대시보드</button>
+        <button class="nav-tab" onclick="switchTab('chatrooms')">카톡방</button>
+        <button class="nav-tab" onclick="switchTab('members')">멤버</button>
+        <button class="nav-tab" onclick="switchTab('paste')">붙여넣기</button>
     </div>
 
-    <!-- TAB 3: 멤버 관리 -->
-    <div id="members" class="content">
-        <div class="section-title">멤버 관리</div>
+    <div class="container">
+        <div id="alert" class="alert"></div>
 
-        <div class="grid-2">
-            <div class="card">
-                <div class="card-header">멤버 추가</div>
-                <form onsubmit="addMember(event)">
-                    <div class="form-group">
-                        <label class="form-label">카톡방 선택</label>
-                        <select class="form-select" id="member-chatroom" required>
-                            <option value="">카톡방을 선택하세요</option>
-                        </select>
-                    </div>
-                    <div class="form-row">
+        <div id="dashboard" class="content active">
+            <div class="section-title">구분별 최종 물량 Snapshot</div>
+            <div class="select-group">
+                <select id="chatroom-select" onchange="loadSnapshot()">
+                    <option value="">카톡방을 선택하세요</option>
+                </select>
+                <button class="button button-primary" onclick="loadSnapshot()" style="flex: 0 0 auto; padding: 11px 20px;">새로고침</button>
+            </div>
+            <div id="snapshot-container"></div>
+        </div>
+
+        <div id="chatrooms" class="content">
+            <div class="section-title">카톡방 관리</div>
+            <div class="grid-2">
+                <div class="card">
+                    <div class="card-header">새 카톡방 추가</div>
+                    <form onsubmit="addChatroom(event)">
                         <div class="form-group">
-                            <label class="form-label">이름</label>
-                            <input type="text" class="form-input" id="member-name" placeholder="홍길동" required>
+                            <label class="form-label">채팅방 이름</label>
+                            <input type="text" class="form-input" id="chatroom-name" placeholder="경기광주 경기광주SUB" required>
                         </div>
                         <div class="form-group">
-                            <label class="form-label">역할</label>
-                            <select class="form-select" id="member-role" required>
-                                <option value="">선택</option>
-                                <option value="배차담당자">배차담당자</option>
-                                <option value="지역사업담당">지역사업담당</option>
-                                <option value="집배점">집배점</option>
-                                <option value="고객사">고객사</option>
+                            <label class="form-label">지점 (SUB)</label>
+                            <input type="text" class="form-input" id="chatroom-branch" placeholder="경기광주SUB" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">설명</label>
+                            <input type="text" class="form-input" id="chatroom-description" placeholder="선택사항">
+                        </div>
+                        <div class="button-group">
+                            <button type="submit" class="button button-primary">추가하기</button>
+                            <button type="reset" class="button button-secondary">초기화</button>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">등록된 카톡방</div>
+                    <div id="chatrooms-list"></div>
+                </div>
+            </div>
+        </div>
+
+        <div id="members" class="content">
+            <div class="section-title">멤버 관리</div>
+            <div class="grid-2">
+                <div class="card">
+                    <div class="card-header">멤버 추가</div>
+                    <form onsubmit="addMember(event)">
+                        <div class="form-group">
+                            <label class="form-label">카톡방 선택</label>
+                            <select class="form-select" id="member-chatroom" required>
+                                <option value="">카톡방을 선택하세요</option>
                             </select>
                         </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label class="form-label">거점/지역</label>
-                            <input type="text" class="form-input" id="member-location" placeholder="야탑, 신분당, 정자">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label">이름</label>
+                                <input type="text" class="form-input" id="member-name" placeholder="홍길동" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">역할</label>
+                                <select class="form-select" id="member-role" required>
+                                    <option value="">선택</option>
+                                    <option value="배차담당자">배차담당자</option>
+                                    <option value="지역사업담당">지역사업담당</option>
+                                    <option value="집배점">집배점</option>
+                                    <option value="고객사">고객사</option>
+                                </select>
+                            </div>
                         </div>
-                        <div class="form-group">
-                            <label class="form-label">회사명</label>
-                            <input type="text" class="form-input" id="member-company" placeholder="나우로지스틱스">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label">거점/지역</label>
+                                <input type="text" class="form-input" id="member-location" placeholder="야탑, 신분당, 정자">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">회사명</label>
+                                <input type="text" class="form-input" id="member-company" placeholder="나우로지스틱스">
+                            </div>
                         </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label class="form-label">직급/직책</label>
-                            <input type="text" class="form-input" id="member-position" placeholder="대리">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label">직급/직책</label>
+                                <input type="text" class="form-input" id="member-position" placeholder="대리">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">전화번호</label>
+                                <input type="tel" class="form-input" id="member-phone" placeholder="010-1234-5678">
+                            </div>
                         </div>
-                        <div class="form-group">
-                            <label class="form-label">전화번호</label>
-                            <input type="tel" class="form-input" id="member-phone" placeholder="010-1234-5678">
+                        <div class="button-group">
+                            <button type="submit" class="button button-primary">추가하기</button>
+                            <button type="reset" class="button button-secondary">초기화</button>
                         </div>
-                    </div>
-                    <div class="button-group">
-                        <button type="submit" class="button button-primary">추가하기</button>
-                        <button type="reset" class="button button-secondary">초기화</button>
-                    </div>
-                </form>
-            </div>
-
-            <div class="card">
-                <div class="card-header">멤버 목록</div>
-                <div class="select-group">
-                    <select id="members-chatroom-filter" onchange="loadMembers()">
-                        <option value="">모든 카톡방</option>
-                    </select>
+                    </form>
                 </div>
-                <div id="members-list"></div>
+
+                <div class="card">
+                    <div class="card-header">멤버 목록</div>
+                    <div class="select-group">
+                        <select id="members-chatroom-filter" onchange="loadMembers()">
+                            <option value="">모든 카톡방</option>
+                        </select>
+                    </div>
+                    <div id="members-list"></div>
+                </div>
+            </div>
+        </div>
+
+        <div id="paste" class="content">
+            <div class="section-title">카톡 메시지 분석</div>
+            <div class="card">
+                <div class="card-header">카톡 메시지 복사 & 붙여넣기</div>
+                <div class="form-group">
+                    <label class="form-label">메시지 입력</label>
+                    <textarea id="paste-area" class="form-textarea" placeholder="카톡에서 메시지를 드래그해서 복사 후 붙여넣으세요&#10;&#10;예시:&#10;[거거너] [오전 6:29] 야탑 12130&#10;[사랑하는엄마] [오전 6:29] 신분당 1000&#10;[사랑하는엄마] [오전 6:30] 아니다 1200&#10;[사랑하는엄마] [오전 6:31] 아냐 1500개요&#10;[거거너] [오전 6:42] 20000개로 할게요"></textarea>
+                </div>
+                <div class="button-group">
+                    <button class="button button-primary" onclick="analyzeMessages()">분석하기</button>
+                    <button class="button button-secondary" onclick="document.getElementById('paste-area').value = ''">지우기</button>
+                </div>
+                <div id="analysis-result"></div>
             </div>
         </div>
     </div>
 
-    <!-- TAB 4: 붙여넣기 -->
-    <div id="paste" class="content">
-        <div class="section-title">카톡 메시지 분석</div>
+    <script>
+        const DB = {
+            chatrooms: [],
+            members: [],
 
-        <div class="card">
-            <div class="card-header">카톡 메시지 복사 & 붙여넣기</div>
-            <div class="form-group">
-                <label class="form-label">메시지 입력</label>
-                <textarea id="paste-area" class="form-textarea" placeholder="카톡에서 메시지를 드래그해서 복사 후 붙여넣으세요&#10;&#10;예시:&#10;08:42 A대리: 3,200개&#10;09:13 B과장: 신분당 3,500개요&#10;09:38 B과장: 신분당 3,400&#10;09:45 C대리: 정자 2,800"></textarea>
-            </div>
-            <div class="button-group">
-                <button class="button button-primary" onclick="analyzeMessages()">분석하기</button>
-                <button class="button button-secondary" onclick="document.getElementById('paste-area').value = ''">지우기</button>
-            </div>
-            <div id="analysis-result"></div>
-        </div>
-    </div>
-</div>
+            addChatroom(data) {
+                const room = { id: Date.now(), ...data, created_at: new Date().toISOString() };
+                this.chatrooms.push(room);
+                this.save();
+                return room.id;
+            },
 
-<script>
-    const DB = {
-        chatrooms: [],
-        members: [],
+            getChatrooms() { return this.chatrooms; },
+            getChatroom(id) { return this.chatrooms.find(r => r.id == id); },
 
-        addChatroom(data) {
-            const room = { id: Date.now(), ...data, created_at: new Date().toISOString() };
-            this.chatrooms.push(room);
-            this.save();
-            return room.id;
-        },
+            deleteChatroom(id) {
+                this.chatrooms = this.chatrooms.filter(r => r.id != id);
+                this.members = this.members.filter(m => m.chatroom_id != id);
+                this.save();
+            },
 
-        getChatrooms() { return this.chatrooms; },
-        getChatroom(id) { return this.chatrooms.find(r => r.id == id); },
+            addMember(data) {
+                const member = { id: Date.now(), ...data, added_at: new Date().toISOString() };
+                this.members.push(member);
+                this.save();
+                return member.id;
+            },
 
-        deleteChatroom(id) {
-            this.chatrooms = this.chatrooms.filter(r => r.id != id);
-            this.members = this.members.filter(m => m.chatroom_id != id);
-            this.save();
-        },
+            getMembers(chatroomId) {
+                if (!chatroomId) return this.members;
+                return this.members.filter(m => m.chatroom_id == chatroomId);
+            },
 
-        addMember(data) {
-            const member = { id: Date.now(), ...data, added_at: new Date().toISOString() };
-            this.members.push(member);
-            this.save();
-            return member.id;
-        },
+            deleteMember(id) {
+                this.members = this.members.filter(m => m.id != id);
+                this.save();
+            },
 
-        getMembers(chatroomId) {
-            if (!chatroomId) return this.members;
-            return this.members.filter(m => m.chatroom_id == chatroomId);
-        },
+            save() {
+                localStorage.setItem('dispatch_db', JSON.stringify({
+                    chatrooms: this.chatrooms,
+                    members: this.members
+                }));
+            },
 
-        deleteMember(id) {
-            this.members = this.members.filter(m => m.id != id);
-            this.save();
-        },
-
-        save() {
-            localStorage.setItem('dispatch_db', JSON.stringify({
-                chatrooms: this.chatrooms,
-                members: this.members
-            }));
-        },
-
-        load() {
-            const data = localStorage.getItem('dispatch_db');
-            if (data) {
-                const parsed = JSON.parse(data);
-                this.chatrooms = parsed.chatrooms || [];
-                this.members = parsed.members || [];
-            }
-        }
-    };
-
-    DB.load();
-
-    function switchTab(tab) {
-        document.querySelectorAll('.content').forEach(el => el.classList.remove('active'));
-        document.querySelectorAll('.nav-tab').forEach(el => el.classList.remove('active'));
-        document.getElementById(tab).classList.add('active');
-        event.target.classList.add('active');
-        if (tab === 'chatrooms') loadChatrooms();
-        if (tab === 'members') { loadChatrooms(); loadMembers(); }
-    }
-
-    function showAlert(message, type) {
-        const alert = document.getElementById('alert');
-        alert.textContent = message;
-        alert.className = `alert show alert-${type}`;
-        setTimeout(() => alert.classList.remove('show'), 3000);
-    }
-
-    function loadChatrooms() {
-        const chatrooms = DB.getChatrooms();
-        updateChatroomSelects();
-        renderChatrooms();
-    }
-
-    function updateChatroomSelects() {
-        const selects = ['chatroom-select', 'member-chatroom', 'members-chatroom-filter'];
-        const chatrooms = DB.getChatrooms();
-        selects.forEach(selectId => {
-            const select = document.getElementById(selectId);
-            if (!select) return;
-            const value = select.value;
-            select.innerHTML = '<option value="">-- 선택하세요 --</option>';
-            chatrooms.forEach(room => {
-                const option = document.createElement('option');
-                option.value = room.id;
-                option.textContent = `${room.name} (${room.branch})`;
-                select.appendChild(option);
-            });
-            select.value = value;
-        });
-    }
-
-    function renderChatrooms() {
-        const container = document.getElementById('chatrooms-list');
-        const chatrooms = DB.getChatrooms();
-        if (chatrooms.length === 0) {
-            container.innerHTML = '<div class="empty-state"><div class="empty-state-icon">📭</div><p class="empty-state-text">등록된 카톡방이 없습니다</p></div>';
-            return;
-        }
-        const html = `<table class="table"><thead><tr><th>채팅방</th><th>지점(SUB)</th><th style="text-align: center;">작업</th></tr></thead><tbody>${chatrooms.map(room => `<tr><td>${room.name}</td><td><span class="badge">$${room.branch}</span></td><td style="text-align: center;"><button class="button button-danger" onclick="deleteChatroom($${room.id})">삭제</button></td></tr>`).join('')}</tbody></table>`;
-        container.innerHTML = html;
-    }
-
-    function addChatroom(event) {
-        event.preventDefault();
-        const data = {
-            name: document.getElementById('chatroom-name').value,
-            branch: document.getElementById('chatroom-branch').value,
-            description: document.getElementById('chatroom-description').value
-        };
-        if (!data.name || !data.branch) {
-            showAlert('필수 정보를 입력해주세요', 'error');
-            return;
-        }
-        DB.addChatroom(data);
-        showAlert('카톡방이 추가되었습니다', 'success');
-        event.target.reset();
-        loadChatrooms();
-    }
-
-    function deleteChatroom(id) {
-        if (!confirm('정말 삭제하시겠습니까?')) return;
-        DB.deleteChatroom(id);
-        showAlert('카톡방이 삭제되었습니다', 'success');
-        loadChatrooms();
-    }
-
-    function loadMembers() {
-        const roomId = document.getElementById('members-chatroom-filter').value;
-        const members = DB.getMembers(roomId);
-        if (members.length === 0) {
-            document.getElementById('members-list').innerHTML = '<div class="empty-state"><div class="empty-state-icon">👥</div><p class="empty-state-text">멤버가 없습니다</p></div>';
-            return;
-        }
-        const roleBadges = {'배차담당자': 'badge','지역사업담당': 'badge-success','집배점': 'badge-warning','고객사': 'badge-danger'};
-        const html = `<table class="table"><thead><tr><th>이름</th><th>역할</th><th>거점/지역</th><th>회사</th><th>직급</th><th style="text-align: center;">작업</th></tr></thead><tbody>${members.map(m => `<tr><td>${m.name}</td><td><span class="badge $${roleBadges[m.role]}">$${m.role}</span></td><td>$${m.location || '—'}</td><td>$${m.company || '—'}</td><td>$${m.position || '—'}</td><td style="text-align: center;"><button class="button button-danger" onclick="deleteMember($${m.id})">삭제</button></td></tr>`).join('')}</tbody></table>`;
-        document.getElementById('members-list').innerHTML = html;
-    }
-
-    function addMember(event) {
-        event.preventDefault();
-        const roomId = document.getElementById('member-chatroom').value;
-        if (!roomId) {
-            showAlert('카톡방을 선택하세요', 'error');
-            return;
-        }
-        const data = {
-            chatroom_id: parseInt(roomId),
-            name: document.getElementById('member-name').value,
-            role: document.getElementById('member-role').value,
-            location: document.getElementById('member-location').value,
-            company: document.getElementById('member-company').value,
-            position: document.getElementById('member-position').value,
-            phone: document.getElementById('member-phone').value
-        };
-        if (!data.name || !data.role) {
-            showAlert('필수 정보를 입력해주세요', 'error');
-            return;
-        }
-        DB.addMember(data);
-        showAlert('멤버가 추가되었습니다', 'success');
-        event.target.reset();
-        loadMembers();
-    }
-
-    function deleteMember(id) {
-        if (!confirm('정말 삭제하시겠습니까?')) return;
-        DB.deleteMember(id);
-        showAlert('멤버가 삭제되었습니다', 'success');
-        loadMembers();
-    }
-
-    // 거점 목록 - 확장 가능
-    const LOCATIONS = ["야탑", "신분당", "정자", "분당", "압구정", "강남", "강동", "강북", "강서", "관악", "광진", "구로", "금천", "노원", "도봉", "동대문", "동작", "마포", "서대문", "서초", "성동", "성북", "송파", "양천", "영등포", "용산", "은평", "종로", "중", "중랑"];
-
-    function parseMessages(text) {
-    const lines = text.split('\n').filter(line => line.trim());
-    const messages = [];
-    
-    // 새로운 패턴 - 카톡 실제 형식 대응
-    // [지각대] [오전 6:29] 아침 12130
-    // [서정천-영미] [오전 6:29] 신분당 1000
-    const pattern1 = /\[([^\]]+)\]\s*\[([^\]]+)\]\s*(.+)/;
-    
-    // 기존 패턴 유지
-    const pattern2 = /^(\d{1,2}):(\d{2})\s+(.+?)[\s:：]\s*(.+)$/;
-    
-    lines.forEach(line => {
-        let match = line.match(pattern1);
-        
-        if (match) {
-            const [, author, time, content] = match;
-            // 시간 정규화 (오전 6:29 → 06:29)
-            let normalizedTime = time;
-            if (time.includes('오전')) {
-                normalizedTime = time.replace('오전 ', '').padStart(5, '0');
-            } else if (time.includes('오후')) {
-                const timeParts = time.replace('오후 ', '').split(':');
-                const hour = parseInt(timeParts[0]) + 12;
-                normalizedTime = `${hour}:${timeParts[1]}`;
-            }
-            
-            messages.push({ 
-                time: normalizedTime, 
-                author: author.trim(), 
-                content: content.trim() 
-            });
-            return;
-        }
-        
-        // 기존 패턴
-        match = line.match(pattern2);
-        if (match) {
-            const [, hour, min, author, content] = match;
-            messages.push({ 
-                time: `${hour}:${min}`, 
-                author: author.trim(), 
-                content: content.trim() 
-            });
-        }
-    });
-    
-    return messages;
-}
-
-    function classifyMessage(text) {
-        if (/최종|확정|이렇게|이 숫자/.test(text)) return 'final';
-        if (/다시|수정|정정|변경|확인해보니/.test(text)) return 'revision';
-        return 'new_estimate';
-    }
-
-    function extractNumber(text) {
-        const matches = text.match(/\d{1,5}/g);
-        return matches ? Math.max(...matches.map(Number)) : null;
-    }
-
-    // 개선된 거점 추출 - 더 정확한 매칭
-    function extractLocation(text) {
-        // 거점명 앞에 있는 경우 우선 (예: "야탑 3000")
-        for (let loc of LOCATIONS) {
-            if (new RegExp(`\\b${loc}\\b`).test(text)) {
-                return loc;
-            }
-        }
-        return null;
-    }
-
-    function analyzeMessages() {
-        const text = document.getElementById('paste-area').value;
-        if (!text.trim()) {
-            showAlert('카톡 메시지를 붙여넣어주세요', 'error');
-            return;
-        }
-        const messages = parseMessages(text);
-        if (messages.length === 0) {
-            showAlert('인식할 수 있는 메시지 형식이 없습니다', 'error');
-            return;
-        }
-        const analysis = {};
-        messages.forEach(msg => {
-            const number = extractNumber(msg.content);
-            const location = extractLocation(msg.content);
-            const classification = classifyMessage(msg.content);
-            
-            if (!number) return;
-            if (!location) return; // 거점 정보 없으면 스킵
-
-            if (!analysis[location]) {
-                analysis[location] = { location, history: [], latestValid: null, firstValue: null };
-            }
-
-            if (classification !== 'cancel') {
-                const entry = { time: msg.time, author: msg.author, value: number, type: classification, message: msg.content };
-                analysis[location].history.push(entry);
-                if (!analysis[location].firstValue) {
-                    analysis[location].firstValue = number;
-                }
-                const priority = { final: 3, revision: 2, new_estimate: 1 };
-                if (!analysis[location].latestValid || priority[classification] >= priority[analysis[location].latestValid.type]) {
-                    analysis[location].latestValid = entry;
+            load() {
+                const data = localStorage.getItem('dispatch_db');
+                if (data) {
+                    const parsed = JSON.parse(data);
+                    this.chatrooms = parsed.chatrooms || [];
+                    this.members = parsed.members || [];
                 }
             }
-        });
-        const validAnalysis = Object.values(analysis).filter(a => a.latestValid);
-        if (validAnalysis.length === 0) {
-            showAlert('물량 정보를 찾을 수 없습니다', 'error');
-            return;
-        }
-        renderAnalysis(validAnalysis);
-    }
-
-    function renderAnalysis(analysis) {
-        const resultDiv = document.getElementById('analysis-result');
-        const html = `<div style="margin-top: 30px;"><div style="background: linear-gradient(135deg, #059669 0%, #10b981 100%); color: white; padding: 20px; border-radius: 12px; margin-bottom: 20px; font-weight: 700;"><div style="font-size: 12px; opacity: 0.9; text-transform: uppercase; letter-spacing: 1px;">최종 당일 예상 물량</div><div style="font-size: 22px; margin-top: 10px;">${analysis.map(a => `$${a.location} $${a.latestValid.value}대`).join(' · ')}</div></div><table class="snapshot-table"><thead><tr><th>거점</th><th>최초</th><th>최신</th><th>증감</th><th>시각</th><th>상태</th></tr></thead><tbody>${analysis.map(item => {const change = item.latestValid.value - item.firstValue; return `<tr><td>${item.location}</td><td>$${item.firstValue}</td><td><span class="snapshot-quantity">$${item.latestValid.value}</span></td><td><span class="snapshot-change $${change > 0 ? 'increase' : change < 0 ? 'decrease' : 'neutral'}">$${change > 0 ? '+' : ''}$${change}</span></td><td>$${item.latestValid.time}</td><td><span class="badge $${item.latestValid.type === 'final' ? 'badge-danger' : 'badge-warning'}">$${item.latestValid.type === 'final' ? '최종' : '수정'}</span></td></tr>`;}).join('')}</tbody></table></div>`;
-        resultDiv.innerHTML = html;
-        showAlert('분석 완료!', 'success');
-    }
-
-    function loadSnapshot() {
-        const roomId = document.getElementById('chatroom-select').value;
-        if (!roomId) {
-            showAlert('카톡방을 선택하세요', 'error');
-            return;
-        }
-        const demoData = {
-            locations: [
-                { location: '야탑', first_value: 3200, latest_value: 3200, change: 0, time: '08:42', type: 'new_estimate' },
-                { location: '신분당', first_value: 3500, latest_value: 3400, change: -100, time: '09:38', type: 'revision' }
-            ]
         };
-        renderSnapshot(demoData);
-    }
 
-    function renderSnapshot(data) {
-        const container = document.getElementById('snapshot-container');
-        if (!data.locations || data.locations.length === 0) {
-            container.innerHTML = '<div class="empty-state"><div class="empty-state-icon">📭</div><p class="empty-state-text">아직 데이터가 없습니다</p></div>';
-            return;
+        DB.load();
+
+        function switchTab(tab) {
+            document.querySelectorAll('.content').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.nav-tab').forEach(el => el.classList.remove('active'));
+            document.getElementById(tab).classList.add('active');
+            event.target.classList.add('active');
+            if (tab === 'chatrooms') loadChatrooms();
+            if (tab === 'members') { loadChatrooms(); loadMembers(); }
         }
-        const html = `<table class="snapshot-table"><thead><tr><th>거점</th><th>최초</th><th>최신</th><th>증감</th><th>시각</th><th>상태</th></tr></thead><tbody>${data.locations.map(loc => `<tr><td>${loc.location}</td><td>$${loc.first_value}</td><td><span class="snapshot-quantity">$${loc.latest_value}</span></td><td><span class="snapshot-change $${loc.change > 0 ? 'increase' : loc.change < 0 ? 'decrease' : 'neutral'}">$${loc.change > 0 ? '+' : ''}$${loc.change}</span></td><td>$${loc.time}</td><td><span class="badge $${loc.type === 'final' ? 'badge-danger' : 'badge-warning'}">$${loc.type === 'final' ? '최종' : '수정'}</span></td></tr>`).join('')}</tbody></table>`;
-        container.innerHTML = html;
-    }
 
-    loadChatrooms();
-</script>
+        function showAlert(message, type) {
+            const alert = document.getElementById('alert');
+            alert.textContent = message;
+            alert.className = `alert show alert-${type}`;
+            setTimeout(() => alert.classList.remove('show'), 3000);
+        }
+
+        function loadChatrooms() {
+            const chatrooms = DB.getChatrooms();
+            updateChatroomSelects();
+            renderChatrooms();
+        }
+
+        function updateChatroomSelects() {
+            const selects = ['chatroom-select', 'member-chatroom', 'members-chatroom-filter'];
+            const chatrooms = DB.getChatrooms();
+            selects.forEach(selectId => {
+                const select = document.getElementById(selectId);
+                if (!select) return;
+                const value = select.value;
+                select.innerHTML = '<option value="">-- 선택하세요 --</option>';
+                chatrooms.forEach(room => {
+                    const option = document.createElement('option');
+                    option.value = room.id;
+                    option.textContent = `${room.name} (${room.branch})`;
+                    select.appendChild(option);
+                });
+                select.value = value;
+            });
+        }
+
+        function renderChatrooms() {
+            const container = document.getElementById('chatrooms-list');
+            const chatrooms = DB.getChatrooms();
+            if (chatrooms.length === 0) {
+                container.innerHTML = '<div class="empty-state"><div class="empty-state-icon">📭</div><p class="empty-state-text">등록된 카톡방이 없습니다</p></div>';
+                return;
+            }
+            const html = `<table class="table"><thead><tr><th>채팅방</th><th>지점(SUB)</th><th style="text-align: center;">작업</th></tr></thead><tbody>${chatrooms.map(room => `<tr><td>${room.name}</td><td><span class="badge">${room.branch}</span></td><td style="text-align: center;"><button class="button button-danger" onclick="deleteChatroom(${room.id})">삭제</button></td></tr>`).join('')}</tbody></table>`;
+            container.innerHTML = html;
+        }
+
+        function addChatroom(event) {
+            event.preventDefault();
+            const data = {
+                name: document.getElementById('chatroom-name').value,
+                branch: document.getElementById('chatroom-branch').value,
+                description: document.getElementById('chatroom-description').value
+            };
+            if (!data.name || !data.branch) {
+                showAlert('필수 정보를 입력해주세요', 'error');
+                return;
+            }
+            DB.addChatroom(data);
+            showAlert('카톡방이 추가되었습니다', 'success');
+            event.target.reset();
+            loadChatrooms();
+        }
+
+        function deleteChatroom(id) {
+            if (!confirm('정말 삭제하시겠습니까?')) return;
+            DB.deleteChatroom(id);
+            showAlert('카톡방이 삭제되었습니다', 'success');
+            loadChatrooms();
+        }
+
+        function loadMembers() {
+            const roomId = document.getElementById('members-chatroom-filter').value;
+            const members = DB.getMembers(roomId);
+            if (members.length === 0) {
+                document.getElementById('members-list').innerHTML = '<div class="empty-state"><div class="empty-state-icon">👥</div><p class="empty-state-text">멤버가 없습니다</p></div>';
+                return;
+            }
+            const roleBadges = {'배차담당자': 'badge','지역사업담당': 'badge-success','집배점': 'badge-warning','고객사': 'badge-danger'};
+            const html = `<table class="table"><thead><tr><th>이름</th><th>역할</th><th>거점/지역</th><th>회사</th><th>직급</th><th style="text-align: center;">작업</th></tr></thead><tbody>${members.map(m => `<tr><td>${m.name}</td><td><span class="badge ${roleBadges[m.role]}">${m.role}</span></td><td>${m.location || '—'}</td><td>${m.company || '—'}</td><td>${m.position || '—'}</td><td style="text-align: center;"><button class="button button-danger" onclick="deleteMember(${m.id})">삭제</button></td></tr>`).join('')}</tbody></table>`;
+            document.getElementById('members-list').innerHTML = html;
+        }
+
+        function addMember(event) {
+            event.preventDefault();
+            const roomId = document.getElementById('member-chatroom').value;
+            if (!roomId) {
+                showAlert('카톡방을 선택하세요', 'error');
+                return;
+            }
+            const data = {
+                chatroom_id: parseInt(roomId),
+                name: document.getElementById('member-name').value,
+                role: document.getElementById('member-role').value,
+                location: document.getElementById('member-location').value,
+                company: document.getElementById('member-company').value,
+                position: document.getElementById('member-position').value,
+                phone: document.getElementById('member-phone').value
+            };
+            if (!data.name || !data.role) {
+                showAlert('필수 정보를 입력해주세요', 'error');
+                return;
+            }
+            DB.addMember(data);
+            showAlert('멤버가 추가되었습니다', 'success');
+            event.target.reset();
+            loadMembers();
+        }
+
+        function deleteMember(id) {
+            if (!confirm('정말 삭제하시겠습니까?')) return;
+            DB.deleteMember(id);
+            showAlert('멤버가 삭제되었습니다', 'success');
+            loadMembers();
+        }
+
+        const LOCATIONS = ["야탑", "신분당", "정자", "분당", "압구정", "강남", "강동", "강북", "강서", "관악", "광진", "구로", "금천", "노원", "도봉", "동대문", "동작", "마포", "서대문", "서초", "성동", "성북", "송파", "양천", "영등포", "용산", "은평", "종로", "중", "중랑"];
+
+        function parseMessages(text) {
+            const lines = text.split('\n').filter(line => line.trim());
+            const messages = [];
+            
+            const pattern1 = /\[([^\]]+)\]\s*\[([^\]]+)\]\s*(.+)/;
+            
+            lines.forEach(line => {
+                let match = line.match(pattern1);
+                
+                if (match) {
+                    const [, author, time, content] = match;
+                    let normalizedTime = time;
+                    if (time.includes('오전')) {
+                        normalizedTime = time.replace('오전 ', '').padStart(5, '0');
+                    } else if (time.includes('오후')) {
+                        const timeParts = time.replace('오후 ', '').split(':');
+                        const hour = parseInt(timeParts[0]) + 12;
+                        normalizedTime = `${hour}:${timeParts[1]}`;
+                    }
+                    
+                    messages.push({ 
+                        time: normalizedTime, 
+                        author: author.trim(), 
+                        content: content.trim() 
+                    });
+                }
+            });
+            
+            return messages;
+        }
+
+        function classifyMessage(text) {
+            if (/최종|확정|이렇게|이 숫자|할게요|해요|합쳐요/.test(text)) return 'final';
+            if (/다시|수정|정정|변경|확인해|아니다|아냐/.test(text)) return 'revision';
+            return 'new_estimate';
+        }
+
+        function extractNumber(text) {
+            const matches = text.match(/\d{1,5}/g);
+            return matches ? Math.max(...matches.map(Number)) : null;
+        }
+
+        function extractLocation(text) {
+            for (let loc of LOCATIONS) {
+                if (new RegExp(`\\b${loc}\\b`).test(text)) {
+                    return loc;
+                }
+            }
+            return null;
+        }
+
+        function analyzeMessages() {
+            const text = document.getElementById('paste-area').value;
+            
+            if (!text.trim()) {
+                showAlert('카톡 메시지를 붙여넣어주세요', 'error');
+                return;
+            }
+            
+            const messages = parseMessages(text);
+            
+            if (messages.length === 0) {
+                showAlert('카톡 메시지 형식을 인식할 수 없습니다. [이름] [시간] 내용 형식으로 입력해주세요', 'error');
+                return;
+            }
+            
+            const analysis = {};
+            let validCount = 0;
+            
+            messages.forEach(msg => {
+                const number = extractNumber(msg.content);
+                const location = extractLocation(msg.content);
+                const classification = classifyMessage(msg.content);
+                
+                if (!number) {
+                    return;
+                }
+                if (!location) {
+                    return;
+                }
+
+                validCount++;
+
+                if (!analysis[location]) {
+                    analysis[location] = { location, history: [], latestValid: null, firstValue: null };
+                }
+
+                if (classification !== 'cancel') {
+                    const entry = { time: msg.time, author: msg.author, value: number, type: classification, message: msg.content };
+                    analysis[location].history.push(entry);
+                    
+                    if (!analysis[location].firstValue) {
+                        analysis[location].firstValue = number;
+                    }
+                    
+                    const priority = { final: 3, revision: 2, new_estimate: 1 };
+                    if (!analysis[location].latestValid || priority[classification] >= priority[analysis[location].latestValid.type]) {
+                        analysis[location].latestValid = entry;
+                    }
+                }
+            });
+            
+            const validAnalysis = Object.values(analysis).filter(a => a.latestValid);
+            
+            if (validAnalysis.length === 0) {
+                showAlert('분석할 수 있는 물량 정보를 찾을 수 없습니다. 거점명(야탑, 신분당 등)과 숫자를 포함한 메시지를 입력해주세요', 'error');
+                return;
+            }
+            
+            renderAnalysis(validAnalysis);
+        }
+
+        function renderAnalysis(analysis) {
+            const resultDiv = document.getElementById('analysis-result');
+            const today = new Date().toLocaleDateString('ko-KR');
+            
+            const html = `<div style="margin-top: 30px;"><div style="background: linear-gradient(135deg, #059669 0%, #10b981 100%); color: white; padding: 20px; border-radius: 12px; margin-bottom: 20px; font-weight: 700;"><div style="font-size: 12px; opacity: 0.9; text-transform: uppercase; letter-spacing: 1px;">${today} 최종 당일 예상 물량</div><div style="font-size: 22px; margin-top: 10px;">${analysis.map(a => `${a.location} ${a.latestValid.value}`).join(' · ')}</div></div><table class="snapshot-table"><thead><tr><th>구분</th><th>최초</th><th>최신</th><th>증감</th><th>시각</th><th>상태</th></tr></thead><tbody>${analysis.map(item => {const change = item.latestValid.value - item.firstValue; return `<tr><td>${item.location}</td><td>${item.firstValue}</td><td><span class="snapshot-quantity">${item.latestValid.value}</span></td><td><span class="snapshot-change ${change > 0 ? 'increase' : change < 0 ? 'decrease' : 'neutral'}">${change > 0 ? '+' : ''}${change}</span></td><td>${item.latestValid.time}</td><td><span class="badge ${item.latestValid.type === 'final' ? 'badge-danger' : 'badge-warning'}">${item.latestValid.type === 'final' ? '최종' : '수정'}</span></td></tr>`;}).join('')}</tbody></table></div>`;
+            resultDiv.innerHTML = html;
+            showAlert('성공했습니다! 분석이 완료되었습니다', 'success');
+        }
+
+        function loadSnapshot() {
+            const roomId = document.getElementById('chatroom-select').value;
+            if (!roomId) {
+                showAlert('카톡방을 선택하세요', 'error');
+                return;
+            }
+            const today = new Date().toLocaleDateString('ko-KR');
+            const demoData = {
+                date: today,
+                locations: [
+                    { location: '야탑', first_value: 3200, latest_value: 3200, change: 0, time: '08:42', type: 'new_estimate' },
+                    { location: '신분당', first_value: 3500, latest_value: 3400, change: -100, time: '09:38', type: 'revision' }
+                ]
+            };
+            renderSnapshot(demoData);
+        }
+
+        function renderSnapshot(data) {
+            const container = document.getElementById('snapshot-container');
+            if (!data.locations || data.locations.length === 0) {
+                container.innerHTML = '<div class="empty-state"><div class="empty-state-icon">📭</div><p class="empty-state-text">아직 데이터가 없습니다</p></div>';
+                return;
+            }
+            const html = `<table class="snapshot-table"><thead><tr><th>구분</th><th>최초</th><th>최신</th><th>증감</th><th>시각</th><th>상태</th></tr></thead><tbody>${data.locations.map(loc => `<tr><td>${loc.location}</td><td>${loc.first_value}</td><td><span class="snapshot-quantity">${loc.latest_value}</span></td><td><span class="snapshot-change ${loc.change > 0 ? 'increase' : loc.change < 0 ? 'decrease' : 'neutral'}">${loc.change > 0 ? '+' : ''}${loc.change}</span></td><td>${loc.time}</td><td><span class="badge ${loc.type === 'final' ? 'badge-danger' : 'badge-warning'}">${loc.type === 'final' ? '최종' : '수정'}</span></td></tr>`).join('')}</tbody></table>`;
+            container.innerHTML = html;
+        }
+
+        loadChatrooms();
+    </script>
 </body>
 </html>
