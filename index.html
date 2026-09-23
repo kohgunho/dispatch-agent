@@ -284,29 +284,6 @@
         font-weight: 600;
     }
 
-    .status-badge {
-        display: inline-block;
-        padding: 4px 8px;
-        border-radius: 4px;
-        font-size: 12px;
-        font-weight: 600;
-    }
-
-    .status-badge.normal {
-        background: #dbeafe;
-        color: #1e40af;
-    }
-
-    .status-badge.revision {
-        background: #fef3c7;
-        color: #92400e;
-    }
-
-    .status-badge.warning {
-        background: #fecaca;
-        color: #991b1b;
-    }
-
     .search-group {
         display: flex;
         gap: 12px;
@@ -472,6 +449,16 @@
         font-size: 11px;
         font-weight: 600;
     }
+
+    .unregistered-label {
+        background: #fecaca;
+        color: #991b1b;
+        padding: 2px 6px;
+        border-radius: 4px;
+        font-size: 11px;
+        font-weight: 600;
+        margin-right: 4px;
+    }
 </style>
 </head>
 <body>
@@ -631,11 +618,6 @@
         </div>
 
         <div class="form-group">
-            <label>지사명 (선택사항)</label>
-            <input type="text" id="branchName" placeholder="예: 서울지사, 부산지사">
-        </div>
-
-        <div class="form-group">
             <label>Kakao Talk 메시지 복붙 (한 줄에 한 메시지)</label>
             <textarea id="messageInput" placeholder="예:&#10;[거거너] [오전 6:29] 12000요&#10;[사랑하는엄마] [오전 7:15] 520"></textarea>
         </div>
@@ -708,6 +690,23 @@
 
     let editingChatroomId = null;
     let editingMemberId = null;
+
+    // 숫자 포맷 (천단위 쉼표)
+    function formatNumber(num) {
+        return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    }
+
+    // 시스템 시간 포맷 (YYYY-MM-DD HH:MM:SS)
+    function getSystemTime() {
+        const now = new Date();
+        const year = now.getFullYear();
+        const month = String(now.getMonth() + 1).padStart(2, '0');
+        const day = String(now.getDate()).padStart(2, '0');
+        const hours = String(now.getHours()).padStart(2, '0');
+        const minutes = String(now.getMinutes()).padStart(2, '0');
+        const seconds = String(now.getSeconds()).padStart(2, '0');
+        return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+    }
 
     // TEST DATA
     function loadTestData() {
@@ -1111,10 +1110,10 @@
         const chatroomSelect = document.getElementById('analysisCharoom');
         const chatroomId = parseInt(chatroomSelect.value);
         const messageText = document.getElementById('messageInput').value.trim();
-        const branchName = document.getElementById('branchName').value.trim() || '기본';
         const successMsg = document.getElementById('successMessage');
         const errorMsg = document.getElementById('errorMessage');
         const resultDiv = document.getElementById('analysisResult');
+        const systemTime = getSystemTime();
 
         successMsg.style.display = 'none';
         errorMsg.style.display = 'none';
@@ -1122,7 +1121,7 @@
 
         console.log('=== Analysis Start ===');
         console.log('Chatroom ID:', chatroomId);
-        console.log('Branch:', branchName);
+        console.log('System Time:', systemTime);
         console.log('DB members count:', db.members.length);
 
         if (!chatroomId || isNaN(chatroomId)) {
@@ -1231,8 +1230,8 @@
         const result = {
             id: Date.now(),
             chatroomId,
-            branchName,
             date: today,
+            systemTime,
             analysis,
             messages
         };
@@ -1244,7 +1243,6 @@
         successMsg.style.display = 'block';
 
         document.getElementById('messageInput').value = '';
-        document.getElementById('branchName').value = '';
         renderAnalysis(result);
         renderDashboard();
         console.log('=== Analysis Complete ===');
@@ -1259,49 +1257,50 @@
             return;
         }
 
-        const latestTime = Math.max(...result.messages.map(m => {
-            const [h, min] = m.time.split(':').map(Number);
-            return h * 60 + min;
-        }));
-        const latestTimeStr = `${String(Math.floor(latestTime / 60)).padStart(2, '0')}:${String(latestTime % 60).padStart(2, '0')}`;
-
         let html = `
             <div class="analysis-summary">
-                <strong>${result.date}</strong> | ${result.branchName} | ${chatroom.name}<br>
-                <strong>${latestTimeStr} 기준 당일 예상 물량:</strong>
+                <strong>${result.date}</strong> | ${chatroom.name}<br>
+                <strong>시스템 반영: ${result.systemTime}</strong><br>
+                <strong>당일 예상 물량:</strong>
         `;
 
         let totalVolume = 0;
+        let unregisteredVolume = 0;
         const locations = Object.keys(result.analysis).sort();
         
         locations.forEach(loc => {
             const data = result.analysis[loc];
             if (data.location) {
-                html += ` ${data.location} ${data.latestValue}`;
+                html += ` ${data.location} ${formatNumber(data.latestValue)}`;
                 totalVolume += data.latestValue;
+            } else {
+                html += ` <span class="unregistered-label">미등록</span>(${formatNumber(data.latestValue)})`;
+                unregisteredVolume += data.latestValue;
             }
         });
 
-        html += `<br><strong>총 물량: ${totalVolume}</strong></div>`;
+        html += `<br><strong>총 물량: ${formatNumber(totalVolume + unregisteredVolume)}</strong>`;
+        if (unregisteredVolume > 0) {
+            html += ` (등록: ${formatNumber(totalVolume)} / 미등록: ${formatNumber(unregisteredVolume)})`;
+        }
+        html += '</div>';
 
-        html += '<div style="overflow-x: auto;"><table><thead><tr><th>구분</th><th>최초</th><th>최신</th><th>증감</th><th>시각</th><th>상태</th></tr></thead><tbody>';
+        html += '<div style="overflow-x: auto;"><table><thead><tr><th>구분</th><th>최초</th><th>최신</th><th>증감</th><th>시각</th></tr></thead><tbody>';
 
         locations.forEach(loc => {
             const data = result.analysis[loc];
             const change = data.latestValue - data.firstValue;
             const changeClass = change > 0 ? 'change-positive' : (change < 0 ? 'change-negative' : '');
-            const changeText = change > 0 ? `+${change}` : `${change}`;
-            const statusClass = data.lastClassification === 'revision' ? 'revision' : 'normal';
+            const changeText = change > 0 ? `+${formatNumber(change)}` : `${formatNumber(change)}`;
             const locDisplay = data.location ? data.location : '<span class="no-location">미등록</span>';
 
             html += `
                 <tr>
                     <td>${locDisplay}</td>
-                    <td>${data.firstValue}</td>
-                    <td>${data.latestValue}</td>
+                    <td>${formatNumber(data.firstValue)}</td>
+                    <td>${formatNumber(data.latestValue)}</td>
                     <td class="${changeClass}">${changeText}</td>
                     <td>${data.latestTime}</td>
-                    <td><span class="status-badge ${statusClass}">${data.lastClassification === 'revision' ? '수정됨' : '확정'}</span></td>
                 </tr>
             `;
         });
@@ -1343,57 +1342,51 @@
 
             if (!chatroom) return;
 
-            const latestTime = Math.max(...latest.messages.map(m => {
-                const [h, min] = m.time.split(':').map(Number);
-                return h * 60 + min;
-            }));
-            const latestTimeStr = `${String(Math.floor(latestTime / 60)).padStart(2, '0')}:${String(latestTime % 60).padStart(2, '0')}`;
-
             html += `
                 <div class="chatroom-section">
-                    <div class="chatroom-title">${latest.branchName || '기본'} | ${chatroom.name}</div>
-                    <div class="chatroom-meta">${latest.date} | 마지막 업데이트: ${latestTimeStr}</div>
+                    <div class="chatroom-title">${chatroom.name}</div>
+                    <div class="chatroom-meta">마지막 업데이트: ${latest.systemTime}</div>
             `;
 
             // 총 물량
             let totalVolume = 0;
+            let unregisteredVolume = 0;
             const locations = Object.keys(latest.analysis).sort();
             
             locations.forEach(loc => {
                 const data = latest.analysis[loc];
                 if (data.location) {
                     totalVolume += data.latestValue;
+                } else {
+                    unregisteredVolume += data.latestValue;
                 }
             });
 
             html += `
                 <div class="total-volume">
                     <div class="total-volume-label">총 예상 물량</div>
-                    <div class="total-volume-value">${totalVolume}</div>
+                    <div class="total-volume-value">${formatNumber(totalVolume + unregisteredVolume)}</div>
+                    ${unregisteredVolume > 0 ? `<div style="font-size: 13px; margin-top: 8px; color: #92400e;">등록: ${formatNumber(totalVolume)} / 미등록: ${formatNumber(unregisteredVolume)}</div>` : ''}
                 </div>
             `;
 
             // 테이블
-            html += '<div style="overflow-x: auto;"><table><thead><tr><th>지사명</th><th>구분</th><th>최초</th><th>최신</th><th>증감</th><th>시각</th><th>상태</th></tr></thead><tbody>';
+            html += '<div style="overflow-x: auto;"><table><thead><tr><th>구분</th><th>최초</th><th>최신</th><th>증감</th><th>시각</th></tr></thead><tbody>';
 
             locations.forEach(loc => {
                 const data = latest.analysis[loc];
                 const change = data.latestValue - data.firstValue;
                 const changeClass = change > 0 ? 'change-positive' : (change < 0 ? 'change-negative' : '');
-                const changeText = change > 0 ? `+${change}` : `${change}`;
-                const statusClass = data.lastClassification === 'revision' ? 'revision' : 'normal';
+                const changeText = change > 0 ? `+${formatNumber(change)}` : `${formatNumber(change)}`;
                 const locDisplay = data.location ? data.location : '<span class="no-location">미등록</span>';
-                const branchDisplay = latest.branchName || '-';
 
                 html += `
                     <tr>
-                        <td>${branchDisplay}</td>
                         <td>${locDisplay}</td>
-                        <td>${data.firstValue}</td>
-                        <td>${data.latestValue}</td>
+                        <td>${formatNumber(data.firstValue)}</td>
+                        <td>${formatNumber(data.latestValue)}</td>
                         <td class="${changeClass}">${changeText}</td>
                         <td>${data.latestTime}</td>
-                        <td><span class="status-badge ${statusClass}">${data.lastClassification === 'revision' ? '수정됨' : '확정'}</span></td>
                     </tr>
                 `;
             });
