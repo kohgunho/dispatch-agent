@@ -280,24 +280,19 @@
         color: #92400e;
     }
 
-    .filter-group {
+    .search-group {
         display: flex;
         gap: 12px;
         margin-bottom: 16px;
         flex-wrap: wrap;
     }
 
-    .filter-group select {
+    .search-group input {
         flex: 1;
-        min-width: 150px;
+        min-width: 200px;
     }
 
-    .filter-group input {
-        flex: 1;
-        min-width: 150px;
-    }
-
-    .filter-btn {
+    .search-btn {
         background: #1e3a8a;
         color: white;
         padding: 10px 20px;
@@ -308,8 +303,23 @@
         font-size: 14px;
     }
 
-    .filter-btn:hover {
+    .search-btn:hover {
         background: #1e40af;
+    }
+
+    .clear-btn {
+        background: #94a3b8;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        font-weight: 600;
+        font-size: 14px;
+    }
+
+    .clear-btn:hover {
+        background: #64748b;
     }
 </style>
 </head>
@@ -351,6 +361,15 @@
         <div id="errorMessageChatroom" class="error-message"></div>
 
         <h3 style="margin-top: 32px; margin-bottom: 16px; color: #1e3a8a; font-size: 18px;">등록된 채팅방</h3>
+        
+        <div style="margin-bottom: 16px;">
+            <div class="search-group">
+                <input type="text" id="chatroomSearchInput" placeholder="채팅방 검색...">
+                <button class="search-btn" onclick="searchChatrooms()">검색</button>
+                <button class="clear-btn" onclick="clearChatroomSearch()">초기화</button>
+            </div>
+        </div>
+
         <div style="overflow-x: auto;">
             <table>
                 <thead>
@@ -410,23 +429,16 @@
         <div id="successMessageMember" class="success-message"></div>
         <div id="errorMessageMember" class="error-message"></div>
 
-        <div style="margin-top: 32px; padding: 16px; background: #f8fafc; border-radius: 8px;">
-            <h3 style="margin-bottom: 12px; color: #1e3a8a; font-size: 16px;">필터링</h3>
-            <div class="filter-group">
-                <select id="filterRole">
-                    <option value="">모든 역할</option>
-                    <option value="배차담당자">배차담당자</option>
-                    <option value="지역사업담당">지역사업담당</option>
-                    <option value="집배점">집배점</option>
-                    <option value="고객사">고객사</option>
-                </select>
-                <input type="text" id="filterLocation" placeholder="거점/고객사로 필터링">
-                <button class="filter-btn" onclick="filterMembers()">필터 적용</button>
-                <button class="filter-btn" style="background: #94a3b8;" onclick="clearFilters()">초기화</button>
+        <h3 style="margin-top: 32px; margin-bottom: 16px; color: #1e3a8a; font-size: 18px;">등록된 멤버</h3>
+        
+        <div style="margin-bottom: 16px;">
+            <div class="search-group">
+                <input type="text" id="memberSearchInput" placeholder="이름, 역할, 거점으로 검색...">
+                <button class="search-btn" onclick="searchMembers()">검색</button>
+                <button class="clear-btn" onclick="clearMemberSearch()">초기화</button>
             </div>
         </div>
 
-        <h3 style="margin-top: 32px; margin-bottom: 16px; color: #1e3a8a; font-size: 18px;">등록된 멤버</h3>
         <div style="overflow-x: auto;">
             <table>
                 <thead>
@@ -530,15 +542,47 @@
         document.getElementById('chatroomName').value = '';
         successMsg.textContent = '채팅방이 추가되었습니다.';
         successMsg.style.display = 'block';
-        renderChatrooms();
+        clearChatroomSearch();
         updateAnalysisChatroomSelect();
     }
 
     function deleteChatroom(id) {
         db.chatrooms = db.chatrooms.filter(c => c.id !== id);
         saveDB();
-        renderChatrooms();
+        clearChatroomSearch();
         updateAnalysisChatroomSelect();
+    }
+
+    function searchChatrooms() {
+        const searchTerm = document.getElementById('chatroomSearchInput').value.trim().toLowerCase();
+        const tbody = document.getElementById('chatroomList');
+        tbody.innerHTML = '';
+
+        let filtered = db.chatrooms;
+        if (searchTerm) {
+            filtered = filtered.filter(c => c.name.toLowerCase().includes(searchTerm));
+        }
+
+        if (filtered.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="3" style="text-align: center; color: #94a3b8;">검색 결과가 없습니다.</td></tr>';
+            return;
+        }
+
+        filtered.forEach(chatroom => {
+            const messageCount = db.analysis.filter(a => a.chatroomId === chatroom.id).length;
+            tbody.innerHTML += `
+                <tr>
+                    <td>${chatroom.name}</td>
+                    <td>${messageCount}</td>
+                    <td><button class="delete-btn" onclick="deleteChatroom(${chatroom.id})">삭제</button></td>
+                </tr>
+            `;
+        });
+    }
+
+    function clearChatroomSearch() {
+        document.getElementById('chatroomSearchInput').value = '';
+        renderChatrooms();
     }
 
     function renderChatrooms() {
@@ -601,28 +645,32 @@
         document.getElementById('memberCompany').value = '';
         successMsg.textContent = '멤버가 추가되었습니다.';
         successMsg.style.display = 'block';
-        renderMembers();
+        clearMemberSearch();
     }
 
     function deleteMember(id) {
         db.members = db.members.filter(m => m.id !== id);
         saveDB();
-        renderMembers();
+        clearMemberSearch();
     }
 
-    function filterMembers() {
-        const role = document.getElementById('filterRole').value;
-        const location = document.getElementById('filterLocation').value.trim();
-
-        let filtered = db.members;
-        if (role) filtered = filtered.filter(m => m.role === role);
-        if (location) filtered = filtered.filter(m => m.location.includes(location));
-
+    function searchMembers() {
+        const searchTerm = document.getElementById('memberSearchInput').value.trim().toLowerCase();
         const tbody = document.getElementById('memberList');
         tbody.innerHTML = '';
 
+        let filtered = db.members;
+        if (searchTerm) {
+            filtered = filtered.filter(m => 
+                m.name.toLowerCase().includes(searchTerm) ||
+                m.role.toLowerCase().includes(searchTerm) ||
+                m.location.toLowerCase().includes(searchTerm) ||
+                m.company.toLowerCase().includes(searchTerm)
+            );
+        }
+
         if (filtered.length === 0) {
-            tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: #94a3b8;">멤버가 없습니다.</td></tr>';
+            tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: #94a3b8;">검색 결과가 없습니다.</td></tr>';
             return;
         }
 
@@ -639,9 +687,8 @@
         });
     }
 
-    function clearFilters() {
-        document.getElementById('filterRole').value = '';
-        document.getElementById('filterLocation').value = '';
+    function clearMemberSearch() {
+        document.getElementById('memberSearchInput').value = '';
         renderMembers();
     }
 
