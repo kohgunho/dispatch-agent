@@ -191,6 +191,26 @@
         background: #f8fafc;
     }
 
+    .action-btns {
+        display: flex;
+        gap: 8px;
+    }
+
+    .edit-btn {
+        background: #3b82f6;
+        color: white;
+        padding: 6px 12px;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 12px;
+        transition: all 0.2s;
+    }
+
+    .edit-btn:hover {
+        background: #2563eb;
+    }
+
     .delete-btn {
         background: #ef4444;
         color: white;
@@ -292,21 +312,6 @@
         min-width: 200px;
     }
 
-    .search-btn {
-        background: #1e3a8a;
-        color: white;
-        padding: 10px 20px;
-        border: none;
-        border-radius: 8px;
-        cursor: pointer;
-        font-weight: 600;
-        font-size: 14px;
-    }
-
-    .search-btn:hover {
-        background: #1e40af;
-    }
-
     .clear-btn {
         background: #94a3b8;
         color: white;
@@ -319,6 +324,57 @@
     }
 
     .clear-btn:hover {
+        background: #64748b;
+    }
+
+    .modal {
+        display: none;
+        position: fixed;
+        z-index: 1000;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+    }
+
+    .modal.active {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .modal-content {
+        background-color: white;
+        padding: 24px;
+        border-radius: 12px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+        max-width: 500px;
+        width: 90%;
+    }
+
+    .modal-header {
+        font-size: 18px;
+        font-weight: 700;
+        color: #1e3a8a;
+        margin-bottom: 20px;
+    }
+
+    .modal-buttons {
+        display: flex;
+        gap: 12px;
+        margin-top: 24px;
+    }
+
+    .modal-buttons button {
+        flex: 1;
+    }
+
+    .cancel-btn {
+        background: #94a3b8;
+    }
+
+    .cancel-btn:hover {
         background: #64748b;
     }
 </style>
@@ -482,6 +538,54 @@
     </div>
 </div>
 
+<!-- Edit Chatroom Modal -->
+<div id="editChatroomModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">채팅방 수정</div>
+        <div class="form-group">
+            <label>채팅방 이름</label>
+            <input type="text" id="editChatroomName">
+        </div>
+        <div class="modal-buttons">
+            <button onclick="saveEditChatroom()">저장</button>
+            <button class="cancel-btn" onclick="closeEditChatroomModal()">취소</button>
+        </div>
+    </div>
+</div>
+
+<!-- Edit Member Modal -->
+<div id="editMemberModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">멤버 수정</div>
+        <div class="form-group">
+            <label>이름</label>
+            <input type="text" id="editMemberName" disabled style="background: #f1f5f9; cursor: not-allowed;">
+        </div>
+        <div class="form-group">
+            <label>역할</label>
+            <select id="editMemberRole">
+                <option value="">선택해주세요</option>
+                <option value="배차담당자">배차담당자</option>
+                <option value="지역사업담당">지역사업담당</option>
+                <option value="집배점">집배점</option>
+                <option value="고객사">고객사</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label>집배점/고객사</label>
+            <input type="text" id="editMemberLocation">
+        </div>
+        <div class="form-group">
+            <label>회사명</label>
+            <input type="text" id="editMemberCompany">
+        </div>
+        <div class="modal-buttons">
+            <button onclick="saveEditMember()">저장</button>
+            <button class="cancel-btn" onclick="closeEditMemberModal()">취소</button>
+        </div>
+    </div>
+</div>
+
 <script>
     const LOCATIONS = ["야탑", "신분당", "정자", "분당", "압구정", "강남", "강동", "강북", "강서", "관악", "광진", "구로", "금천", "노원", "도봉", "동대문", "동작", "마포", "서대문", "서초", "성동", "성북", "송파", "양천", "영등포", "용산", "은평", "종로", "중", "중랑"];
 
@@ -490,6 +594,9 @@
         members: [],
         analysis: []
     };
+
+    let editingChatroomId = null;
+    let editingMemberId = null;
 
     // Initialize
     function initDB() {
@@ -544,11 +651,55 @@
         updateAnalysisChatroomSelect();
     }
 
-    function deleteChatroom(id) {
-        db.chatrooms = db.chatrooms.filter(c => c.id !== id);
+    function openEditChatroomModal(id) {
+        const chatroom = db.chatrooms.find(c => c.id === id);
+        if (!chatroom) return;
+        
+        editingChatroomId = id;
+        document.getElementById('editChatroomName').value = chatroom.name;
+        document.getElementById('editChatroomModal').classList.add('active');
+    }
+
+    function closeEditChatroomModal() {
+        document.getElementById('editChatroomModal').classList.remove('active');
+        editingChatroomId = null;
+    }
+
+    function saveEditChatroom() {
+        const newName = document.getElementById('editChatroomName').value.trim();
+        const errorMsg = document.getElementById('errorMessageChatroom');
+
+        if (!newName) {
+            errorMsg.textContent = '채팅방 이름을 입력해주세요.';
+            errorMsg.style.display = 'block';
+            return;
+        }
+
+        if (db.chatrooms.some(c => c.name === newName && c.id !== editingChatroomId)) {
+            errorMsg.textContent = '이미 존재하는 채팅방명입니다.';
+            errorMsg.style.display = 'block';
+            return;
+        }
+
+        const chatroom = db.chatrooms.find(c => c.id === editingChatroomId);
+        chatroom.name = newName;
         saveDB();
+        closeEditChatroomModal();
         renderChatrooms();
         updateAnalysisChatroomSelect();
+        
+        const successMsg = document.getElementById('successMessageChatroom');
+        successMsg.textContent = '채팅방이 수정되었습니다.';
+        successMsg.style.display = 'block';
+    }
+
+    function deleteChatroom(id) {
+        if (confirm('정말 삭제하시겠습니까?')) {
+            db.chatrooms = db.chatrooms.filter(c => c.id !== id);
+            saveDB();
+            renderChatrooms();
+            updateAnalysisChatroomSelect();
+        }
     }
 
     function searchChatrooms() {
@@ -572,7 +723,12 @@
                 <tr>
                     <td>${chatroom.name}</td>
                     <td>${messageCount}</td>
-                    <td><button class="delete-btn" onclick="deleteChatroom(${chatroom.id})">삭제</button></td>
+                    <td>
+                        <div class="action-btns">
+                            <button class="edit-btn" onclick="openEditChatroomModal(${chatroom.id})">수정</button>
+                            <button class="delete-btn" onclick="deleteChatroom(${chatroom.id})">삭제</button>
+                        </div>
+                    </td>
                 </tr>
             `;
         });
@@ -598,7 +754,12 @@
                 <tr>
                     <td>${chatroom.name}</td>
                     <td>${messageCount}</td>
-                    <td><button class="delete-btn" onclick="deleteChatroom(${chatroom.id})">삭제</button></td>
+                    <td>
+                        <div class="action-btns">
+                            <button class="edit-btn" onclick="openEditChatroomModal(${chatroom.id})">수정</button>
+                            <button class="delete-btn" onclick="deleteChatroom(${chatroom.id})">삭제</button>
+                        </div>
+                    </td>
                 </tr>
             `;
         });
@@ -646,10 +807,57 @@
         renderMembers();
     }
 
-    function deleteMember(id) {
-        db.members = db.members.filter(m => m.id !== id);
+    function openEditMemberModal(id) {
+        const member = db.members.find(m => m.id === id);
+        if (!member) return;
+        
+        editingMemberId = id;
+        document.getElementById('editMemberName').value = member.name;
+        document.getElementById('editMemberRole').value = member.role;
+        document.getElementById('editMemberLocation').value = member.location;
+        document.getElementById('editMemberCompany').value = member.company;
+        document.getElementById('editMemberModal').classList.add('active');
+    }
+
+    function closeEditMemberModal() {
+        document.getElementById('editMemberModal').classList.remove('active');
+        editingMemberId = null;
+    }
+
+    function saveEditMember() {
+        const role = document.getElementById('editMemberRole').value;
+        const location = document.getElementById('editMemberLocation').value.trim();
+        const company = document.getElementById('editMemberCompany').value.trim();
+        const errorMsg = document.getElementById('errorMessageMember');
+
+        errorMsg.style.display = 'none';
+
+        if (!role || !location) {
+            errorMsg.textContent = '역할과 집배점/고객사를 입력해주세요.';
+            errorMsg.style.display = 'block';
+            return;
+        }
+
+        const member = db.members.find(m => m.id === editingMemberId);
+        member.role = role;
+        member.location = location;
+        member.company = company;
+        
         saveDB();
+        closeEditMemberModal();
         renderMembers();
+        
+        const successMsg = document.getElementById('successMessageMember');
+        successMsg.textContent = '멤버가 수정되었습니다.';
+        successMsg.style.display = 'block';
+    }
+
+    function deleteMember(id) {
+        if (confirm('정말 삭제하시겠습니까?')) {
+            db.members = db.members.filter(m => m.id !== id);
+            saveDB();
+            renderMembers();
+        }
     }
 
     function searchMembers() {
@@ -679,7 +887,12 @@
                     <td>${member.role}</td>
                     <td>${member.location}</td>
                     <td>${member.company}</td>
-                    <td><button class="delete-btn" onclick="deleteMember(${member.id})">삭제</button></td>
+                    <td>
+                        <div class="action-btns">
+                            <button class="edit-btn" onclick="openEditMemberModal(${member.id})">수정</button>
+                            <button class="delete-btn" onclick="deleteMember(${member.id})">삭제</button>
+                        </div>
+                    </td>
                 </tr>
             `;
         });
@@ -706,7 +919,12 @@
                     <td>${member.role}</td>
                     <td>${member.location}</td>
                     <td>${member.company}</td>
-                    <td><button class="delete-btn" onclick="deleteMember(${member.id})">삭제</button></td>
+                    <td>
+                        <div class="action-btns">
+                            <button class="edit-btn" onclick="openEditMemberModal(${member.id})">수정</button>
+                            <button class="delete-btn" onclick="deleteMember(${member.id})">삭제</button>
+                        </div>
+                    </td>
                 </tr>
             `;
         });
@@ -748,14 +966,12 @@
         return 'final';
     }
 
-    // Member-based location mapping
     function extractLocationAndNumber(name, content) {
         const member = db.members.find(m => m.name === name);
         
         let location = null;
         let number = null;
 
-        // 1. Try to extract location from content
         for (const loc of LOCATIONS) {
             if (content.includes(loc)) {
                 location = loc;
@@ -763,12 +979,10 @@
             }
         }
 
-        // 2. If no location in content, use member's assigned location
         if (!location && member) {
             location = member.location;
         }
 
-        // 3. Extract number
         number = extractNumber(content);
 
         return { location, number };
@@ -829,14 +1043,12 @@
             return;
         }
 
-        // Sort by time
         messages.sort((a, b) => {
             const timeA = a.time.split(':').reduce((h, m) => h * 60 + parseInt(m), 0);
             const timeB = b.time.split(':').reduce((h, m) => h * 60 + parseInt(m), 0);
             return timeA - timeB;
         });
 
-        // Analyze per location
         const analysis = {};
 
         for (const msg of messages) {
