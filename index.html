@@ -420,7 +420,7 @@
         
         <div style="margin-bottom: 16px;">
             <div class="search-group">
-                <input type="text" id="chatroomSearchInput" placeholder="채팅방 검색..." onkeyup="displayChatrooms()">
+                <input type="text" id="chatroomSearchInput" placeholder="채팅방 검색..." onkeyup="renderChatrooms()">
                 <button class="clear-btn" onclick="clearChatroomSearch()">초기화</button>
             </div>
         </div>
@@ -488,7 +488,7 @@
         
         <div style="margin-bottom: 16px;">
             <div class="search-group">
-                <input type="text" id="memberSearchInput" placeholder="이름, 역할, 거점으로 검색..." onkeyup="displayMembers()">
+                <input type="text" id="memberSearchInput" placeholder="이름, 역할, 거점으로 검색..." onkeyup="renderMembers()">
                 <button class="clear-btn" onclick="clearMemberSearch()">초기화</button>
             </div>
         </div>
@@ -604,8 +604,8 @@
         if (saved) {
             db = JSON.parse(saved);
         }
-        displayChatrooms();
-        displayMembers();
+        renderChatrooms();
+        renderMembers();
         updateAnalysisChatroomSelect();
         renderDashboard();
     }
@@ -648,7 +648,7 @@
         document.getElementById('chatroomName').value = '';
         successMsg.textContent = '채팅방이 추가되었습니다.';
         successMsg.style.display = 'block';
-        displayChatrooms();
+        renderChatrooms();
         updateAnalysisChatroomSelect();
     }
 
@@ -686,7 +686,7 @@
         chatroom.name = newName;
         saveDB();
         closeEditChatroomModal();
-        displayChatrooms();
+        renderChatrooms();
         updateAnalysisChatroomSelect();
         
         const successMsg = document.getElementById('successMessageChatroom');
@@ -698,12 +698,12 @@
         if (confirm('정말 삭제하시겠습니까?')) {
             db.chatrooms = db.chatrooms.filter(c => c.id !== id);
             saveDB();
-            displayChatrooms();
+            renderChatrooms();
             updateAnalysisChatroomSelect();
         }
     }
 
-    function displayChatrooms() {
+    function renderChatrooms() {
         const searchTerm = document.getElementById('chatroomSearchInput').value.trim().toLowerCase();
         const tbody = document.getElementById('chatroomList');
         tbody.innerHTML = '';
@@ -714,7 +714,11 @@
         }
 
         if (filtered.length === 0) {
-            tbody.innerHTML = '<tr><td colspan="3" style="text-align: center; color: #94a3b8;">검색 결과가 없습니다.</td></tr>';
+            if (db.chatrooms.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="3" style="text-align: center; color: #94a3b8;">등록된 채팅방이 없습니다.</td></tr>';
+            } else {
+                tbody.innerHTML = '<tr><td colspan="3" style="text-align: center; color: #94a3b8;">검색 결과가 없습니다.</td></tr>';
+            }
             return;
         }
 
@@ -737,7 +741,7 @@
 
     function clearChatroomSearch() {
         document.getElementById('chatroomSearchInput').value = '';
-        displayChatrooms();
+        renderChatrooms();
     }
 
     // Member Functions
@@ -779,7 +783,7 @@
         document.getElementById('memberCompany').value = '';
         successMsg.textContent = '멤버가 추가되었습니다.';
         successMsg.style.display = 'block';
-        displayMembers();
+        renderMembers();
     }
 
     function openEditMemberModal(id) {
@@ -820,7 +824,7 @@
         
         saveDB();
         closeEditMemberModal();
-        displayMembers();
+        renderMembers();
         
         const successMsg = document.getElementById('successMessageMember');
         successMsg.textContent = '멤버가 수정되었습니다.';
@@ -831,11 +835,11 @@
         if (confirm('정말 삭제하시겠습니까?')) {
             db.members = db.members.filter(m => m.id !== id);
             saveDB();
-            displayMembers();
+            renderMembers();
         }
     }
 
-    function displayMembers() {
+    function renderMembers() {
         const searchTerm = document.getElementById('memberSearchInput').value.trim().toLowerCase();
         const tbody = document.getElementById('memberList');
         tbody.innerHTML = '';
@@ -851,7 +855,11 @@
         }
 
         if (filtered.length === 0) {
-            tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: #94a3b8;">검색 결과가 없습니다.</td></tr>';
+            if (db.members.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: #94a3b8;">등록된 멤버가 없습니다.</td></tr>';
+            } else {
+                tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: #94a3b8;">검색 결과가 없습니다.</td></tr>';
+            }
             return;
         }
 
@@ -875,7 +883,7 @@
 
     function clearMemberSearch() {
         document.getElementById('memberSearchInput').value = '';
-        displayMembers();
+        renderMembers();
     }
 
     // Message Parsing
