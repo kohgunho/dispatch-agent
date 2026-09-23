@@ -900,8 +900,17 @@
     }
 
     function normalizeTime(timeStr) {
-        let [period, time] = timeStr.split(' ');
-        let [hours, minutes] = time.split(':').map(Number);
+        const parts = timeStr.split(' ');
+        if (parts.length < 2) return null;
+        
+        const period = parts[0];
+        const time = parts[1];
+        const timeParts = time.split(':');
+        
+        if (timeParts.length < 2) return null;
+        
+        let hours = parseInt(timeParts[0]);
+        let minutes = parseInt(timeParts[1]);
 
         if (period === '오후' && hours !== 12) hours += 12;
         if (period === '오전' && hours === 12) hours = 0;
@@ -955,7 +964,7 @@
         errorMsg.style.display = 'none';
         resultDiv.innerHTML = '';
 
-        if (!chatroomId) {
+        if (!chatroomId || chatroomId === 0) {
             errorMsg.textContent = '채팅방을 선택해주세요.';
             errorMsg.style.display = 'block';
             return;
@@ -977,19 +986,25 @@
             const { location, number } = extractLocationAndNumber(parsed.name, parsed.content);
 
             if (!location || number === null) {
-                errorMsg.textContent = `메시지를 분석할 수 없습니다: "${line}"\\n사람 이름이 멤버로 등록되어 있고, 메시지에 숫자가 포함되어 있어야 합니다.`;
+                errorMsg.textContent = `메시지 분석 실패: "${line}"\n멤버가 등록되어 있거나 메시지에 숫자가 포함되어야 합니다.`;
+                errorMsg.style.display = 'block';
+                return;
+            }
+
+            const normalizedTime = normalizeTime(parsed.timeStr);
+            if (!normalizedTime) {
+                errorMsg.textContent = `시간 형식이 잘못되었습니다: "${parsed.timeStr}"\n형식: 오전/오후 HH:MM`;
                 errorMsg.style.display = 'block';
                 return;
             }
 
             messages.push({
                 name: parsed.name,
-                time: normalizeTime(parsed.timeStr),
+                time: normalizedTime,
                 content: parsed.content,
                 location,
                 number,
-                classification: classifyMessage(parsed.content),
-                timestamp: new Date(parsed.timeStr).getTime() || Date.now()
+                classification: classifyMessage(parsed.content)
             });
         }
 
@@ -999,12 +1014,14 @@
             return;
         }
 
+        // Sort by time
         messages.sort((a, b) => {
             const timeA = a.time.split(':').reduce((h, m) => h * 60 + parseInt(m), 0);
             const timeB = b.time.split(':').reduce((h, m) => h * 60 + parseInt(m), 0);
             return timeA - timeB;
         });
 
+        // Analyze per location
         const analysis = {};
 
         for (const msg of messages) {
@@ -1049,6 +1066,12 @@
     function renderAnalysis(result) {
         const resultDiv = document.getElementById('analysisResult');
         const chatroom = db.chatrooms.find(c => c.id === result.chatroomId);
+        
+        if (!chatroom) {
+            resultDiv.innerHTML = '<div class="error-message">채팅방을 찾을 수 없습니다.</div>';
+            return;
+        }
+
         const latestTime = Math.max(...result.messages.map(m => {
             const [h, min] = m.time.split(':').map(Number);
             return h * 60 + min;
@@ -1107,6 +1130,8 @@
         dashboardContent.innerHTML = '';
 
         const chatroom = db.chatrooms.find(c => c.id === latest.chatroomId);
+        if (!chatroom) return;
+
         const latestTime = Math.max(...latest.messages.map(m => {
             const [h, min] = m.time.split(':').map(Number);
             return h * 60 + min;
