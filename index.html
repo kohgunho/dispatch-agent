@@ -403,6 +403,17 @@
     .test-btn:hover {
         background: #059669;
     }
+
+    .info-box {
+        background: #eff6ff;
+        border-left: 4px solid #3b82f6;
+        padding: 12px 16px;
+        border-radius: 8px;
+        margin-bottom: 16px;
+        font-size: 13px;
+        color: #1e40af;
+        line-height: 1.6;
+    }
 </style>
 </head>
 <body>
@@ -474,10 +485,9 @@
     <div id="members" class="tab-content">
         <h2 style="margin-bottom: 20px; color: #1e3a8a;">멤버 관리</h2>
         
-        <div style="background: #f8fafc; padding: 16px; border-radius: 8px; margin-bottom: 24px; font-size: 13px; line-height: 1.6; color: #475569;">
-            <strong style="color: #1e3a8a;">멤버를 등록하면:</strong><br>
-            분석 탭에서 메시지를 입력할 때, 사람 이름만 있어도 자신의 집배점/고객사로 자동 맵핑됩니다.<br>
-            예: "[거거너] [오전 6:29] 5개" → 거거너가 야탑 담당이면 자동으로 "야탑 5개"로 인식됩니다.
+        <div class="info-box">
+            <strong>멤버를 등록하면:</strong><br>
+            분석 탭에서 "[사람이름] [시간] 숫자" 형식의 메시지도 자동으로 분석됩니다.
         </div>
 
         <div class="form-group">
@@ -548,6 +558,13 @@
     <div id="analysis" class="tab-content">
         <h2 style="margin-bottom: 20px; color: #1e3a8a;">메시지 분석</h2>
         
+        <div class="info-box">
+            <strong>메시지 형식:</strong><br>
+            [사람이름] [시간] 거점명 숫자 (또는 숫자만)<br>
+            예1: [거거너] [오전 6:29] 야탑 12000<br>
+            예2: [거거너] [오전 6:29] 12000 (멤버 DB에서 거점 자동 조회)
+        </div>
+
         <div class="form-group">
             <label>채팅방 선택</label>
             <select id="analysisCharoom">
@@ -557,7 +574,7 @@
 
         <div class="form-group">
             <label>Kakao Talk 메시지 복붙 (한 줄에 한 메시지)</label>
-            <textarea id="messageInput" placeholder="예:&#10;[거거너] [오전 6:29] 5개&#10;[사랑하는엄마] [오전 6:29] 신분당 10000개"></textarea>
+            <textarea id="messageInput" placeholder="예:&#10;[거거너] [오전 6:29] 12000요&#10;[사랑하는엄마] [오전 7:15] 520"></textarea>
         </div>
 
         <button onclick="analyzeMessages()">분석하기</button>
@@ -631,6 +648,7 @@
 
     // TEST DATA
     function loadTestData() {
+        console.log('Loading test data...');
         db.members = [
             { id: 1, name: "거거너", role: "배차담당자", location: "야탑", company: "배송A" },
             { id: 2, name: "사랑하는엄마", role: "지역사업담당", location: "신분당", company: "배송B" }
@@ -638,12 +656,14 @@
         db.chatrooms = [
             { id: 100, name: "야탑배송팀" }
         ];
+        db.analysis = [];
         saveDB();
+        console.log('Test data saved. Members:', db.members);
         displayAllMembers();
         displayAllChatrooms();
         updateAnalysisChatroomSelect();
         const msg = document.getElementById('successMessageMember');
-        msg.textContent = '테스트 데이터가 로드되었습니다!';
+        msg.textContent = '✓ 테스트 데이터 로드 완료! 분석 탭에서 메시지를 입력해보세요.';
         msg.style.display = 'block';
     }
 
@@ -651,7 +671,15 @@
     function initDB() {
         const saved = localStorage.getItem('dispatch_db');
         if (saved) {
-            db = JSON.parse(saved);
+            try {
+                db = JSON.parse(saved);
+                console.log('DB loaded from localStorage:', db);
+            } catch (e) {
+                console.error('Error loading DB:', e);
+                db = { chatrooms: [], members: [], analysis: [] };
+            }
+        } else {
+            db = { chatrooms: [], members: [], analysis: [] };
         }
         displayAllChatrooms();
         displayAllMembers();
@@ -661,6 +689,7 @@
 
     function saveDB() {
         localStorage.setItem('dispatch_db', JSON.stringify(db));
+        console.log('DB saved:', db);
     }
 
     function switchTab(event, tabName) {
@@ -953,12 +982,12 @@
     }
 
     function normalizeTime(timeStr) {
-        const parts = timeStr.split(' ');
+        const parts = timeStr.split(/\s+/);
         if (parts.length < 2) return null;
         
         const period = parts[0];
-        const time = parts[1];
-        const timeParts = time.split(':');
+        const timeOnly = parts[1];
+        const timeParts = timeOnly.split(':');
         
         if (timeParts.length < 2) return null;
         
@@ -974,8 +1003,8 @@
     }
 
     function extractNumber(text) {
-        const match = text.match(/(\d+)/);
-        return match ? parseInt(match[1]) : null;
+        const cleanText = text.replace(/[^0-9]/g, '');
+        return cleanText ? parseInt(cleanText) : null;
     }
 
     function classifyMessage(content) {
@@ -987,11 +1016,10 @@
     }
 
     function extractLocationAndNumber(name, content) {
-        const member = db.members.find(m => m.name === name);
-        
         let location = null;
         let number = null;
 
+        // 우선 메시지 내용에서 거점명 찾기
         for (const loc of LOCATIONS) {
             if (content.includes(loc)) {
                 location = loc;
@@ -999,17 +1027,26 @@
             }
         }
 
-        if (!location && member) {
-            location = member.location;
+        // 메시지에 거점명이 없으면, 멤버 DB에서 찾기
+        if (!location) {
+            console.log('No location in content. Searching member:', name);
+            const member = db.members.find(m => m.name === name);
+            if (member) {
+                location = member.location;
+                console.log('Found member location:', location);
+            }
         }
 
+        // 숫자 추출
         number = extractNumber(content);
 
+        console.log('extractLocationAndNumber result:', { name, location, number });
         return { location, number };
     }
 
     function analyzeMessages() {
-        const chatroomId = parseInt(document.getElementById('analysisCharoom').value);
+        const chatroomSelect = document.getElementById('analysisCharoom');
+        const chatroomId = parseInt(chatroomSelect.value);
         const messageText = document.getElementById('messageInput').value.trim();
         const successMsg = document.getElementById('successMessage');
         const errorMsg = document.getElementById('errorMessage');
@@ -1019,8 +1056,10 @@
         errorMsg.style.display = 'none';
         resultDiv.innerHTML = '';
 
+        console.log('=== Analysis Start ===');
         console.log('Chatroom ID:', chatroomId);
-        console.log('Message Text:', messageText);
+        console.log('DB members count:', db.members.length);
+        console.log('DB members:', JSON.stringify(db.members));
 
         if (!chatroomId || isNaN(chatroomId)) {
             errorMsg.textContent = '채팅방을 선택해주세요.';
@@ -1040,27 +1079,30 @@
 
         for (let i = 0; i < lines.length; i++) {
             const line = lines[i];
+            console.log(`Line ${i + 1}:`, line);
+
             const parsed = parseMessage(line);
             
             if (!parsed) {
-                parseErrors.push(`${i + 1}번 줄: 형식 오류 - "${line}"`);
+                parseErrors.push(`${i + 1}번: 형식 오류 - "[이름] [시간] 내용" 형식이 아닙니다.`);
                 continue;
             }
 
-            console.log('Parsed:', parsed);
-
             const normalizedTime = normalizeTime(parsed.timeStr);
             if (!normalizedTime) {
-                parseErrors.push(`${i + 1}번 줄: 시간 형식 오류 - "${parsed.timeStr}"`);
+                parseErrors.push(`${i + 1}번: 시간 형식 오류 - "오전/오후 시:분" 형식이 필요합니다.`);
                 continue;
             }
 
             const { location, number } = extractLocationAndNumber(parsed.name, parsed.content);
 
-            console.log('Extracted:', { location, number });
+            if (!location) {
+                parseErrors.push(`${i + 1}번: 거점명 없음 - 메시지에 거점명을 포함하거나 멤버를 등록하세요.`);
+                continue;
+            }
 
-            if (!location || number === null) {
-                parseErrors.push(`${i + 1}번 줄: 거점명 또는 숫자 없음 - "${line}"`);
+            if (number === null) {
+                parseErrors.push(`${i + 1}번: 숫자 없음 - 메시지에 물량 숫자가 필요합니다.`);
                 continue;
             }
 
@@ -1072,19 +1114,28 @@
                 number,
                 classification: classifyMessage(parsed.content)
             });
+
+            console.log(`Line ${i + 1} SUCCESS:`, { location, number, time: normalizedTime });
         }
 
         if (parseErrors.length > 0) {
+            console.log('Parse errors:', parseErrors);
             errorMsg.textContent = '분석 중 오류 발생:\n\n' + parseErrors.join('\n');
             errorMsg.style.display = 'block';
         }
 
         if (messages.length === 0) {
-            errorMsg.textContent = '분석할 수 있는 메시지가 없습니다.';
-            errorMsg.style.display = 'block';
+            if (parseErrors.length === 0) {
+                errorMsg.textContent = '분석할 수 있는 메시지가 없습니다.';
+                errorMsg.style.display = 'block';
+            }
+            console.log('No valid messages');
             return;
         }
 
+        console.log('Valid messages:', messages);
+
+        // 시간순 정렬
         messages.sort((a, b) => {
             const timeA = a.time.split(':').reduce((h, m) => h * 60 + parseInt(m), 0);
             const timeB = b.time.split(':').reduce((h, m) => h * 60 + parseInt(m), 0);
@@ -1111,7 +1162,14 @@
             }
         }
 
+        console.log('Final analysis:', analysis);
+
         const today = new Date().toISOString().split('T')[0];
+
+        // ✅ FIX: db.analysis 초기화 확인
+        if (!Array.isArray(db.analysis)) {
+            db.analysis = [];
+        }
 
         const result = {
             id: Date.now(),
@@ -1124,12 +1182,13 @@
         db.analysis.push(result);
         saveDB();
 
-        successMsg.textContent = '성공했습니다! 분석이 완료되었습니다.';
+        successMsg.textContent = '✓ 분석이 완료되었습니다!';
         successMsg.style.display = 'block';
 
         document.getElementById('messageInput').value = '';
         renderAnalysis(result);
         renderDashboard();
+        console.log('=== Analysis Complete ===');
     }
 
     function renderAnalysis(result) {
@@ -1185,7 +1244,7 @@
     function renderDashboard() {
         const dashboardContent = document.getElementById('dashboardContent');
 
-        if (db.analysis.length === 0) {
+        if (!db.analysis || db.analysis.length === 0) {
             dashboardContent.innerHTML = `
                 <div class="empty-state">
                     <p>분석 데이터가 없습니다.</p>
@@ -1250,9 +1309,11 @@
     function updateAnalysisChatroomSelect() {
         const select = document.getElementById('analysisCharoom');
         select.innerHTML = '<option value="">선택해주세요</option>';
-        db.chatrooms.forEach(c => {
-            select.innerHTML += `<option value="${c.id}">${c.name}</option>`;
-        });
+        if (db && db.chatrooms && Array.isArray(db.chatrooms)) {
+            db.chatrooms.forEach(c => {
+                select.innerHTML += `<option value="${c.id}">${c.name}</option>`;
+            });
+        }
     }
 
     // Initialize on load
