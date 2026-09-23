@@ -165,6 +165,18 @@
         word-wrap: break-word;
     }
 
+    .warning-message {
+        background: #fef3c7;
+        color: #92400e;
+        padding: 12px 16px;
+        border-radius: 8px;
+        margin-bottom: 16px;
+        font-size: 14px;
+        display: none;
+        white-space: pre-wrap;
+        word-wrap: break-word;
+    }
+
     table {
         width: 100%;
         border-collapse: collapse;
@@ -350,6 +362,8 @@
         box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
         max-width: 500px;
         width: 90%;
+        max-height: 80vh;
+        overflow-y: auto;
     }
 
     .modal-header {
@@ -458,6 +472,57 @@
         font-size: 11px;
         font-weight: 600;
         margin-right: 4px;
+    }
+
+    .revision-indicator {
+        background: #fef3c7;
+        color: #92400e;
+        padding: 4px 8px;
+        border-radius: 4px;
+        font-size: 12px;
+        font-weight: 600;
+        display: inline-block;
+        margin-right: 8px;
+    }
+
+    .parse-preview {
+        background: #f1f5f9;
+        border: 1px solid #cbd5e1;
+        border-radius: 8px;
+        padding: 16px;
+        margin-bottom: 16px;
+        font-size: 13px;
+    }
+
+    .parse-preview-item {
+        padding: 8px;
+        margin-bottom: 8px;
+        background: white;
+        border-left: 3px solid #3b82f6;
+        border-radius: 4px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .parse-preview-item.revision {
+        border-left-color: #f59e0b;
+    }
+
+    .parse-item-name {
+        font-weight: 600;
+        color: #1e3a8a;
+    }
+
+    .parse-item-value {
+        font-weight: 700;
+        color: #1e3a8a;
+        font-size: 14px;
+    }
+
+    .parse-item-hint {
+        font-size: 11px;
+        color: #64748b;
     }
 </style>
 </head>
@@ -605,9 +670,9 @@
         
         <div class="info-box">
             <strong>메시지 형식:</strong><br>
-            [사람이름] [시간] 거점명 숫자 (또는 숫자만)<br>
-            예1: [거거너] [오전 6:29] 야탑 12000<br>
-            예2: [거거너] [오전 6:29] 12000 (멤버 DB에서 거점 자동 조회)
+            [사람이름] [시간] 거점명 숫자<br>
+            <strong>수정 표현 자동 감지:</strong> "아니다", "아냐", "정정", "수정", "다시", "맞다" 등<br>
+            예: [거거너] [오전 6:31] 아니다 400 → 400으로 반영
         </div>
 
         <div class="form-group">
@@ -619,14 +684,17 @@
 
         <div class="form-group">
             <label>Kakao Talk 메시지 복붙 (한 줄에 한 메시지)</label>
-            <textarea id="messageInput" placeholder="예:&#10;[거거너] [오전 6:29] 12000요&#10;[사랑하는엄마] [오전 7:15] 520"></textarea>
+            <textarea id="messageInput" placeholder="예:&#10;[거거너] [오전 6:29] 12000&#10;[거거너] [오전 6:31] 아니다 400"></textarea>
         </div>
 
-        <button onclick="analyzeMessages()">분석하기</button>
+        <button onclick="previewParse()">분석 미리보기</button>
+        <button onclick="analyzeMessages()" style="margin-left: 8px;">분석하기</button>
 
+        <div id="warningMessage" class="warning-message"></div>
         <div id="successMessage" class="success-message"></div>
         <div id="errorMessage" class="error-message"></div>
 
+        <div id="parsePreview"></div>
         <div id="analysisResult" style="margin-top: 24px;"></div>
     </div>
 </div>
@@ -681,6 +749,9 @@
 
 <script>
     const LOCATIONS = ["야탑", "신분당", "정자", "분당", "압구정", "강남", "강동", "강북", "강서", "관악", "광진", "구로", "금천", "노원", "도봉", "동대문", "동작", "마포", "서대문", "서초", "성동", "성북", "송파", "양천", "영등포", "용산", "은평", "종로", "중", "중랑"];
+    
+    // 수정 키워드 (LLM 대체용 휴리스틱)
+    const REVISION_KEYWORDS = ['아니다', '아냐', '정정', '수정', '다시', '맞다', '아 맞다', '잠깐', '틀렸', '다시 말', '사실은', '아 맞아'];
 
     let db = {
         chatrooms: [],
@@ -696,7 +767,7 @@
         return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
     }
 
-    // 시스템 시간 포맷 (YYYY-MM-DD HH:MM:SS)
+    // 시스템 시간 포맷
     function getSystemTime() {
         const now = new Date();
         const year = now.getFullYear();
@@ -706,6 +777,30 @@
         const minutes = String(now.getMinutes()).padStart(2, '0');
         const seconds = String(now.getSeconds()).padStart(2, '0');
         return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+    }
+
+    // ✅ 메시지가 수정인지 감지 (휴리스틱)
+    function isRevisionMessage(content) {
+        const lower = content.toLowerCase();
+        return REVISION_KEYWORDS.some(keyword => lower.includes(keyword));
+    }
+
+    // ✅ 모든 숫자 추출
+    function extractAllNumbers(text) {
+        const matches = text.match(/\d+/g);
+        return matches ? matches.map(Number) : [];
+    }
+
+    // ✅ 스마트 숫자 감지
+    function extractSmartNumber(content) {
+        const numbers = extractAllNumbers(content);
+        if (numbers.length === 0) return null;
+        if (numbers.length === 1) return numbers[0];
+        
+        // 여러 숫자가 있으면 마지막 숫자 사용 (수정 표현)
+        // 예: "아니다 400" → [400] (마지막)
+        // 예: "12000요 아니다 400" → [12000, 400] (마지막 400)
+        return numbers[numbers.length - 1];
     }
 
     // TEST DATA
@@ -1064,19 +1159,6 @@
         return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}`;
     }
 
-    function extractNumber(text) {
-        const cleanText = text.replace(/[^0-9]/g, '');
-        return cleanText ? parseInt(cleanText) : null;
-    }
-
-    function classifyMessage(content) {
-        const lower = content.toLowerCase();
-        if (lower.includes('취소') || lower.includes('cancel')) return 'cancel';
-        if (lower.includes('수정') || lower.includes('정정') || lower.includes('아니다') || lower.includes('아냐')) return 'revision';
-        if (lower.includes('추정') || lower.includes('예상')) return 'new_estimate';
-        return 'final';
-    }
-
     function extractLocationAndNumber(name, content) {
         let location = null;
         let number = null;
@@ -1091,19 +1173,66 @@
 
         // 메시지에 거점명이 없으면, 멤버 DB에서 찾기
         if (!location) {
-            console.log('No location in content. Searching member:', name);
             const member = db.members.find(m => m.name === name);
             if (member) {
                 location = member.location;
-                console.log('Found member location:', location);
             }
         }
 
-        // 숫자 추출
-        number = extractNumber(content);
+        // ✅ 스마트 숫자 감지 사용
+        number = extractSmartNumber(content);
 
-        console.log('extractLocationAndNumber result:', { name, location, number });
         return { location, number };
+    }
+
+    // ✅ 분석 미리보기
+    function previewParse() {
+        const messageText = document.getElementById('messageInput').value.trim();
+        const lines = messageText.split('\n').filter(l => l.trim());
+        const warningMsg = document.getElementById('warningMessage');
+        const previewDiv = document.getElementById('parsePreview');
+
+        warningMsg.style.display = 'none';
+        previewDiv.innerHTML = '';
+
+        if (lines.length === 0) {
+            warningMsg.textContent = '메시지를 입력해주세요.';
+            warningMsg.style.display = 'block';
+            return;
+        }
+
+        let previewHTML = '<div class="parse-preview"><strong>분석 미리보기:</strong><br>';
+        let revisionCount = 0;
+
+        for (let i = 0; i < lines.length; i++) {
+            const line = lines[i];
+            const parsed = parseMessage(line);
+
+            if (!parsed) {
+                previewHTML += `<div class="parse-preview-item" style="background: #fee2e2;"><span>❌ ${line}</span></div>`;
+                continue;
+            }
+
+            const { location, number } = extractLocationAndNumber(parsed.name, parsed.content);
+            const isRevision = isRevisionMessage(parsed.content);
+            const statusBadge = isRevision ? '<span class="revision-indicator">수정</span>' : '';
+
+            previewHTML += `
+                <div class="parse-preview-item ${isRevision ? 'revision' : ''}">
+                    <span>${statusBadge} <span class="parse-item-name">${parsed.name}</span> → ${location || '(미등록)'} <span class="parse-item-value">${number || '?'}</span></span>
+                </div>
+            `;
+
+            if (isRevision) revisionCount++;
+        }
+
+        previewHTML += '</div>';
+        previewDiv.innerHTML = previewHTML;
+
+        if (revisionCount > 0) {
+            warningMsg.textContent = `수정 메시지 ${revisionCount}개 감지됨 - 마지막 값으로 반영됩니다`;
+            warningMsg.style.display = 'block';
+        }
     }
 
     function analyzeMessages() {
@@ -1118,11 +1247,6 @@
         successMsg.style.display = 'none';
         errorMsg.style.display = 'none';
         resultDiv.innerHTML = '';
-
-        console.log('=== Analysis Start ===');
-        console.log('Chatroom ID:', chatroomId);
-        console.log('System Time:', systemTime);
-        console.log('DB members count:', db.members.length);
 
         if (!chatroomId || isNaN(chatroomId)) {
             errorMsg.textContent = '채팅방을 선택해주세요.';
@@ -1142,8 +1266,6 @@
 
         for (let i = 0; i < lines.length; i++) {
             const line = lines[i];
-            console.log(`Line ${i + 1}:`, line);
-
             const parsed = parseMessage(line);
             
             if (!parsed) {
@@ -1170,10 +1292,8 @@
                 content: parsed.content,
                 location: location || null,
                 number,
-                classification: classifyMessage(parsed.content)
+                isRevision: isRevisionMessage(parsed.content)
             });
-
-            console.log(`Line ${i + 1} SUCCESS:`, { location, number, time: normalizedTime });
         }
 
         if (parseErrors.length > 0) {
@@ -1187,8 +1307,6 @@
             return;
         }
 
-        console.log('Valid messages:', messages);
-
         // 시간순 정렬
         messages.sort((a, b) => {
             const timeA = a.time.split(':').reduce((h, m) => h * 60 + parseInt(m), 0);
@@ -1196,30 +1314,44 @@
             return timeA - timeB;
         });
 
-        const analysis = {};
-
+        // 같은 사람의 최신값만 취하기
+        const analysisByPerson = {};
+        
         for (const msg of messages) {
-            if (msg.classification === 'cancel') continue;
+            const personKey = `${msg.name}_${msg.location || '(거점없음)'}`;
 
-            const locKey = msg.location || '(거점없음)';
-
-            if (!analysis[locKey]) {
-                analysis[locKey] = {
-                    location: msg.location,
-                    firstValue: msg.number,
-                    firstTime: msg.time,
-                    latestValue: msg.number,
-                    latestTime: msg.time,
-                    lastClassification: msg.classification
-                };
-            } else {
-                analysis[locKey].latestValue = msg.number;
-                analysis[locKey].latestTime = msg.time;
-                analysis[locKey].lastClassification = msg.classification;
-            }
+            analysisByPerson[personKey] = {
+                name: msg.name,
+                location: msg.location,
+                firstValue: analysisByPerson[personKey]?.firstValue || msg.number,
+                firstTime: analysisByPerson[personKey]?.firstTime || msg.time,
+                latestValue: msg.number,
+                latestTime: msg.time,
+                lastClassification: msg.isRevision ? 'revision' : 'final'
+            };
         }
 
-        console.log('Final analysis:', analysis);
+        // 거점별로 합산
+        const analysis = {};
+        Object.values(analysisByPerson).forEach(person => {
+            const locKey = person.location || '(거점없음)';
+            if (!analysis[locKey]) {
+                analysis[locKey] = {
+                    location: person.location,
+                    firstValue: person.firstValue,
+                    firstTime: person.firstTime,
+                    latestValue: person.latestValue,
+                    latestTime: person.latestTime,
+                    lastClassification: person.lastClassification
+                };
+            } else {
+                analysis[locKey].latestValue += person.latestValue;
+                if (person.latestTime > analysis[locKey].latestTime) {
+                    analysis[locKey].latestTime = person.latestTime;
+                    analysis[locKey].lastClassification = person.lastClassification;
+                }
+            }
+        });
 
         const today = new Date().toISOString().split('T')[0];
 
@@ -1243,9 +1375,9 @@
         successMsg.style.display = 'block';
 
         document.getElementById('messageInput').value = '';
+        document.getElementById('parsePreview').innerHTML = '';
         renderAnalysis(result);
         renderDashboard();
-        console.log('=== Analysis Complete ===');
     }
 
     function renderAnalysis(result) {
