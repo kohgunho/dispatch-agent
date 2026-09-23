@@ -420,7 +420,7 @@
         
         <div style="margin-bottom: 16px;">
             <div class="search-group">
-                <input type="text" id="chatroomSearchInput" placeholder="채팅방 검색..." onkeyup="searchChatrooms()">
+                <input type="text" id="chatroomSearchInput" placeholder="채팅방 검색..." onkeyup="displayChatrooms()">
                 <button class="clear-btn" onclick="clearChatroomSearch()">초기화</button>
             </div>
         </div>
@@ -488,7 +488,7 @@
         
         <div style="margin-bottom: 16px;">
             <div class="search-group">
-                <input type="text" id="memberSearchInput" placeholder="이름, 역할, 거점으로 검색..." onkeyup="searchMembers()">
+                <input type="text" id="memberSearchInput" placeholder="이름, 역할, 거점으로 검색..." onkeyup="displayMembers()">
                 <button class="clear-btn" onclick="clearMemberSearch()">초기화</button>
             </div>
         </div>
@@ -604,8 +604,8 @@
         if (saved) {
             db = JSON.parse(saved);
         }
-        renderChatrooms();
-        renderMembers();
+        displayChatrooms();
+        displayMembers();
         updateAnalysisChatroomSelect();
         renderDashboard();
     }
@@ -647,7 +647,7 @@
         document.getElementById('chatroomName').value = '';
         successMsg.textContent = '채팅방이 추가되었습니다.';
         successMsg.style.display = 'block';
-        renderChatrooms();
+        displayChatrooms();
         updateAnalysisChatroomSelect();
     }
 
@@ -685,7 +685,7 @@
         chatroom.name = newName;
         saveDB();
         closeEditChatroomModal();
-        renderChatrooms();
+        displayChatrooms();
         updateAnalysisChatroomSelect();
         
         const successMsg = document.getElementById('successMessageChatroom');
@@ -697,12 +697,12 @@
         if (confirm('정말 삭제하시겠습니까?')) {
             db.chatrooms = db.chatrooms.filter(c => c.id !== id);
             saveDB();
-            renderChatrooms();
+            displayChatrooms();
             updateAnalysisChatroomSelect();
         }
     }
 
-    function searchChatrooms() {
+    function displayChatrooms() {
         const searchTerm = document.getElementById('chatroomSearchInput').value.trim().toLowerCase();
         const tbody = document.getElementById('chatroomList');
         tbody.innerHTML = '';
@@ -736,33 +736,7 @@
 
     function clearChatroomSearch() {
         document.getElementById('chatroomSearchInput').value = '';
-        renderChatrooms();
-    }
-
-    function renderChatrooms() {
-        const tbody = document.getElementById('chatroomList');
-        tbody.innerHTML = '';
-
-        if (db.chatrooms.length === 0) {
-            tbody.innerHTML = '<tr><td colspan="3" style="text-align: center; color: #94a3b8;">등록된 채팅방이 없습니다.</td></tr>';
-            return;
-        }
-
-        db.chatrooms.forEach(chatroom => {
-            const messageCount = db.analysis.filter(a => a.chatroomId === chatroom.id).length;
-            tbody.innerHTML += `
-                <tr>
-                    <td>${chatroom.name}</td>
-                    <td>${messageCount}</td>
-                    <td>
-                        <div class="action-btns">
-                            <button class="edit-btn" onclick="openEditChatroomModal(${chatroom.id})">수정</button>
-                            <button class="delete-btn" onclick="deleteChatroom(${chatroom.id})">삭제</button>
-                        </div>
-                    </td>
-                </tr>
-            `;
-        });
+        displayChatrooms();
     }
 
     // Member Functions
@@ -804,7 +778,7 @@
         document.getElementById('memberCompany').value = '';
         successMsg.textContent = '멤버가 추가되었습니다.';
         successMsg.style.display = 'block';
-        renderMembers();
+        displayMembers();
     }
 
     function openEditMemberModal(id) {
@@ -845,7 +819,7 @@
         
         saveDB();
         closeEditMemberModal();
-        renderMembers();
+        displayMembers();
         
         const successMsg = document.getElementById('successMessageMember');
         successMsg.textContent = '멤버가 수정되었습니다.';
@@ -856,11 +830,11 @@
         if (confirm('정말 삭제하시겠습니까?')) {
             db.members = db.members.filter(m => m.id !== id);
             saveDB();
-            renderMembers();
+            displayMembers();
         }
     }
 
-    function searchMembers() {
+    function displayMembers() {
         const searchTerm = document.getElementById('memberSearchInput').value.trim().toLowerCase();
         const tbody = document.getElementById('memberList');
         tbody.innerHTML = '';
@@ -900,34 +874,7 @@
 
     function clearMemberSearch() {
         document.getElementById('memberSearchInput').value = '';
-        renderMembers();
-    }
-
-    function renderMembers() {
-        const tbody = document.getElementById('memberList');
-        tbody.innerHTML = '';
-
-        if (db.members.length === 0) {
-            tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: #94a3b8;">등록된 멤버가 없습니다.</td></tr>';
-            return;
-        }
-
-        db.members.forEach(member => {
-            tbody.innerHTML += `
-                <tr>
-                    <td>${member.name}</td>
-                    <td>${member.role}</td>
-                    <td>${member.location}</td>
-                    <td>${member.company}</td>
-                    <td>
-                        <div class="action-btns">
-                            <button class="edit-btn" onclick="openEditMemberModal(${member.id})">수정</button>
-                            <button class="delete-btn" onclick="deleteMember(${member.id})">삭제</button>
-                        </div>
-                    </td>
-                </tr>
-            `;
-        });
+        displayMembers();
     }
 
     // Message Parsing
@@ -1197,16 +1144,4 @@
         dashboardContent.innerHTML = html;
     }
 
-    function updateAnalysisChatroomSelect() {
-        const select = document.getElementById('analysisCharoom');
-        select.innerHTML = '<option value="">선택해주세요</option>';
-        db.chatrooms.forEach(c => {
-            select.innerHTML += `<option value="${c.id}">${c.name}</option>`;
-        });
-    }
-
-    // Initialize on load
-    window.addEventListener('DOMContentLoaded', initDB);
-</script>
-</body>
-</html>
+    function updateAnaly
