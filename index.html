@@ -143,16 +143,6 @@
         transform: translateY(0);
     }
 
-    .button-group {
-        display: flex;
-        gap: 12px;
-        margin-top: 16px;
-    }
-
-    .button-group button {
-        flex: 1;
-    }
-
     .success-message {
         background: #d1fae5;
         color: #065f46;
@@ -177,6 +167,7 @@
         width: 100%;
         border-collapse: collapse;
         margin-top: 16px;
+        background: white;
     }
 
     th {
@@ -193,9 +184,10 @@
         padding: 12px;
         border-bottom: 1px solid #e2e8f0;
         font-size: 14px;
+        color: #1e293b;
     }
 
-    tr:hover {
+    tbody tr:hover {
         background: #f8fafc;
     }
 
@@ -288,11 +280,6 @@
         color: #92400e;
     }
 
-    .status-badge.cancel {
-        background: #fee2e2;
-        color: #991b1b;
-    }
-
     .filter-group {
         display: flex;
         gap: 12px;
@@ -363,16 +350,23 @@
         <div id="successMessageChatroom" class="success-message"></div>
         <div id="errorMessageChatroom" class="error-message"></div>
 
-        <table style="margin-top: 24px;">
-            <thead>
-                <tr>
-                    <th>채팅방명</th>
-                    <th>메시지 수</th>
-                    <th>작업</th>
-                </tr>
-            </thead>
-            <tbody id="chatroomList"></tbody>
-        </table>
+        <h3 style="margin-top: 32px; margin-bottom: 16px; color: #1e3a8a; font-size: 18px;">등록된 채팅방</h3>
+        <div style="overflow-x: auto;">
+            <table>
+                <thead>
+                    <tr>
+                        <th>채팅방명</th>
+                        <th>메시지 수</th>
+                        <th>작업</th>
+                    </tr>
+                </thead>
+                <tbody id="chatroomList">
+                    <tr>
+                        <td colspan="3" style="text-align: center; color: #94a3b8;">등록된 채팅방이 없습니다.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
 
     <!-- Members Tab -->
@@ -416,7 +410,7 @@
         <div id="successMessageMember" class="success-message"></div>
         <div id="errorMessageMember" class="error-message"></div>
 
-        <div style="margin-top: 24px; padding: 16px; background: #f8fafc; border-radius: 8px;">
+        <div style="margin-top: 32px; padding: 16px; background: #f8fafc; border-radius: 8px;">
             <h3 style="margin-bottom: 12px; color: #1e3a8a; font-size: 16px;">필터링</h3>
             <div class="filter-group">
                 <select id="filterRole">
@@ -432,18 +426,25 @@
             </div>
         </div>
 
-        <table style="margin-top: 24px;">
-            <thead>
-                <tr>
-                    <th>이름</th>
-                    <th>역할</th>
-                    <th>집배점/고객사</th>
-                    <th>회사</th>
-                    <th>작업</th>
-                </tr>
-            </thead>
-            <tbody id="memberList"></tbody>
-        </table>
+        <h3 style="margin-top: 32px; margin-bottom: 16px; color: #1e3a8a; font-size: 18px;">등록된 멤버</h3>
+        <div style="overflow-x: auto;">
+            <table>
+                <thead>
+                    <tr>
+                        <th>이름</th>
+                        <th>역할</th>
+                        <th>집배점/고객사</th>
+                        <th>회사</th>
+                        <th>작업</th>
+                    </tr>
+                </thead>
+                <tbody id="memberList">
+                    <tr>
+                        <td colspan="5" style="text-align: center; color: #94a3b8;">등록된 멤버가 없습니다.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
 
     <!-- Analysis Tab -->
@@ -545,7 +546,7 @@
         tbody.innerHTML = '';
 
         if (db.chatrooms.length === 0) {
-            tbody.innerHTML = '<tr><td colspan="3" style="text-align: center; color: #94a3b8;">채팅방이 없습니다.</td></tr>';
+            tbody.innerHTML = '<tr><td colspan="3" style="text-align: center; color: #94a3b8;">등록된 채팅방이 없습니다.</td></tr>';
             return;
         }
 
@@ -649,7 +650,7 @@
         tbody.innerHTML = '';
 
         if (db.members.length === 0) {
-            tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: #94a3b8;">멤버가 없습니다.</td></tr>';
+            tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: #94a3b8;">등록된 멤버가 없습니다.</td></tr>';
             return;
         }
 
@@ -704,7 +705,6 @@
 
     // Member-based location mapping
     function extractLocationAndNumber(name, content) {
-        // Find member by name
         const member = db.members.find(m => m.name === name);
         
         let location = null;
@@ -852,7 +852,7 @@
         html += ' ' + locations.map(loc => `${loc} ${result.analysis[loc].latestValue}`).join(' / ');
         html += '</div>';
 
-        html += '<table><thead><tr><th>구분</th><th>최초</th><th>최신</th><th>증감</th><th>시각</th><th>상태</th></tr></thead><tbody>';
+        html += '<div style="overflow-x: auto;"><table><thead><tr><th>구분</th><th>최초</th><th>최신</th><th>증감</th><th>시각</th><th>상태</th></tr></thead><tbody>';
 
         locations.forEach(loc => {
             const data = result.analysis[loc];
@@ -873,7 +873,7 @@
             `;
         });
 
-        html += '</tbody></table>';
+        html += '</tbody></table></div>';
         resultDiv.innerHTML = html;
     }
 
@@ -915,7 +915,7 @@
         html += ' ' + locations.map(loc => `${loc} ${latest.analysis[loc].latestValue}`).join(' / ');
         html += '</div>';
 
-        html += '<table><thead><tr><th>구분</th><th>최초</th><th>최신</th><th>증감</th><th>시각</th><th>상태</th></tr></thead><tbody>';
+        html += '<div style="overflow-x: auto;"><table><thead><tr><th>구분</th><th>최초</th><th>최신</th><th>증감</th><th>시각</th><th>상태</th></tr></thead><tbody>';
 
         locations.forEach(loc => {
             const data = latest.analysis[loc];
@@ -936,7 +936,7 @@
             `;
         });
 
-        html += '</tbody></table>';
+        html += '</tbody></table></div>';
         dashboardContent.innerHTML = html;
     }
 
