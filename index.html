@@ -312,6 +312,21 @@
         min-width: 200px;
     }
 
+    .search-btn {
+        background: #1e3a8a;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        font-weight: 600;
+        font-size: 14px;
+    }
+
+    .search-btn:hover {
+        background: #1e40af;
+    }
+
     .clear-btn {
         background: #94a3b8;
         color: white;
@@ -420,7 +435,8 @@
         
         <div style="margin-bottom: 16px;">
             <div class="search-group">
-                <input type="text" id="chatroomSearchInput" placeholder="채팅방 검색..." onkeyup="renderChatrooms()">
+                <input type="text" id="chatroomSearchInput" placeholder="채팅방 검색...">
+                <button class="search-btn" onclick="renderChatrooms()">검색</button>
                 <button class="clear-btn" onclick="clearChatroomSearch()">초기화</button>
             </div>
         </div>
@@ -488,7 +504,8 @@
         
         <div style="margin-bottom: 16px;">
             <div class="search-group">
-                <input type="text" id="memberSearchInput" placeholder="이름, 역할, 거점으로 검색..." onkeyup="renderMembers()">
+                <input type="text" id="memberSearchInput" placeholder="이름, 역할, 거점으로 검색...">
+                <button class="search-btn" onclick="renderMembers()">검색</button>
                 <button class="clear-btn" onclick="clearMemberSearch()">초기화</button>
             </div>
         </div>
@@ -620,6 +637,11 @@
         document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
         document.getElementById(tabName).classList.add('active');
         event.target.classList.add('active');
+        
+        // 분석 탭 진입 시 채팅방 갱신
+        if (tabName === 'analysis') {
+            updateAnalysisChatroomSelect();
+        }
     }
 
     // Chatroom Functions
