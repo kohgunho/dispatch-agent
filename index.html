@@ -14,525 +14,522 @@
         min-height: 100vh;
         padding: 20px;
         color: #1e293b;
-    }.container {
-    max-width: 1200px;
-    margin: 0 auto;
-}
-
-header {
-    background: white;
-    padding: 24px;
-    border-radius: 12px;
-    margin-bottom: 24px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-}
-
-header h1 {
-    font-size: 28px;
-    color: #1e3a8a;
-    margin-bottom: 8px;
-}
-
-header p {
-    color: #64748b;
-    font-size: 14px;
-}
-
-.tabs {
-    display: flex;
-    gap: 8px;
-    margin-bottom: 24px;
-    background: white;
-    padding: 12px;
-    border-radius: 12px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-}
-
-.tab-btn {
-    padding: 10px 20px;
-    border: none;
-    background: #f1f5f9;
-    color: #64748b;
-    border-radius: 8px;
-    cursor: pointer;
-    font-weight: 500;
-    transition: all 0.2s;
-}
-
-.tab-btn.active {
-    background: #1e3a8a;
-    color: white;
-}
-
-.tab-btn:hover {
-    background: #e2e8f0;
-}
-
-.tab-btn.active:hover {
-    background: #1e40af;
-}
-
-.tab-content {
-    display: none;
-    background: white;
-    border-radius: 12px;
-    padding: 24px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-}
-
-.tab-content.active {
-    display: block;
-}
-
-.form-group {
-    margin-bottom: 16px;
-}
-
-label {
-    display: block;
-    margin-bottom: 8px;
-    font-weight: 600;
-    color: #1e3a8a;
-    font-size: 14px;
-}
-
-input, select, textarea {
-    width: 100%;
-    padding: 10px 12px;
-    border: 1.5px solid #cbd5e1;
-    border-radius: 8px;
-    font-size: 14px;
-    font-family: inherit;
-    transition: border-color 0.2s;
-}
-
-input:focus, select:focus, textarea:focus {
-    outline: none;
-    border-color: #1e3a8a;
-    box-shadow: 0 0 0 3px rgba(30, 58, 138, 0.1);
-}
-
-textarea {
-    resize: vertical;
-    min-height: 100px;
-    font-family: 'Courier New', monospace;
-    font-size: 13px;
-}
-
-button {
-    background: #1e3a8a;
-    color: white;
-    padding: 10px 24px;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    font-weight: 600;
-    font-size: 14px;
-    transition: all 0.2s;
-}
-
-button:hover {
-    background: #1e40af;
-    transform: translateY(-1px);
-    box-shadow: 0 4px 8px rgba(30, 58, 138, 0.3);
-}
-
-button:active {
-    transform: translateY(0);
-}
-
-.success-message {
-    background: #d1fae5;
-    color: #065f46;
-    padding: 12px 16px;
-    border-radius: 8px;
-    margin-bottom: 16px;
-    font-size: 14px;
-    display: none;
-}
-
-.error-message {
-    background: #fee2e2;
-    color: #991b1b;
-    padding: 12px 16px;
-    border-radius: 8px;
-    margin-bottom: 16px;
-    font-size: 14px;
-    display: none;
-    white-space: pre-wrap;
-    word-wrap: break-word;
-}
-
-.warning-message {
-    background: #fef3c7;
-    color: #92400e;
-    padding: 12px 16px;
-    border-radius: 8px;
-    margin-bottom: 16px;
-    font-size: 14px;
-    display: none;
-    white-space: pre-wrap;
-    word-wrap: break-word;
-}
-
-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 16px;
-    background: white;
-}
-
-th {
-    background: #f8fafc;
-    padding: 12px;
-    text-align: left;
-    font-weight: 600;
-    color: #1e3a8a;
-    border-bottom: 2px solid #cbd5e1;
-    font-size: 14px;
-}
-
-td {
-    padding: 12px;
-    border-bottom: 1px solid #e2e8f0;
-    font-size: 14px;
-    color: #1e293b;
-}
-
-tbody tr:hover {
-    background: #f8fafc;
-}
-
-.action-btns {
-    display: flex;
-    gap: 8px;
-}
-
-.edit-btn {
-    background: #3b82f6;
-    color: white;
-    padding: 6px 12px;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    font-size: 12px;
-    transition: all 0.2s;
-}
-
-.edit-btn:hover {
-    background: #2563eb;
-}
-
-.delete-btn {
-    background: #ef4444;
-    color: white;
-    padding: 6px 12px;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    font-size: 12px;
-    transition: all 0.2s;
-}
-
-.delete-btn:hover {
-    background: #dc2626;
-}
-
-.empty-state {
-    text-align: center;
-    padding: 40px 20px;
-    color: #94a3b8;
-}
-
-.empty-state p {
-    font-size: 16px;
-    margin-bottom: 8px;
-}
-
-.metric-card {
-    background: #f0f4ff;
-    border-left: 4px solid #1e3a8a;
-    padding: 16px;
-    border-radius: 8px;
-    margin-bottom: 16px;
-}
-
-.metric-label {
-    font-size: 12px;
-    color: #64748b;
-    text-transform: uppercase;
-    font-weight: 600;
-    margin-bottom: 4px;
-}
-
-.metric-value {
-    font-size: 24px;
-    font-weight: 700;
-    color: #1e3a8a;
-}
-
-.analysis-summary {
-    background: #f0f4ff;
-    border-left: 4px solid #1e3a8a;
-    padding: 16px;
-    border-radius: 8px;
-    margin-bottom: 24px;
-    font-size: 14px;
-}
-
-.analysis-summary strong {
-    color: #1e3a8a;
-}
-
-.change-positive {
-    color: #dc2626;
-    font-weight: 600;
-}
-
-.change-negative {
-    color: #16a34a;
-    font-weight: 600;
-}
-
-.search-group {
-    display: flex;
-    gap: 12px;
-    margin-bottom: 16px;
-    flex-wrap: wrap;
-}
-
-.search-group input {
-    flex: 1;
-    min-width: 200px;
-}
-
-.search-btn {
-    background: #1e3a8a;
-    color: white;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    font-weight: 600;
-    font-size: 14px;
-}
-
-.search-btn:hover {
-    background: #1e40af;
-}
-
-.clear-btn {
-    background: #94a3b8;
-    color: white;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    font-weight: 600;
-    font-size: 14px;
-}
-
-.clear-btn:hover {
-    background: #64748b;
-}
-
-.modal {
-    display: none;
-    position: fixed;
-    z-index: 1000;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
-}
-
-.modal.active {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.modal-content {
-    background-color: white;
-    padding: 24px;
-    border-radius: 12px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
-    max-width: 500px;
-    width: 90%;
-    max-height: 80vh;
-    overflow-y: auto;
-}
-
-.modal-header {
-    font-size: 18px;
-    font-weight: 700;
-    color: #1e3a8a;
-    margin-bottom: 20px;
-}
-
-.modal-buttons {
-    display: flex;
-    gap: 12px;
-    margin-top: 24px;
-}
-
-.modal-buttons button {
-    flex: 1;
-}
-
-.cancel-btn {
-    background: #94a3b8;
-}
-
-.cancel-btn:hover {
-    background: #64748b;
-}
-
-.test-btn {
-    background: #10b981;
-    margin-left: 8px;
-}
-
-.test-btn:hover {
-    background: #059669;
-}
-
-.info-box {
-    background: #eff6ff;
-    border-left: 4px solid #3b82f6;
-    padding: 12px 16px;
-    border-radius: 8px;
-    margin-bottom: 16px;
-    font-size: 13px;
-    color: #1e40af;
-    line-height: 1.6;
-}
-
-.chatroom-section {
-    background: #f8fafc;
-    border: 1px solid #cbd5e1;
-    border-radius: 8px;
-    padding: 20px;
-    margin-bottom: 24px;
-}
-
-.chatroom-title {
-    font-size: 18px;
-    font-weight: 700;
-    color: #1e3a8a;
-    margin-bottom: 12px;
-}
-
-.chatroom-meta {
-    font-size: 13px;
-    color: #64748b;
-    margin-bottom: 16px;
-}
-
-.total-volume {
-    background: #fff7ed;
-    border-left: 4px solid #ea580c;
-    padding: 16px;
-    border-radius: 8px;
-    margin-bottom: 24px;
-    font-size: 14px;
-}
-
-.total-volume-label {
-    font-size: 12px;
-    color: #92400e;
-    text-transform: uppercase;
-    font-weight: 600;
-    margin-bottom: 4px;
-}
-
-.total-volume-value {
-    font-size: 28px;
-    font-weight: 700;
-    color: #ea580c;
-}
-
-.total-volume-date {
-    font-size: 13px;
-    color: #92400e;
-    margin-top: 8px;
-}
-
-.no-location {
-    background: #fecaca;
-    color: #991b1b;
-    padding: 2px 8px;
-    border-radius: 4px;
-    font-size: 11px;
-    font-weight: 600;
-}
-
-.unregistered-label {
-    background: #fecaca;
-    color: #991b1b;
-    padding: 2px 6px;
-    border-radius: 4px;
-    font-size: 11px;
-    font-weight: 600;
-    margin-right: 4px;
-}
-
-.revision-indicator {
-    background: #fef3c7;
-    color: #92400e;
-    padding: 4px 8px;
-    border-radius: 4px;
-    font-size: 12px;
-    font-weight: 600;
-    display: inline-block;
-    margin-right: 8px;
-}
-
-.parse-preview {
-    background: #f1f5f9;
-    border: 1px solid #cbd5e1;
-    border-radius: 8px;
-    padding: 16px;
-    margin-bottom: 16px;
-    font-size: 13px;
-}
-
-.parse-preview-item {
-    padding: 8px;
-    margin-bottom: 8px;
-    background: white;
-    border-left: 3px solid #3b82f6;
-    border-radius: 4px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.parse-preview-item.revision {
-    border-left-color: #f59e0b;
-}
-
-.parse-preview-item.date {
-    border-left-color: #10b981;
-    background: #f0fdf4;
-}
-
-.parse-item-name {
-    font-weight: 600;
-    color: #1e3a8a;
-}
-
-.parse-item-value {
-    font-weight: 700;
-    color: #1e3a8a;
-    font-size: 14px;
-}
-
-.parse-item-hint {
-    font-size: 11px;
-    color: #64748b;
-}
+    }
+
+    .container {
+        max-width: 1400px;
+        margin: 0 auto;
+    }
+
+    header {
+        background: white;
+        padding: 24px;
+        border-radius: 12px;
+        margin-bottom: 24px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    header h1 {
+        font-size: 28px;
+        color: #1e3a8a;
+        margin-bottom: 8px;
+    }
+
+    header p {
+        color: #64748b;
+        font-size: 14px;
+    }
+
+    .tabs {
+        display: flex;
+        gap: 8px;
+        margin-bottom: 24px;
+        background: white;
+        padding: 12px;
+        border-radius: 12px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        flex-wrap: wrap;
+    }
+
+    .tab-btn {
+        padding: 10px 20px;
+        border: none;
+        background: #f1f5f9;
+        color: #64748b;
+        border-radius: 8px;
+        cursor: pointer;
+        font-weight: 500;
+        transition: all 0.2s;
+    }
+
+    .tab-btn.active {
+        background: #1e3a8a;
+        color: white;
+    }
+
+    .tab-btn:hover {
+        background: #e2e8f0;
+    }
+
+    .tab-btn.active:hover {
+        background: #1e40af;
+    }
+
+    .tab-content {
+        display: none;
+        background: white;
+        border-radius: 12px;
+        padding: 24px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    .tab-content.active {
+        display: block;
+    }
+
+    .form-group {
+        margin-bottom: 16px;
+    }
+
+    label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: 600;
+        color: #1e3a8a;
+        font-size: 14px;
+    }
+
+    input, select, textarea {
+        width: 100%;
+        padding: 10px 12px;
+        border: 1.5px solid #cbd5e1;
+        border-radius: 8px;
+        font-size: 14px;
+        font-family: inherit;
+        transition: border-color 0.2s;
+    }
+
+    input:focus, select:focus, textarea:focus {
+        outline: none;
+        border-color: #1e3a8a;
+        box-shadow: 0 0 0 3px rgba(30, 58, 138, 0.1);
+    }
+
+    textarea {
+        resize: vertical;
+        min-height: 100px;
+        font-family: 'Courier New', monospace;
+        font-size: 13px;
+    }
+
+    button {
+        background: #1e3a8a;
+        color: white;
+        padding: 10px 24px;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        font-weight: 600;
+        font-size: 14px;
+        transition: all 0.2s;
+    }
+
+    button:hover {
+        background: #1e40af;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 8px rgba(30, 58, 138, 0.3);
+    }
+
+    button:active {
+        transform: translateY(0);
+    }
+
+    .success-message {
+        background: #d1fae5;
+        color: #065f46;
+        padding: 12px 16px;
+        border-radius: 8px;
+        margin-bottom: 16px;
+        font-size: 14px;
+        display: none;
+    }
+
+    .error-message {
+        background: #fee2e2;
+        color: #991b1b;
+        padding: 12px 16px;
+        border-radius: 8px;
+        margin-bottom: 16px;
+        font-size: 14px;
+        display: none;
+        white-space: pre-wrap;
+        word-wrap: break-word;
+    }
+
+    .warning-message {
+        background: #fef3c7;
+        color: #92400e;
+        padding: 12px 16px;
+        border-radius: 8px;
+        margin-bottom: 16px;
+        font-size: 14px;
+        display: none;
+        white-space: pre-wrap;
+        word-wrap: break-word;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 16px;
+        background: white;
+    }
+
+    th {
+        background: #f8fafc;
+        padding: 12px;
+        text-align: left;
+        font-weight: 600;
+        color: #1e3a8a;
+        border-bottom: 2px solid #cbd5e1;
+        font-size: 14px;
+    }
+
+    td {
+        padding: 12px;
+        border-bottom: 1px solid #e2e8f0;
+        font-size: 14px;
+        color: #1e293b;
+    }
+
+    tbody tr:hover {
+        background: #f8fafc;
+    }
+
+    .action-btns {
+        display: flex;
+        gap: 8px;
+    }
+
+    .edit-btn {
+        background: #3b82f6;
+        color: white;
+        padding: 6px 12px;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 12px;
+        transition: all 0.2s;
+    }
+
+    .edit-btn:hover {
+        background: #2563eb;
+    }
+
+    .delete-btn {
+        background: #ef4444;
+        color: white;
+        padding: 6px 12px;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 12px;
+        transition: all 0.2s;
+    }
+
+    .delete-btn:hover {
+        background: #dc2626;
+    }
+
+    .empty-state {
+        text-align: center;
+        padding: 40px 20px;
+        color: #94a3b8;
+    }
+
+    .empty-state p {
+        font-size: 16px;
+        margin-bottom: 8px;
+    }
+
+    .info-box {
+        background: #eff6ff;
+        border-left: 4px solid #3b82f6;
+        padding: 12px 16px;
+        border-radius: 8px;
+        margin-bottom: 16px;
+        font-size: 13px;
+        color: #1e40af;
+        line-height: 1.6;
+    }
+
+    .search-group {
+        display: flex;
+        gap: 12px;
+        margin-bottom: 16px;
+        flex-wrap: wrap;
+    }
+
+    .search-group input {
+        flex: 1;
+        min-width: 200px;
+    }
+
+    .search-btn {
+        background: #1e3a8a;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        font-weight: 600;
+        font-size: 14px;
+    }
+
+    .search-btn:hover {
+        background: #1e40af;
+    }
+
+    .clear-btn {
+        background: #94a3b8;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        font-weight: 600;
+        font-size: 14px;
+    }
+
+    .clear-btn:hover {
+        background: #64748b;
+    }
+
+    .modal {
+        display: none;
+        position: fixed;
+        z-index: 1000;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+    }
+
+    .modal.active {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .modal-content {
+        background-color: white;
+        padding: 24px;
+        border-radius: 12px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+        max-width: 500px;
+        width: 90%;
+        max-height: 80vh;
+        overflow-y: auto;
+    }
+
+    .modal-header {
+        font-size: 18px;
+        font-weight: 700;
+        color: #1e3a8a;
+        margin-bottom: 20px;
+    }
+
+    .modal-buttons {
+        display: flex;
+        gap: 12px;
+        margin-top: 24px;
+    }
+
+    .modal-buttons button {
+        flex: 1;
+    }
+
+    .cancel-btn {
+        background: #94a3b8;
+    }
+
+    .cancel-btn:hover {
+        background: #64748b;
+    }
+
+    .test-btn {
+        background: #10b981;
+        margin-left: 8px;
+    }
+
+    .test-btn:hover {
+        background: #059669;
+    }
+
+    /* Hierarchy styles */
+    .level1-group {
+        background: white;
+        border-left: 4px solid #1e3a8a;
+        padding: 16px;
+        border-radius: 8px;
+        margin-bottom: 16px;
+    }
+
+    .level1-title {
+        font-size: 16px;
+        font-weight: 700;
+        color: #1e3a8a;
+        margin-bottom: 12px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .level1-volume {
+        font-size: 18px;
+        font-weight: 700;
+        color: #1e3a8a;
+    }
+
+    .level2-group {
+        background: #f0f4ff;
+        border-left: 4px solid #3b82f6;
+        padding: 12px;
+        border-radius: 6px;
+        margin-bottom: 12px;
+        margin-left: 12px;
+    }
+
+    .level2-title {
+        font-size: 14px;
+        font-weight: 600;
+        color: #1e40af;
+        margin-bottom: 8px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .level2-volume {
+        font-size: 16px;
+        font-weight: 700;
+        color: #3b82f6;
+    }
+
+    .level3-group {
+        background: #eff6ff;
+        border-left: 4px solid #0284c7;
+        padding: 10px;
+        border-radius: 6px;
+        margin-bottom: 10px;
+        margin-left: 24px;
+    }
+
+    .level3-title {
+        font-size: 13px;
+        font-weight: 600;
+        color: #0369a1;
+        margin-bottom: 8px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .level3-volume {
+        font-size: 15px;
+        font-weight: 700;
+        color: #0284c7;
+    }
+
+    .member-item {
+        background: white;
+        border-left: 2px solid #06b6d4;
+        padding: 8px;
+        border-radius: 4px;
+        margin-bottom: 6px;
+        margin-left: 36px;
+        font-size: 12px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .member-name {
+        color: #164e63;
+        font-weight: 600;
+    }
+
+    .member-value {
+        color: #06b6d4;
+        font-weight: 700;
+    }
+
+    .analysis-summary {
+        background: #f0f4ff;
+        border-left: 4px solid #1e3a8a;
+        padding: 16px;
+        border-radius: 8px;
+        margin-bottom: 24px;
+        font-size: 14px;
+    }
+
+    .analysis-summary strong {
+        color: #1e3a8a;
+    }
+
+    .dashboard-filter {
+        background: #f0f4ff;
+        border-left: 4px solid #1e3a8a;
+        padding: 16px;
+        border-radius: 8px;
+        margin-bottom: 24px;
+    }
+
+    .filter-row {
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+        align-items: center;
+    }
+
+    .filter-row input {
+        max-width: 200px;
+    }
+
+    .analysis-filter {
+        background: #f0f4ff;
+        border-left: 4px solid #1e3a8a;
+        padding: 16px;
+        border-radius: 8px;
+        margin-bottom: 24px;
+    }
+
+    .filter-group {
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+        align-items: flex-end;
+    }
+
+    .filter-group-item {
+        flex: 1;
+        min-width: 200px;
+    }
+
+    .filter-group-item label {
+        margin-bottom: 8px;
+    }
+
+    .date-info {
+        background: #eff6ff;
+        border-left: 4px solid #3b82f6;
+        padding: 12px;
+        border-radius: 6px;
+        margin-bottom: 16px;
+        font-size: 13px;
+        color: #1e40af;
+    }
 </style>
 </head>
 <body>
@@ -545,177 +542,215 @@ tbody tr:hover {
         <button class="tab-btn" onclick="switchTab(event, 'chatrooms')">채팅방</button>
         <button class="tab-btn" onclick="switchTab(event, 'members')">멤버</button>
         <button class="tab-btn" onclick="switchTab(event, 'analysis')">분석</button>
-    </div><!-- Dashboard Tab -->
-<div id="dashboard" class="tab-content active">
-    <h2 style="margin-bottom: 20px; color: #1e3a8a;">대시보드</h2>
-    <div id="dashboardContent">
-        <div class="empty-state">
-            <p>분석 데이터가 없습니다.</p>
-            <p style="font-size: 14px;">분석 탭에서 메시지를 입력하면 여기에 결과가 표시됩니다.</p>
+    </div>
+
+    <!-- Dashboard Tab -->
+    <div id="dashboard" class="tab-content active">
+        <h2 style="margin-bottom: 20px; color: #1e3a8a;">대시보드</h2>
+        
+        <div class="dashboard-filter">
+            <div class="filter-row">
+                <label style="margin-bottom: 0; flex-shrink: 0;">검색 날짜:</label>
+                <input type="date" id="dashboardDateFilter">
+                <button class="search-btn" onclick="filterDashboardByDate()">조회</button>
+                <button class="clear-btn" onclick="clearDashboardFilter()">초기화</button>
+            </div>
         </div>
-    </div>
-</div>
 
-<!-- Chatrooms Tab -->
-<div id="chatrooms" class="tab-content">
-    <h2 style="margin-bottom: 20px; color: #1e3a8a;">채팅방 관리</h2>
-    
-    <div class="form-group">
-        <label>채팅방 이름</label>
-        <input type="text" id="chatroomName" placeholder="예: 야탑배송팀">
-    </div>
+        <div id="dateInfo" class="date-info" style="display: none;"></div>
 
-    <button onclick="addChatroom()">채팅방 추가</button>
-
-    <div id="successMessageChatroom" class="success-message"></div>
-    <div id="errorMessageChatroom" class="error-message"></div>
-
-    <h3 style="margin-top: 32px; margin-bottom: 16px; color: #1e3a8a; font-size: 18px;">등록된 채팅방</h3>
-    
-    <div style="margin-bottom: 16px;">
-        <div class="search-group">
-            <input type="text" id="chatroomSearchInput" placeholder="채팅방 검색...">
-            <button class="search-btn" onclick="searchChatrooms()">검색</button>
-            <button class="clear-btn" onclick="clearChatroomSearch()">초기화</button>
+        <div id="dashboardContent">
+            <div class="empty-state">
+                <p>분석 데이터가 없습니다.</p>
+                <p style="font-size: 14px;">분석 탭에서 메시지를 입력하면 여기에 결과가 표시됩니다.</p>
+            </div>
         </div>
     </div>
 
-    <div style="overflow-x: auto;">
-        <table>
-            <thead>
-                <tr>
-                    <th>채팅방명</th>
-                    <th>메시지 수</th>
-                    <th>작업</th>
-                </tr>
-            </thead>
-            <tbody id="chatroomList">
-                <tr>
-                    <td colspan="3" style="text-align: center; color: #94a3b8;">등록된 채팅방이 없습니다.</td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
-</div>
-
-<!-- Members Tab -->
-<div id="members" class="tab-content">
-    <h2 style="margin-bottom: 20px; color: #1e3a8a;">멤버 관리</h2>
-    
-    <div class="info-box">
-        <strong>멤버를 등록하면:</strong><br>
-        분석 탭에서 "[사람이름] [시간] 숫자" 형식의 메시지도 자동으로 분석됩니다.
-    </div>
-
-    <div class="form-group">
-        <label>이름</label>
-        <input type="text" id="memberName" placeholder="예: 거거너">
-    </div>
-
-    <div class="form-group">
-        <label>역할</label>
-        <select id="memberRole">
-            <option value="">선택해주세요</option>
-            <option value="배차담당자">배차담당자</option>
-            <option value="지역사업담당">지역사업담당</option>
-            <option value="집배점">집배점</option>
-            <option value="고객사">고객사</option>
-        </select>
-    </div>
-
-    <div class="form-group">
-        <label>집배점/고객사</label>
-        <input type="text" id="memberLocation" placeholder="예: 야탑, 신분당, 강남 등">
-    </div>
-
-    <div class="form-group">
-        <label>회사명</label>
-        <input type="text" id="memberCompany" placeholder="예: 배송회사A">
-    </div>
-
-    <div>
-        <button onclick="addMember()">멤버 추가</button>
-        <button class="test-btn" onclick="loadTestData()">테스트 데이터 로드</button>
-    </div>
-
-    <div id="successMessageMember" class="success-message"></div>
-    <div id="errorMessageMember" class="error-message"></div>
-
-    <h3 style="margin-top: 32px; margin-bottom: 16px; color: #1e3a8a; font-size: 18px;">등록된 멤버</h3>
-    
-    <div style="margin-bottom: 16px;">
-        <div class="search-group">
-            <input type="text" id="memberSearchInput" placeholder="이름, 역할, 거점으로 검색...">
-            <button class="search-btn" onclick="searchMembers()">검색</button>
-            <button class="clear-btn" onclick="clearMemberSearch()">초기화</button>
-        </div>
-    </div>
-
-    <div style="overflow-x: auto;">
-        <table>
-            <thead>
-                <tr>
-                    <th>이름</th>
-                    <th>역할</th>
-                    <th>집배점/고객사</th>
-                    <th>회사</th>
-                    <th>작업</th>
-                </tr>
-            </thead>
-            <tbody id="memberList">
-                <tr>
-                    <td colspan="5" style="text-align: center; color: #94a3b8;">등록된 멤버가 없습니다.</td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
-</div>
-
-<!-- Analysis Tab -->
-<div id="analysis" class="tab-content">
-    <h2 style="margin-bottom: 20px; color: #1e3a8a;">메시지 분석</h2>
-    
-    <div class="info-box">
-        <strong>메시지 형식:</strong><br>
-        [사람이름] [시간] 거점명 숫자<br>
-        <strong>날짜 포함:</strong> "2026년 9월 28일 월요일" 같은 날짜를 첫 줄에 포함하면 대시보드에 반영됩니다
-    </div>
-
-    <div class="form-group">
-        <label>채팅방 선택</label>
-        <select id="analysisCharoom">
-            <option value="">선택해주세요</option>
-        </select>
-    </div>
-
-    <div class="form-group">
-        <label>Kakao Talk 메시지 복붙 (한 줄에 한 메시지)</label>
-        <textarea id="messageInput" placeholder="예:&#10;2026년 9월 28일 월요일&#10;[거거너] [오전 6:29] 12000&#10;[거거너] [오전 6:31] 아니다 400"></textarea>
-    </div>
-
-    <button onclick="previewParse()">분석 미리보기</button>
-    <button onclick="analyzeMessages()" style="margin-left: 8px;">분석하기</button>
-
-    <div id="warningMessage" class="warning-message"></div>
-    <div id="successMessage" class="success-message"></div>
-    <div id="errorMessage" class="error-message"></div>
-
-    <div id="parsePreview"></div>
-    <div id="analysisResult" style="margin-top: 24px;"></div>
-</div>
-</div><!-- Edit Chatroom Modal --><div id="editChatroomModal" class="modal">
-    <div class="modal-content">
-        <div class="modal-header">채팅방 수정</div>
+    <!-- Chatrooms Tab -->
+    <div id="chatrooms" class="tab-content">
+        <h2 style="margin-bottom: 20px; color: #1e3a8a;">채팅방 관리</h2>
+        
         <div class="form-group">
             <label>채팅방 이름</label>
-            <input type="text" id="editChatroomName">
+            <input type="text" id="chatroomName" placeholder="예: 야탑배송팀">
         </div>
-        <div class="modal-buttons">
-            <button onclick="saveEditChatroom()">저장</button>
-            <button class="cancel-btn" onclick="closeEditChatroomModal()">취소</button>
+
+        <button onclick="addChatroom()">채팅방 추가</button>
+
+        <div id="successMessageChatroom" class="success-message"></div>
+        <div id="errorMessageChatroom" class="error-message"></div>
+
+        <h3 style="margin-top: 32px; margin-bottom: 16px; color: #1e3a8a; font-size: 18px;">등록된 채팅방</h3>
+        
+        <div style="margin-bottom: 16px;">
+            <div class="search-group">
+                <input type="text" id="chatroomSearchInput" placeholder="채팅방 검색...">
+                <button class="search-btn" onclick="searchChatrooms()">검색</button>
+                <button class="clear-btn" onclick="clearChatroomSearch()">초기화</button>
+            </div>
+        </div>
+
+        <div style="overflow-x: auto;">
+            <table>
+                <thead>
+                    <tr>
+                        <th>채팅방명</th>
+                        <th>메시지 수</th>
+                        <th>작업</th>
+                    </tr>
+                </thead>
+                <tbody id="chatroomList">
+                    <tr>
+                        <td colspan="3" style="text-align: center; color: #94a3b8;">등록된 채팅방이 없습니다.</td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
     </div>
-</div><!-- Edit Member Modal --><div id="editMemberModal" class="modal">
+
+    <!-- Members Tab -->
+    <div id="members" class="tab-content">
+        <h2 style="margin-bottom: 20px; color: #1e3a8a;">멤버 관리</h2>
+        
+        <div class="info-box">
+            <strong>계층 구조:</strong> 사업담당 → 지사 → Sub<br>
+            예: 동서울 → 강동 → 강동A Sub
+        </div>
+
+        <div class="form-group">
+            <label>이름</label>
+            <input type="text" id="memberName" placeholder="예: 거거너">
+        </div>
+
+        <div class="form-group">
+            <label>역할</label>
+            <select id="memberRole">
+                <option value="">선택해주세요</option>
+                <option value="배차담당자">배차담당자</option>
+                <option value="지역사업담당">지역사업담당</option>
+                <option value="집배점">집배점</option>
+                <option value="고객사">고객사</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label>사업담당 (Level 1)</label>
+            <select id="memberLevel1">
+                <option value="">선택해주세요</option>
+                <option value="동서울">동서울</option>
+                <option value="남서울">남서울</option>
+                <option value="북서울">북서울</option>
+                <option value="서서울">서서울</option>
+                <option value="충청">충청</option>
+                <option value="경북">경북</option>
+                <option value="경남">경남</option>
+                <option value="호남">호남</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label>지사 (Level 2)</label>
+            <input type="text" id="memberLevel2" placeholder="예: 강동, 광진, 송파">
+        </div>
+
+        <div class="form-group">
+            <label>Sub (Level 3)</label>
+            <input type="text" id="memberLevel3" placeholder="예: 강동A Sub, 분당A Sub">
+        </div>
+
+        <div class="form-group">
+            <label>집배점/고객사명</label>
+            <input type="text" id="memberLocation" placeholder="예: 강동집배점, 배송사A">
+        </div>
+
+        <div>
+            <button onclick="addMember()">멤버 추가</button>
+            <button class="test-btn" onclick="loadTestData()">테스트 데이터 로드</button>
+        </div>
+
+        <div id="successMessageMember" class="success-message"></div>
+        <div id="errorMessageMember" class="error-message"></div>
+
+        <h3 style="margin-top: 32px; margin-bottom: 16px; color: #1e3a8a; font-size: 18px;">등록된 멤버</h3>
+        
+        <div style="margin-bottom: 16px;">
+            <div class="search-group">
+                <input type="text" id="memberSearchInput" placeholder="이름, Sub으로 검색...">
+                <button class="search-btn" onclick="searchMembers()">검색</button>
+                <button class="clear-btn" onclick="clearMemberSearch()">초기화</button>
+            </div>
+        </div>
+
+        <div style="overflow-x: auto;">
+            <table>
+                <thead>
+                    <tr>
+                        <th>이름</th>
+                        <th>역할</th>
+                        <th>사업담당</th>
+                        <th>지사</th>
+                        <th>Sub</th>
+                        <th>집배점/고객사명</th>
+                        <th>작업</th>
+                    </tr>
+                </thead>
+                <tbody id="memberList">
+                    <tr>
+                        <td colspan="7" style="text-align: center; color: #94a3b8;">등록된 멤버가 없습니다.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Analysis Tab -->
+    <div id="analysis" class="tab-content">
+        <h2 style="margin-bottom: 20px; color: #1e3a8a;">메시지 분석</h2>
+        
+        <div class="info-box">
+            <strong>메시지 형식:</strong><br>
+            [사람이름] [시간] Sub명 숫자<br>
+            예: [거거너] [오전 6:29] 강동A Sub 12000<br>
+            <strong>날짜 포함:</strong> "2026년 9월 28일 월요일" 같은 날짜를 첫 줄에 포함하면 대시보드에 반영됩니다
+        </div>
+
+        <div class="analysis-filter">
+            <div class="filter-group">
+                <div class="filter-group-item">
+                    <label>Sub 선택</label>
+                    <select id="analysisSubSelect">
+                        <option value="">선택해주세요</option>
+                    </select>
+                </div>
+                <div class="filter-group-item">
+                    <label>채팅방 선택</label>
+                    <select id="analysisChatroomSelect">
+                        <option value="">선택해주세요</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label>Kakao Talk 메시지 복붙 (한 줄에 한 메시지)</label>
+            <textarea id="messageInput" placeholder="예:&#10;2026년 9월 28일 월요일&#10;[거거너] [오전 6:29] 강동A Sub 12000&#10;[거거너] [오전 6:31] 아니다 400"></textarea>
+        </div>
+
+        <button onclick="previewParse()">분석 미리보기</button>
+        <button onclick="analyzeMessages()" style="margin-left: 8px;">분석하기</button>
+
+        <div id="warningMessage" class="warning-message"></div>
+        <div id="successMessage" class="success-message"></div>
+        <div id="errorMessage" class="error-message"></div>
+
+        <div id="parsePreview"></div>
+        <div id="analysisResult" style="margin-top: 24px;"></div>
+    </div>
+</div>
+
+<!-- Edit Member Modal -->
+<div id="editMemberModal" class="modal">
     <div class="modal-content">
         <div class="modal-header">멤버 수정</div>
         <div class="form-group">
@@ -733,36 +768,63 @@ tbody tr:hover {
             </select>
         </div>
         <div class="form-group">
-            <label>집배점/고객사</label>
-            <input type="text" id="editMemberLocation">
+            <label>사업담당</label>
+            <select id="editMemberLevel1">
+                <option value="">선택해주세요</option>
+                <option value="동서울">동서울</option>
+                <option value="남서울">남서울</option>
+                <option value="북서울">북서울</option>
+                <option value="서서울">서서울</option>
+                <option value="충청">충청</option>
+                <option value="경북">경북</option>
+                <option value="경남">경남</option>
+                <option value="호남">호남</option>
+            </select>
         </div>
         <div class="form-group">
-            <label>회사명</label>
-            <input type="text" id="editMemberCompany">
+            <label>지사</label>
+            <input type="text" id="editMemberLevel2">
+        </div>
+        <div class="form-group">
+            <label>Sub</label>
+            <input type="text" id="editMemberLevel3">
+        </div>
+        <div class="form-group">
+            <label>집배점/고객사명</label>
+            <input type="text" id="editMemberLocation">
         </div>
         <div class="modal-buttons">
             <button onclick="saveEditMember()">저장</button>
             <button class="cancel-btn" onclick="closeEditMemberModal()">취소</button>
         </div>
     </div>
-</div><script>
-    const LOCATIONS = ["야탑", "신분당", "정자", "분당", "압구정", "강남", "강동", "강북", "강서", "관악", "광진", "구로", "금천", "노원", "도봉", "동대문", "동작", "마포", "서대문", "서초", "성동", "성북", "송파", "양천", "영등포", "용산", "은평", "종로", "중", "중랑"];
-    
-    // 수정 키워드
-    const REVISION_KEYWORDS = ['아니다', '아냐', '정정', '수정', '다시', '맞다', '아 맞다', '잠깐', '틀렸', '다시 말', '사실은', '아 맞아'];
+</div>
 
+<script>
     let db = {
         chatrooms: [],
         members: [],
         analysis: []
     };
 
-    let editingChatroomId = null;
     let editingMemberId = null;
 
-    // ✅ 날짜 줄 감지 및 추출 함수
+    function formatNumber(num) {
+        return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    }
+
+    function getSystemTime() {
+        const now = new Date();
+        const year = now.getFullYear();
+        const month = String(now.getMonth() + 1).padStart(2, '0');
+        const day = String(now.getDate()).padStart(2, '0');
+        const hours = String(now.getHours()).padStart(2, '0');
+        const minutes = String(now.getMinutes()).padStart(2, '0');
+        const seconds = String(now.getSeconds()).padStart(2, '0');
+        return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+    }
+
     function extractDate(line) {
-        // 한국 날짜 패턴: "2026년 9월 28일 월요일"
         const koreanDatePattern = /(\d{4})년\s+(\d{1,2})월\s+(\d{1,2})일/;
         const match = line.match(koreanDatePattern);
         
@@ -773,7 +835,6 @@ tbody tr:hover {
             return `${year}-${month}-${day}`;
         }
         
-        // 다른 패턴: "2026.09.28" or "2026-09-28"
         const otherDatePattern = /(\d{4})[.\/-](\d{1,2})[.\/-](\d{1,2})/;
         const match2 = line.match(otherDatePattern);
         if (match2) {
@@ -790,367 +851,22 @@ tbody tr:hover {
         return extractDate(line) !== null;
     }
 
-    // 숫자 포맷 (천단위 쉼표)
-    function formatNumber(num) {
-        return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-    }
-
-    // 시스템 시간 포맷
-    function getSystemTime() {
-        const now = new Date();
-        const year = now.getFullYear();
-        const month = String(now.getMonth() + 1).padStart(2, '0');
-        const day = String(now.getDate()).padStart(2, '0');
-        const hours = String(now.getHours()).padStart(2, '0');
-        const minutes = String(now.getMinutes()).padStart(2, '0');
-        const seconds = String(now.getSeconds()).padStart(2, '0');
-        return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
-    }
-
-    // 메시지가 수정인지 감지
     function isRevisionMessage(content) {
-        const lower = content.toLowerCase();
-        return REVISION_KEYWORDS.some(keyword => lower.includes(keyword));
+        const keywords = ['아니다', '아냐', '정정', '수정', '다시', '맞다'];
+        return keywords.some(keyword => content.includes(keyword));
     }
 
-    // 모든 숫자 추출
     function extractAllNumbers(text) {
         const matches = text.match(/\d+/g);
         return matches ? matches.map(Number) : [];
     }
 
-    // 스마트 숫자 감지
     function extractSmartNumber(content) {
         const numbers = extractAllNumbers(content);
         if (numbers.length === 0) return null;
-        if (numbers.length === 1) return numbers[0];
-        
         return numbers[numbers.length - 1];
     }
 
-    // TEST DATA
-    function loadTestData() {
-        console.log('Loading test data...');
-        db.members = [
-            { id: 1, name: "거거너", role: "배차담당자", location: "야탑", company: "배송A" },
-            { id: 2, name: "사랑하는엄마", role: "지역사업담당", location: "신분당", company: "배송B" }
-        ];
-        db.chatrooms = [
-            { id: 100, name: "야탑배송팀" }
-        ];
-        db.analysis = [];
-        saveDB();
-        console.log('Test data saved. Members:', db.members);
-        displayAllMembers();
-        displayAllChatrooms();
-        updateAnalysisChatroomSelect();
-        const msg = document.getElementById('successMessageMember');
-        msg.textContent = '✓ 테스트 데이터 로드 완료! 분석 탭에서 메시지를 입력해보세요.';
-        msg.style.display = 'block';
-    }
-
-    // Initialize
-    function initDB() {
-        const saved = localStorage.getItem('dispatch_db');
-        if (saved) {
-            try {
-                db = JSON.parse(saved);
-                console.log('DB loaded from localStorage:', db);
-            } catch (e) {
-                console.error('Error loading DB:', e);
-                db = { chatrooms: [], members: [], analysis: [] };
-            }
-        } else {
-            db = { chatrooms: [], members: [], analysis: [] };
-        }
-        displayAllChatrooms();
-        displayAllMembers();
-        updateAnalysisChatroomSelect();
-        renderDashboard();
-    }
-
-    function saveDB() {
-        localStorage.setItem('dispatch_db', JSON.stringify(db));
-        console.log('DB saved:', db);
-    }
-
-    function switchTab(event, tabName) {
-        event.preventDefault();
-        document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
-        document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
-        document.getElementById(tabName).classList.add('active');
-        event.target.classList.add('active');
-        
-        if (tabName === 'analysis') {
-            updateAnalysisChatroomSelect();
-        }
-    }
-
-    // CHATROOM FUNCTIONS
-    function addChatroom() {
-        const name = document.getElementById('chatroomName').value.trim();
-        const successMsg = document.getElementById('successMessageChatroom');
-        const errorMsg = document.getElementById('errorMessageChatroom');
-
-        successMsg.style.display = 'none';
-        errorMsg.style.display = 'none';
-
-        if (!name) {
-            errorMsg.textContent = '채팅방 이름을 입력해주세요.';
-            errorMsg.style.display = 'block';
-            return;
-        }
-
-        if (db.chatrooms.some(c => c.name === name)) {
-            errorMsg.textContent = '이미 존재하는 채팅방입니다.';
-            errorMsg.style.display = 'block';
-            return;
-        }
-
-        db.chatrooms.push({ id: Date.now(), name });
-        saveDB();
-        document.getElementById('chatroomName').value = '';
-        successMsg.textContent = '채팅방이 추가되었습니다.';
-        successMsg.style.display = 'block';
-        displayAllChatrooms();
-        updateAnalysisChatroomSelect();
-    }
-
-    function displayAllChatrooms() {
-        document.getElementById('chatroomSearchInput').value = '';
-        renderChatroomTable(db.chatrooms);
-    }
-
-    function searchChatrooms() {
-        const searchTerm = document.getElementById('chatroomSearchInput').value.trim().toLowerCase();
-        const filtered = db.chatrooms.filter(c => c.name.toLowerCase().includes(searchTerm));
-        renderChatroomTable(filtered);
-    }
-
-    function clearChatroomSearch() {
-        displayAllChatrooms();
-    }
-
-    function renderChatroomTable(chatrooms) {
-        const tbody = document.getElementById('chatroomList');
-        tbody.innerHTML = '';
-
-        if (chatrooms.length === 0) {
-            tbody.innerHTML = '<tr><td colspan="3" style="text-align: center; color: #94a3b8;">등록된 채팅방이 없습니다.</td></tr>';
-            return;
-        }
-
-        chatrooms.forEach(chatroom => {
-            const messageCount = db.analysis.filter(a => a.chatroomId === chatroom.id).length;
-            tbody.innerHTML += `
-                <tr>
-                    <td>${chatroom.name}</td>
-                    <td>${messageCount}</td>
-                    <td>
-                        <div class="action-btns">
-                            <button class="edit-btn" onclick="openEditChatroomModal(${chatroom.id})">수정</button>
-                            <button class="delete-btn" onclick="deleteChatroom(${chatroom.id})">삭제</button>
-                        </div>
-                    </td>
-                </tr>
-            `;
-        });
-    }
-
-    function openEditChatroomModal(id) {
-        const chatroom = db.chatrooms.find(c => c.id === id);
-        if (!chatroom) return;
-        
-        editingChatroomId = id;
-        document.getElementById('editChatroomName').value = chatroom.name;
-        document.getElementById('editChatroomModal').classList.add('active');
-    }
-
-    function closeEditChatroomModal() {
-        document.getElementById('editChatroomModal').classList.remove('active');
-        editingChatroomId = null;
-    }
-
-    function saveEditChatroom() {
-        const newName = document.getElementById('editChatroomName').value.trim();
-        const errorMsg = document.getElementById('errorMessageChatroom');
-
-        if (!newName) {
-            errorMsg.textContent = '채팅방 이름을 입력해주세요.';
-            errorMsg.style.display = 'block';
-            return;
-        }
-
-        if (db.chatrooms.some(c => c.name === newName && c.id !== editingChatroomId)) {
-            errorMsg.textContent = '이미 존재하는 채팅방명입니다.';
-            errorMsg.style.display = 'block';
-            return;
-        }
-
-        const chatroom = db.chatrooms.find(c => c.id === editingChatroomId);
-        chatroom.name = newName;
-        saveDB();
-        closeEditChatroomModal();
-        displayAllChatrooms();
-        updateAnalysisChatroomSelect();
-        
-        const successMsg = document.getElementById('successMessageChatroom');
-        successMsg.textContent = '채팅방이 수정되었습니다.';
-        successMsg.style.display = 'block';
-    }
-
-    function deleteChatroom(id) {
-        if (confirm('정말 삭제하시겠습니까?')) {
-            db.chatrooms = db.chatrooms.filter(c => c.id !== id);
-            saveDB();
-            displayAllChatrooms();
-            updateAnalysisChatroomSelect();
-        }
-    }
-
-    // MEMBER FUNCTIONS
-    function addMember() {
-        const name = document.getElementById('memberName').value.trim();
-        const role = document.getElementById('memberRole').value;
-        const location = document.getElementById('memberLocation').value.trim();
-        const company = document.getElementById('memberCompany').value.trim();
-        const successMsg = document.getElementById('successMessageMember');
-        const errorMsg = document.getElementById('errorMessageMember');
-
-        successMsg.style.display = 'none';
-        errorMsg.style.display = 'none';
-
-        if (!name || !role || !location) {
-            errorMsg.textContent = '이름, 역할, 집배점/고객사를 모두 입력해주세요.';
-            errorMsg.style.display = 'block';
-            return;
-        }
-
-        if (db.members.some(m => m.name === name)) {
-            errorMsg.textContent = '이미 존재하는 멤버입니다.';
-            errorMsg.style.display = 'block';
-            return;
-        }
-
-        db.members.push({
-            id: Date.now(),
-            name,
-            role,
-            location,
-            company
-        });
-
-        saveDB();
-        document.getElementById('memberName').value = '';
-        document.getElementById('memberRole').value = '';
-        document.getElementById('memberLocation').value = '';
-        document.getElementById('memberCompany').value = '';
-        successMsg.textContent = '멤버가 추가되었습니다.';
-        successMsg.style.display = 'block';
-        displayAllMembers();
-    }
-
-    function displayAllMembers() {
-        document.getElementById('memberSearchInput').value = '';
-        renderMemberTable(db.members);
-    }
-
-    function searchMembers() {
-        const searchTerm = document.getElementById('memberSearchInput').value.trim().toLowerCase();
-        const filtered = db.members.filter(m => 
-            m.name.toLowerCase().includes(searchTerm) ||
-            m.role.toLowerCase().includes(searchTerm) ||
-            m.location.toLowerCase().includes(searchTerm) ||
-            m.company.toLowerCase().includes(searchTerm)
-        );
-        renderMemberTable(filtered);
-    }
-
-    function clearMemberSearch() {
-        displayAllMembers();
-    }
-
-    function renderMemberTable(members) {
-        const tbody = document.getElementById('memberList');
-        tbody.innerHTML = '';
-
-        if (members.length === 0) {
-            tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: #94a3b8;">등록된 멤버가 없습니다.</td></tr>';
-            return;
-        }
-
-        members.forEach(member => {
-            tbody.innerHTML += `
-                <tr>
-                    <td>${member.name}</td>
-                    <td>${member.role}</td>
-                    <td>${member.location}</td>
-                    <td>${member.company}</td>
-                    <td>
-                        <div class="action-btns">
-                            <button class="edit-btn" onclick="openEditMemberModal(${member.id})">수정</button>
-                            <button class="delete-btn" onclick="deleteMember(${member.id})">삭제</button>
-                        </div>
-                    </td>
-                </tr>
-            `;
-        });
-    }
-
-    function openEditMemberModal(id) {
-        const member = db.members.find(m => m.id === id);
-        if (!member) return;
-        
-        editingMemberId = id;
-        document.getElementById('editMemberName').value = member.name;
-        document.getElementById('editMemberRole').value = member.role;
-        document.getElementById('editMemberLocation').value = member.location;
-        document.getElementById('editMemberCompany').value = member.company;
-        document.getElementById('editMemberModal').classList.add('active');
-    }
-
-    function closeEditMemberModal() {
-        document.getElementById('editMemberModal').classList.remove('active');
-        editingMemberId = null;
-    }
-
-    function saveEditMember() {
-        const role = document.getElementById('editMemberRole').value;
-        const location = document.getElementById('editMemberLocation').value.trim();
-        const company = document.getElementById('editMemberCompany').value.trim();
-        const errorMsg = document.getElementById('errorMessageMember');
-
-        errorMsg.style.display = 'none';
-
-        if (!role || !location) {
-            errorMsg.textContent = '역할과 집배점/고객사를 입력해주세요.';
-            errorMsg.style.display = 'block';
-            return;
-        }
-
-        const member = db.members.find(m => m.id === editingMemberId);
-        member.role = role;
-        member.location = location;
-        member.company = company;
-        
-        saveDB();
-        closeEditMemberModal();
-        displayAllMembers();
-        
-        const successMsg = document.getElementById('successMessageMember');
-        successMsg.textContent = '멤버가 수정되었습니다.';
-        successMsg.style.display = 'block';
-    }
-
-    function deleteMember(id) {
-        if (confirm('정말 삭제하시겠습니까?')) {
-            db.members = db.members.filter(m => m.id !== id);
-            saveDB();
-            displayAllMembers();
-        }
-    }
-
-    // MESSAGE PARSING & ANALYSIS
     function parseMessage(line) {
         const regex = /\[([^\]]+)\]\s*\[([^\]]+)\]\s*(.+)/;
         const match = line.match(regex);
@@ -1185,32 +901,372 @@ tbody tr:hover {
     }
 
     function extractLocationAndNumber(name, content) {
-        let location = null;
+        let sub = null;
+        let level2 = null;
+        let level1 = null;
         let number = null;
 
-        // 우선 메시지 내용에서 거점명 찾기
-        for (const loc of LOCATIONS) {
-            if (content.includes(loc)) {
-                location = loc;
-                break;
-            }
+        // 1. 멤버 DB에서 찾기
+        const member = db.members.find(m => m.name === name);
+        if (member) {
+            sub = member.level3;
+            level2 = member.level2;
+            level1 = member.level1;
         }
 
-        // 메시지에 거점명이 없으면, 멤버 DB에서 찾기
-        if (!location) {
-            const member = db.members.find(m => m.name === name);
-            if (member) {
-                location = member.location;
-            }
+        // 2. 메시지 내용에서 "Sub" 패턴 찾기 (예: "강동A Sub", "분당B Sub")
+        const subPattern = /([가-힣A-Z]+\s*Sub)/;
+        const subMatch = content.match(subPattern);
+        if (subMatch) {
+            sub = subMatch[0].trim();
         }
 
-        // 스마트 숫자 감지 사용
         number = extractSmartNumber(content);
 
-        return { location, number };
+        return { sub, level2, level1, number };
     }
 
-    // ✅ 분석 미리보기
+    function loadTestData() {
+        db.members = [
+            { id: 1, name: "거거너", role: "배차담당자", level1: "동서울", level2: "강동", level3: "강동A Sub", location: "강동집배점" },
+            { id: 2, name: "사랑하는엄마", role: "지역사업담당", level1: "동서울", level2: "송파", level3: "송파B Sub", location: "CJ대한통운" },
+            { id: 3, name: "테스트1", role: "배차담당자", level1: "동서울", level2: "강동", level3: "강동A Sub", location: "강동배송센터" },
+            { id: 4, name: "테스트2", role: "배차담당자", level1: "남서울", level2: "강남", level3: "강남C Sub", location: "강남고객사" }
+        ];
+        db.chatrooms = [
+            { id: 100, name: "강동배송팀" },
+            { id: 101, name: "송파배송팀" },
+            { id: 102, name: "강남배송팀" }
+        ];
+        db.analysis = [
+            {
+                id: 1000,
+                sub: "강동A Sub",
+                chatroomId: 100,
+                date: "2026-09-22",
+                systemTime: "2026-09-22 10:30:00",
+                messages: [
+                    { name: "거거너", time: "06:29", content: "강동A Sub 12000", number: 12000, isRevision: false },
+                    { name: "테스트1", time: "06:45", content: "강동A Sub 8000", number: 8000, isRevision: false }
+                ],
+                finalByMember: { "거거너": 12000, "테스트1": 8000 }
+            },
+            {
+                id: 1001,
+                sub: "송파B Sub",
+                chatroomId: 101,
+                date: "2026-09-22",
+                systemTime: "2026-09-22 10:31:00",
+                messages: [
+                    { name: "사랑하는엄마", time: "07:00", content: "송파B Sub 15000", number: 15000, isRevision: false }
+                ],
+                finalByMember: { "사랑하는엄마": 15000 }
+            },
+            {
+                id: 1002,
+                sub: "강남C Sub",
+                chatroomId: 102,
+                date: "2026-09-21",
+                systemTime: "2026-09-21 10:15:00",
+                messages: [
+                    { name: "테스트2", time: "08:00", content: "강남C Sub 20000", number: 20000, isRevision: false }
+                ],
+                finalByMember: { "테스트2": 20000 }
+            }
+        ];
+        saveDB();
+        displayAllMembers();
+        displayAllChatrooms();
+        updateAnalysisSelects();
+        renderDashboard();
+        const msg = document.getElementById('successMessageMember');
+        msg.textContent = '✓ 테스트 데이터 로드 완료! (2026-09-22, 2026-09-21 데이터 포함)';
+        msg.style.display = 'block';
+    }
+
+    function initDB() {
+        const saved = localStorage.getItem('dispatch_db');
+        if (saved) {
+            try {
+                db = JSON.parse(saved);
+            } catch (e) {
+                db = { chatrooms: [], members: [], analysis: [] };
+            }
+        }
+        displayAllChatrooms();
+        displayAllMembers();
+        updateAnalysisSelects();
+        renderDashboard();
+    }
+
+    function saveDB() {
+        localStorage.setItem('dispatch_db', JSON.stringify(db));
+    }
+
+    function switchTab(event, tabName) {
+        event.preventDefault();
+        document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+        document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+        document.getElementById(tabName).classList.add('active');
+        event.target.classList.add('active');
+        
+        if (tabName === 'analysis') {
+            updateAnalysisSelects();
+        } else if (tabName === 'dashboard') {
+            renderDashboard();
+        }
+    }
+
+    function addChatroom() {
+        const name = document.getElementById('chatroomName').value.trim();
+        const successMsg = document.getElementById('successMessageChatroom');
+        const errorMsg = document.getElementById('errorMessageChatroom');
+
+        successMsg.style.display = 'none';
+        errorMsg.style.display = 'none';
+
+        if (!name) {
+            errorMsg.textContent = '채팅방 이름을 입력해주세요.';
+            errorMsg.style.display = 'block';
+            return;
+        }
+
+        if (db.chatrooms.some(c => c.name === name)) {
+            errorMsg.textContent = '이미 존재하는 채팅방입니다.';
+            errorMsg.style.display = 'block';
+            return;
+        }
+
+        db.chatrooms.push({ id: Date.now(), name });
+        saveDB();
+        document.getElementById('chatroomName').value = '';
+        successMsg.textContent = '채팅방이 추가되었습니다.';
+        successMsg.style.display = 'block';
+        displayAllChatrooms();
+        updateAnalysisSelects();
+    }
+
+    function displayAllChatrooms() {
+        document.getElementById('chatroomSearchInput').value = '';
+        renderChatroomTable(db.chatrooms);
+    }
+
+    function searchChatrooms() {
+        const searchTerm = document.getElementById('chatroomSearchInput').value.trim().toLowerCase();
+        const filtered = db.chatrooms.filter(c => c.name.toLowerCase().includes(searchTerm));
+        renderChatroomTable(filtered);
+    }
+
+    function clearChatroomSearch() {
+        displayAllChatrooms();
+    }
+
+    function renderChatroomTable(chatrooms) {
+        const tbody = document.getElementById('chatroomList');
+        tbody.innerHTML = '';
+
+        if (chatrooms.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="3" style="text-align: center; color: #94a3b8;">등록된 채팅방이 없습니다.</td></tr>';
+            return;
+        }
+
+        chatrooms.forEach(chatroom => {
+            const messageCount = db.analysis.filter(a => a.chatroomId === chatroom.id).length;
+            
+            tbody.innerHTML += `
+                <tr>
+                    <td>${chatroom.name}</td>
+                    <td>${messageCount}</td>
+                    <td>
+                        <div class="action-btns">
+                            <button class="delete-btn" onclick="deleteChatroom(${chatroom.id})">삭제</button>
+                        </div>
+                    </td>
+                </tr>
+            `;
+        });
+    }
+
+    function deleteChatroom(id) {
+        if (confirm('정말 삭제하시겠습니까?')) {
+            db.chatrooms = db.chatrooms.filter(c => c.id !== id);
+            saveDB();
+            displayAllChatrooms();
+            updateAnalysisSelects();
+        }
+    }
+
+    function addMember() {
+        const name = document.getElementById('memberName').value.trim();
+        const role = document.getElementById('memberRole').value;
+        const level1 = document.getElementById('memberLevel1').value;
+        const level2 = document.getElementById('memberLevel2').value.trim();
+        const level3 = document.getElementById('memberLevel3').value.trim();
+        const location = document.getElementById('memberLocation').value.trim();
+        const successMsg = document.getElementById('successMessageMember');
+        const errorMsg = document.getElementById('errorMessageMember');
+
+        successMsg.style.display = 'none';
+        errorMsg.style.display = 'none';
+
+        if (!name || !role || !level1 || !level2 || !level3 || !location) {
+            errorMsg.textContent = '모든 필드를 입력해주세요.';
+            errorMsg.style.display = 'block';
+            return;
+        }
+
+        if (db.members.some(m => m.name === name)) {
+            errorMsg.textContent = '이미 존재하는 멤버입니다.';
+            errorMsg.style.display = 'block';
+            return;
+        }
+
+        db.members.push({
+            id: Date.now(),
+            name,
+            role,
+            level1,
+            level2,
+            level3,
+            location
+        });
+
+        saveDB();
+        document.getElementById('memberName').value = '';
+        document.getElementById('memberRole').value = '';
+        document.getElementById('memberLevel1').value = '';
+        document.getElementById('memberLevel2').value = '';
+        document.getElementById('memberLevel3').value = '';
+        document.getElementById('memberLocation').value = '';
+        successMsg.textContent = '멤버가 추가되었습니다.';
+        successMsg.style.display = 'block';
+        displayAllMembers();
+        updateAnalysisSelects();
+    }
+
+    function displayAllMembers() {
+        document.getElementById('memberSearchInput').value = '';
+        renderMemberTable(db.members);
+    }
+
+    function searchMembers() {
+        const searchTerm = document.getElementById('memberSearchInput').value.trim().toLowerCase();
+        const filtered = db.members.filter(m => 
+            m.name.toLowerCase().includes(searchTerm) ||
+            m.level3.toLowerCase().includes(searchTerm)
+        );
+        renderMemberTable(filtered);
+    }
+
+    function clearMemberSearch() {
+        displayAllMembers();
+    }
+
+    function renderMemberTable(members) {
+        const tbody = document.getElementById('memberList');
+        tbody.innerHTML = '';
+
+        if (members.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="7" style="text-align: center; color: #94a3b8;">등록된 멤버가 없습니다.</td></tr>';
+            return;
+        }
+
+        members.forEach(member => {
+            tbody.innerHTML += `
+                <tr>
+                    <td>${member.name}</td>
+                    <td>${member.role}</td>
+                    <td>${member.level1}</td>
+                    <td>${member.level2}</td>
+                    <td>${member.level3}</td>
+                    <td>${member.location}</td>
+                    <td>
+                        <div class="action-btns">
+                            <button class="edit-btn" onclick="openEditMemberModal(${member.id})">수정</button>
+                            <button class="delete-btn" onclick="deleteMember(${member.id})">삭제</button>
+                        </div>
+                    </td>
+                </tr>
+            `;
+        });
+    }
+
+    function openEditMemberModal(id) {
+        const member = db.members.find(m => m.id === id);
+        if (!member) return;
+        
+        editingMemberId = id;
+        document.getElementById('editMemberName').value = member.name;
+        document.getElementById('editMemberRole').value = member.role;
+        document.getElementById('editMemberLevel1').value = member.level1;
+        document.getElementById('editMemberLevel2').value = member.level2;
+        document.getElementById('editMemberLevel3').value = member.level3;
+        document.getElementById('editMemberLocation').value = member.location;
+        document.getElementById('editMemberModal').classList.add('active');
+    }
+
+    function closeEditMemberModal() {
+        document.getElementById('editMemberModal').classList.remove('active');
+        editingMemberId = null;
+    }
+
+    function saveEditMember() {
+        const role = document.getElementById('editMemberRole').value;
+        const level1 = document.getElementById('editMemberLevel1').value;
+        const level2 = document.getElementById('editMemberLevel2').value.trim();
+        const level3 = document.getElementById('editMemberLevel3').value.trim();
+        const location = document.getElementById('editMemberLocation').value.trim();
+        const errorMsg = document.getElementById('errorMessageMember');
+
+        errorMsg.style.display = 'none';
+
+        if (!role || !level1 || !level2 || !level3 || !location) {
+            errorMsg.textContent = '모든 필드를 입력해주세요.';
+            errorMsg.style.display = 'block';
+            return;
+        }
+
+        const member = db.members.find(m => m.id === editingMemberId);
+        member.role = role;
+        member.level1 = level1;
+        member.level2 = level2;
+        member.level3 = level3;
+        member.location = location;
+        
+        saveDB();
+        closeEditMemberModal();
+        displayAllMembers();
+        
+        const successMsg = document.getElementById('successMessageMember');
+        successMsg.textContent = '멤버가 수정되었습니다.';
+        successMsg.style.display = 'block';
+    }
+
+    function deleteMember(id) {
+        if (confirm('정말 삭제하시겠습니까?')) {
+            db.members = db.members.filter(m => m.id !== id);
+            saveDB();
+            displayAllMembers();
+        }
+    }
+
+    function updateAnalysisSelects() {
+        // Sub 목록 업데이트
+        const subSelect = document.getElementById('analysisSubSelect');
+        const subs = [...new Set(db.members.map(m => m.level3))].sort();
+        subSelect.innerHTML = '<option value="">선택해주세요</option>';
+        subs.forEach(sub => {
+            subSelect.innerHTML += `<option value="${sub}">${sub}</option>`;
+        });
+
+        // 채팅방 목록 업데이트
+        const chatroomSelect = document.getElementById('analysisChatroomSelect');
+        chatroomSelect.innerHTML = '<option value="">선택해주세요</option>';
+        db.chatrooms.forEach(c => {
+            chatroomSelect.innerHTML += `<option value="${c.id}">${c.name}</option>`;
+        });
+    }
+
     function previewParse() {
         const messageText = document.getElementById('messageInput').value.trim();
         const lines = messageText.split('\n').filter(l => l.trim());
@@ -1226,56 +1282,40 @@ tbody tr:hover {
             return;
         }
 
-        let previewHTML = '<div class="parse-preview"><strong>분석 미리보기:</strong><br>';
-        let revisionCount = 0;
-        let dateExtracted = null;
+        let previewHTML = '<div style="margin-bottom: 16px;"><strong>분석 미리보기:</strong><br>';
 
         for (let i = 0; i < lines.length; i++) {
             const line = lines[i];
-
-            // ✅ 날짜 줄 감지
             const extractedDate = extractDate(line);
+            
             if (extractedDate) {
-                dateExtracted = extractedDate;
-                previewHTML += `<div class="parse-preview-item date"><span>📅 날짜: ${extractedDate}</span></div>`;
+                previewHTML += `<div style="background: #d1fae5; padding: 8px; border-radius: 4px; margin-bottom: 8px;">📅 ${extractedDate}</div>`;
                 continue;
             }
 
             const parsed = parseMessage(line);
-
             if (!parsed) {
-                previewHTML += `<div class="parse-preview-item" style="background: #fee2e2;"><span>❌ ${line}</span></div>`;
+                previewHTML += `<div style="background: #fee2e2; padding: 6px; border-radius: 4px; margin-bottom: 4px; color: #991b1b;">❌ ${line}</div>`;
                 continue;
             }
 
-            const { location, number } = extractLocationAndNumber(parsed.name, parsed.content);
-            const isRevision = isRevisionMessage(parsed.content);
-            const statusBadge = isRevision ? '<span class="revision-indicator">수정</span>' : '';
+            const { sub, level2, level1, number } = extractLocationAndNumber(parsed.name, parsed.content);
+            const displaySub = sub || '(미등록)';
 
             previewHTML += `
-                <div class="parse-preview-item ${isRevision ? 'revision' : ''}">
-                    <span>${statusBadge} <span class="parse-item-name">${parsed.name}</span> → ${location || '(미등록)'} <span class="parse-item-value">${number || '?'}</span></span>
+                <div style="background: #f0f9ff; padding: 6px; border-radius: 4px; margin-bottom: 4px; color: #0c4a6e;">
+                    <strong>${parsed.name}</strong> [${parsed.timeStr}] → ${displaySub} / ${number || '?'}
                 </div>
             `;
-
-            if (isRevision) revisionCount++;
         }
 
         previewHTML += '</div>';
         previewDiv.innerHTML = previewHTML;
-
-        if (dateExtracted || revisionCount > 0) {
-            let msg = '';
-            if (dateExtracted) msg += `📅 ${dateExtracted} / `;
-            if (revisionCount > 0) msg += `수정 ${revisionCount}개 감지됨`;
-            warningMsg.textContent = msg;
-            warningMsg.style.display = 'block';
-        }
     }
 
     function analyzeMessages() {
-        const chatroomSelect = document.getElementById('analysisCharoom');
-        const chatroomId = parseInt(chatroomSelect.value);
+        const selectedSub = document.getElementById('analysisSubSelect').value;
+        const selectedChatroomId = parseInt(document.getElementById('analysisChatroomSelect').value);
         const messageText = document.getElementById('messageInput').value.trim();
         const successMsg = document.getElementById('successMessage');
         const errorMsg = document.getElementById('errorMessage');
@@ -1286,8 +1326,8 @@ tbody tr:hover {
         errorMsg.style.display = 'none';
         resultDiv.innerHTML = '';
 
-        if (!chatroomId || isNaN(chatroomId)) {
-            errorMsg.textContent = '채팅방을 선택해주세요.';
+        if (!selectedSub || !selectedChatroomId || isNaN(selectedChatroomId)) {
+            errorMsg.textContent = 'Sub과 채팅방을 모두 선택해주세요.';
             errorMsg.style.display = 'block';
             return;
         }
@@ -1302,20 +1342,18 @@ tbody tr:hover {
         const messages = [];
         let parseErrors = [];
         let extractedDate = null;
+        let revisionCount = 0;
 
         for (let i = 0; i < lines.length; i++) {
             const line = lines[i];
-
-            // ✅ 날짜 줄 추출
             const dateFromLine = extractDate(line);
+            
             if (dateFromLine) {
                 extractedDate = dateFromLine;
-                console.log(`✓ 날짜 감지: ${extractedDate}`);
                 continue;
             }
 
             const parsed = parseMessage(line);
-            
             if (!parsed) {
                 parseErrors.push(`${i + 1}번: 형식 오류`);
                 continue;
@@ -1327,20 +1365,27 @@ tbody tr:hover {
                 continue;
             }
 
-            const { location, number } = extractLocationAndNumber(parsed.name, parsed.content);
+            const { sub, number } = extractLocationAndNumber(parsed.name, parsed.content);
+
+            // 선택한 Sub과 메시지 Sub이 일치해야 함
+            if (sub && sub !== selectedSub) {
+                continue;
+            }
 
             if (number === null) {
                 parseErrors.push(`${i + 1}번: 숫자 없음`);
                 continue;
             }
 
+            const isRevision = isRevisionMessage(parsed.content);
+            if (isRevision) revisionCount++;
+
             messages.push({
                 name: parsed.name,
                 time: normalizedTime,
                 content: parsed.content,
-                location: location || null,
                 number,
-                isRevision: isRevisionMessage(parsed.content)
+                isRevision
             });
         }
 
@@ -1355,53 +1400,18 @@ tbody tr:hover {
             return;
         }
 
-        // 시간순 정렬
         messages.sort((a, b) => {
             const timeA = a.time.split(':').reduce((h, m) => h * 60 + parseInt(m), 0);
             const timeB = b.time.split(':').reduce((h, m) => h * 60 + parseInt(m), 0);
             return timeA - timeB;
         });
 
-        // 같은 사람의 최신값만 취하기
-        const analysisByPerson = {};
-        
-        for (const msg of messages) {
-            const personKey = `${msg.name}_${msg.location || '(거점없음)'}`;
-
-            analysisByPerson[personKey] = {
-                name: msg.name,
-                location: msg.location,
-                firstValue: analysisByPerson[personKey]?.firstValue || msg.number,
-                firstTime: analysisByPerson[personKey]?.firstTime || msg.time,
-                latestValue: msg.number,
-                latestTime: msg.time,
-                lastClassification: msg.isRevision ? 'revision' : 'final'
-            };
-        }
-
-        // 거점별로 합산
-        const analysis = {};
-        Object.values(analysisByPerson).forEach(person => {
-            const locKey = person.location || '(거점없음)';
-            if (!analysis[locKey]) {
-                analysis[locKey] = {
-                    location: person.location,
-                    firstValue: person.firstValue,
-                    firstTime: person.firstTime,
-                    latestValue: person.latestValue,
-                    latestTime: person.latestTime,
-                    lastClassification: person.lastClassification
-                };
-            } else {
-                analysis[locKey].latestValue += person.latestValue;
-                if (person.latestTime > analysis[locKey].latestTime) {
-                    analysis[locKey].latestTime = person.latestTime;
-                    analysis[locKey].lastClassification = person.lastClassification;
-                }
-            }
+        // 사람별로 최종 값 추적
+        const finalByMember = {};
+        messages.forEach(msg => {
+            finalByMember[msg.name] = msg.number;
         });
 
-        // ✅ 날짜 사용 (없으면 시스템 날짜 사용)
         const analysisDate = extractedDate || new Date().toISOString().split('T')[0];
 
         if (!Array.isArray(db.analysis)) {
@@ -1410,26 +1420,27 @@ tbody tr:hover {
 
         const result = {
             id: Date.now(),
-            chatroomId,
+            sub: selectedSub,
+            chatroomId: selectedChatroomId,
             date: analysisDate,
             systemTime,
-            analysis,
-            messages
+            messages,
+            finalByMember
         };
 
         db.analysis.push(result);
         saveDB();
 
-        successMsg.textContent = `✓ 분석 완료! (메시지 ${messages.length}개, 날짜: ${analysisDate})`;
+        const revisionText = revisionCount > 0 ? `수정 ${revisionCount}개 감지됨 - ` : '';
+        successMsg.textContent = `✓ 분석 완료! (${revisionText}메시지 ${messages.length}개, 날짜: ${analysisDate})`;
         successMsg.style.display = 'block';
 
         document.getElementById('messageInput').value = '';
-        document.getElementById('parsePreview').innerHTML = '';
-        renderAnalysis(result);
+        renderAnalysisDetail(result);
         renderDashboard();
     }
 
-    function renderAnalysis(result) {
+    function renderAnalysisDetail(result) {
         const resultDiv = document.getElementById('analysisResult');
         const chatroom = db.chatrooms.find(c => c.id === result.chatroomId);
         
@@ -1440,60 +1451,40 @@ tbody tr:hover {
 
         let html = `
             <div class="analysis-summary">
-                <strong>${result.date}</strong> | ${chatroom.name}<br>
-                <strong>시스템 반영: ${result.systemTime}</strong><br>
-                <strong>당일 예상 물량:</strong>
+                <strong>📅 ${result.date}</strong> | <strong>⏰ ${result.systemTime}</strong><br>
+                <strong>Sub:</strong> ${result.sub}<br>
+                <strong>채팅방:</strong> ${chatroom.name}<br>
         `;
 
         let totalVolume = 0;
-        let unregisteredVolume = 0;
-        const locations = Object.keys(result.analysis).sort();
+        Object.values(result.finalByMember).forEach(val => {
+            totalVolume += val;
+        });
         
-        locations.forEach(loc => {
-            const data = result.analysis[loc];
-            if (data.location) {
-                html += ` ${data.location} ${formatNumber(data.latestValue)}`;
-                totalVolume += data.latestValue;
-            } else {
-                html += ` <span class="unregistered-label">미등록</span>(${formatNumber(data.latestValue)})`;
-                unregisteredVolume += data.latestValue;
-            }
+        html += `<strong>총 물량: ${formatNumber(totalVolume)}</strong></div>`;
+
+        html += '<div style="background: #f0f4ff; border-left: 4px solid #1e3a8a; padding: 16px; border-radius: 8px;"><strong>구성원별 물량</strong><br>';
+
+        Object.keys(result.finalByMember).sort().forEach(name => {
+            const value = result.finalByMember[name];
+            const member = db.members.find(m => m.name === name);
+            const location = member ? member.location : '미등록';
+            html += `<div style="margin-top: 8px; display: flex; justify-content: space-between;">
+                <span><strong>${name}</strong> [${location}]</span>
+                <span style="font-weight: 700; color: #1e3a8a;">${formatNumber(value)}</span>
+            </div>`;
         });
 
-        html += `<br><strong>총 물량: ${formatNumber(totalVolume + unregisteredVolume)}</strong>`;
-        if (unregisteredVolume > 0) {
-            html += ` (등록: ${formatNumber(totalVolume)} / 미등록: ${formatNumber(unregisteredVolume)})`;
-        }
         html += '</div>';
-
-        html += '<div style="overflow-x: auto;"><table><thead><tr><th>구분</th><th>최초</th><th>최신</th><th>증감</th><th>시각</th></tr></thead><tbody>';
-
-        locations.forEach(loc => {
-            const data = result.analysis[loc];
-            const change = data.latestValue - data.firstValue;
-            const changeClass = change > 0 ? 'change-positive' : (change < 0 ? 'change-negative' : '');
-            const changeText = change > 0 ? `+${formatNumber(change)}` : `${formatNumber(change)}`;
-            const locDisplay = data.location ? data.location : '<span class="no-location">미등록</span>';
-
-            html += `
-                <tr>
-                    <td>${locDisplay}</td>
-                    <td>${formatNumber(data.firstValue)}</td>
-                    <td>${formatNumber(data.latestValue)}</td>
-                    <td class="${changeClass}">${changeText}</td>
-                    <td>${data.latestTime}</td>
-                </tr>
-            `;
-        });
-
-        html += '</tbody></table></div>';
         resultDiv.innerHTML = html;
     }
 
     function renderDashboard() {
         const dashboardContent = document.getElementById('dashboardContent');
+        const dateInfoDiv = document.getElementById('dateInfo');
 
         if (!db.analysis || db.analysis.length === 0) {
+            dateInfoDiv.style.display = 'none';
             dashboardContent.innerHTML = `
                 <div class="empty-state">
                     <p>분석 데이터가 없습니다.</p>
@@ -1503,93 +1494,240 @@ tbody tr:hover {
             return;
         }
 
-        let html = '';
+        // 사용 가능한 날짜 목록
+        const availableDates = [...new Set(db.analysis.map(a => a.date))].sort().reverse();
+        dateInfoDiv.textContent = `사용 가능한 날짜: ${availableDates.join(', ')}`;
+        dateInfoDiv.style.display = 'block';
 
-        // 채팅방별로 그룹화
-        const groupedByChatroom = {};
-        db.analysis.forEach(result => {
-            const chatroomId = result.chatroomId;
-            if (!groupedByChatroom[chatroomId]) {
-                groupedByChatroom[chatroomId] = [];
-            }
-            groupedByChatroom[chatroomId].push(result);
+        // 날짜별로 그룹화
+        const byDate = {};
+        db.analysis.forEach(a => {
+            if (!byDate[a.date]) byDate[a.date] = [];
+            byDate[a.date].push(a);
         });
 
-        // 각 채팅방별로 표시
-        Object.keys(groupedByChatroom).forEach(chatroomId => {
-            const results = groupedByChatroom[chatroomId];
-            const latest = results[results.length - 1];
-            const chatroom = db.chatrooms.find(c => c.id === latest.chatroomId);
+        let html = '';
 
-            if (!chatroom) return;
+        // 최신 날짜부터 역순으로
+        Object.keys(byDate).sort().reverse().forEach(date => {
+            html += `<div style="margin-bottom: 32px;">
+                <h3 style="color: #1e3a8a; margin-bottom: 16px;">📅 ${date}</h3>`;
 
-            html += `
-                <div class="chatroom-section">
-                    <div class="chatroom-title">${chatroom.name}</div>
-                    <div class="chatroom-meta">마지막 업데이트: ${latest.systemTime}</div>
-            `;
-
-            // 총 물량
-            let totalVolume = 0;
-            let unregisteredVolume = 0;
-            const locations = Object.keys(latest.analysis).sort();
-            
-            locations.forEach(loc => {
-                const data = latest.analysis[loc];
-                if (data.location) {
-                    totalVolume += data.latestValue;
-                } else {
-                    unregisteredVolume += data.latestValue;
-                }
+            // 사업담당별 그룹화
+            const byLevel1 = {};
+            byDate[date].forEach(a => {
+                const members = db.members.filter(m => m.level3 === a.sub);
+                const level1 = members.length > 0 ? members[0].level1 : '미등록';
+                if (!byLevel1[level1]) byLevel1[level1] = {};
+                byLevel1[level1][a.sub] = a;
             });
 
-            html += `
-                <div class="total-volume">
-                    <div class="total-volume-label">총 예상 물량</div>
-                    <div class="total-volume-value">${formatNumber(totalVolume + unregisteredVolume)}</div>
-                    <div class="total-volume-date">📅 ${latest.date}</div>
-                    ${unregisteredVolume > 0 ? `<div style="font-size: 13px; margin-top: 8px; color: #92400e;">등록: ${formatNumber(totalVolume)} / 미등록: ${formatNumber(unregisteredVolume)}</div>` : ''}
-                </div>
-            `;
-
-            // 테이블
-            html += '<div style="overflow-x: auto;"><table><thead><tr><th>구분</th><th>최초</th><th>최신</th><th>증감</th><th>시각</th></tr></thead><tbody>';
-
-            locations.forEach(loc => {
-                const data = latest.analysis[loc];
-                const change = data.latestValue - data.firstValue;
-                const changeClass = change > 0 ? 'change-positive' : (change < 0 ? 'change-negative' : '');
-                const changeText = change > 0 ? `+${formatNumber(change)}` : `${formatNumber(change)}`;
-                const locDisplay = data.location ? data.location : '<span class="no-location">미등록</span>';
+            Object.keys(byLevel1).sort().forEach(level1 => {
+                let level1Total = 0;
+                Object.values(byLevel1[level1]).forEach(a => {
+                    Object.values(a.finalByMember).forEach(v => level1Total += v);
+                });
 
                 html += `
-                    <tr>
-                        <td>${locDisplay}</td>
-                        <td>${formatNumber(data.firstValue)}</td>
-                        <td>${formatNumber(data.latestValue)}</td>
-                        <td class="${changeClass}">${changeText}</td>
-                        <td>${data.latestTime}</td>
-                    </tr>
+                    <div class="level1-group">
+                        <div class="level1-title">
+                            <span>${level1}</span>
+                            <span class="level1-volume">${formatNumber(level1Total)}</span>
+                        </div>
                 `;
+
+                // 지사별 그룹화
+                const byLevel2 = {};
+                Object.keys(byLevel1[level1]).forEach(sub => {
+                    const a = byLevel1[level1][sub];
+                    const members = db.members.filter(m => m.level3 === a.sub);
+                    const level2 = members.length > 0 ? members[0].level2 : '미등록';
+                    if (!byLevel2[level2]) byLevel2[level2] = {};
+                    byLevel2[level2][sub] = a;
+                });
+
+                Object.keys(byLevel2).sort().forEach(level2 => {
+                    let level2Total = 0;
+                    Object.values(byLevel2[level2]).forEach(a => {
+                        Object.values(a.finalByMember).forEach(v => level2Total += v);
+                    });
+
+                    html += `
+                        <div class="level2-group">
+                            <div class="level2-title">
+                                <span>${level2}</span>
+                                <span class="level2-volume">${formatNumber(level2Total)}</span>
+                            </div>
+                    `;
+
+                    // Sub별 그룹화
+                    Object.keys(byLevel2[level2]).sort().forEach(sub => {
+                        const a = byLevel2[level2][sub];
+                        let subTotal = 0;
+                        Object.values(a.finalByMember).forEach(v => subTotal += v);
+
+                        const chatroom = db.chatrooms.find(c => c.id === a.chatroomId);
+
+                        html += `
+                            <div class="level3-group">
+                                <div class="level3-title">
+                                    <span>${sub} (${chatroom?.name || '미등록'})</span>
+                                    <span class="level3-volume">${formatNumber(subTotal)}</span>
+                                </div>
+                        `;
+
+                        // 구성원별 표시 - 집배점/고객사명으로 표시
+                        Object.keys(a.finalByMember).sort().forEach(name => {
+                            const value = a.finalByMember[name];
+                            const member = db.members.find(m => m.name === name);
+                            const location = member ? member.location : '미등록';
+
+                            html += `
+                                <div class="member-item">
+                                    <span class="member-name">${name} [${location}]</span>
+                                    <span class="member-value">${formatNumber(value)}</span>
+                                </div>
+                            `;
+                        });
+
+                        html += '</div>';
+                    });
+
+                    html += '</div>';
+                });
+
+                html += '</div>';
             });
 
-            html += '</tbody></table></div></div>';
+            html += '</div>';
         });
 
         dashboardContent.innerHTML = html;
     }
 
-    function updateAnalysisChatroomSelect() {
-        const select = document.getElementById('analysisCharoom');
-        select.innerHTML = '<option value="">선택해주세요</option>';
-        if (db && db.chatrooms && Array.isArray(db.chatrooms)) {
-            db.chatrooms.forEach(c => {
-                select.innerHTML += `<option value="${c.id}">${c.name}</option>`;
-            });
+    function filterDashboardByDate() {
+        const selectedDate = document.getElementById('dashboardDateFilter').value;
+        const dashboardContent = document.getElementById('dashboardContent');
+        const dateInfoDiv = document.getElementById('dateInfo');
+
+        if (!selectedDate) {
+            renderDashboard();
+            return;
         }
+
+        const filtered = db.analysis.filter(a => a.date === selectedDate);
+
+        if (filtered.length === 0) {
+            dateInfoDiv.innerHTML = `<strong>조회 결과:</strong> ${selectedDate}에 분석 데이터가 없습니다.`;
+            dateInfoDiv.style.display = 'block';
+            dashboardContent.innerHTML = `
+                <div class="empty-state">
+                    <p>${selectedDate}에 분석 데이터가 없습니다.</p>
+                </div>
+            `;
+            return;
+        }
+
+        dateInfoDiv.innerHTML = `<strong>조회 결과:</strong> ${selectedDate} (${filtered.length}개 Sub)`;
+        dateInfoDiv.style.display = 'block';
+
+        let html = `<h3 style="color: #1e3a8a; margin-bottom: 16px;">📅 ${selectedDate}</h3>`;
+
+        // 사업담당별 그룹화
+        const byLevel1 = {};
+        filtered.forEach(a => {
+            const members = db.members.filter(m => m.level3 === a.sub);
+            const level1 = members.length > 0 ? members[0].level1 : '미등록';
+            if (!byLevel1[level1]) byLevel1[level1] = {};
+            byLevel1[level1][a.sub] = a;
+        });
+
+        Object.keys(byLevel1).sort().forEach(level1 => {
+            let level1Total = 0;
+            Object.values(byLevel1[level1]).forEach(a => {
+                Object.values(a.finalByMember).forEach(v => level1Total += v);
+            });
+
+            html += `
+                <div class="level1-group">
+                    <div class="level1-title">
+                        <span>${level1}</span>
+                        <span class="level1-volume">${formatNumber(level1Total)}</span>
+                    </div>
+            `;
+
+            // 지사별 그룹화
+            const byLevel2 = {};
+            Object.keys(byLevel1[level1]).forEach(sub => {
+                const a = byLevel1[level1][sub];
+                const members = db.members.filter(m => m.level3 === a.sub);
+                const level2 = members.length > 0 ? members[0].level2 : '미등록';
+                if (!byLevel2[level2]) byLevel2[level2] = {};
+                byLevel2[level2][sub] = a;
+            });
+
+            Object.keys(byLevel2).sort().forEach(level2 => {
+                let level2Total = 0;
+                Object.values(byLevel2[level2]).forEach(a => {
+                    Object.values(a.finalByMember).forEach(v => level2Total += v);
+                });
+
+                html += `
+                    <div class="level2-group">
+                        <div class="level2-title">
+                            <span>${level2}</span>
+                            <span class="level2-volume">${formatNumber(level2Total)}</span>
+                        </div>
+                `;
+
+                // Sub별 그룹화
+                Object.keys(byLevel2[level2]).sort().forEach(sub => {
+                    const a = byLevel2[level2][sub];
+                    let subTotal = 0;
+                    Object.values(a.finalByMember).forEach(v => subTotal += v);
+
+                    const chatroom = db.chatrooms.find(c => c.id === a.chatroomId);
+
+                    html += `
+                        <div class="level3-group">
+                            <div class="level3-title">
+                                <span>${sub} (${chatroom?.name || '미등록'})</span>
+                                <span class="level3-volume">${formatNumber(subTotal)}</span>
+                            </div>
+                    `;
+
+                    // 구성원별 표시 - 집배점/고객사명으로 표시
+                    Object.keys(a.finalByMember).sort().forEach(name => {
+                        const value = a.finalByMember[name];
+                        const member = db.members.find(m => m.name === name);
+                        const location = member ? member.location : '미등록';
+
+                        html += `
+                            <div class="member-item">
+                                <span class="member-name">${name} [${location}]</span>
+                                <span class="member-value">${formatNumber(value)}</span>
+                            </div>
+                        `;
+                    });
+
+                    html += '</div>';
+                });
+
+                html += '</div>';
+            });
+
+            html += '</div>';
+        });
+
+        dashboardContent.innerHTML = html;
     }
 
-    // Initialize on load
+    function clearDashboardFilter() {
+        document.getElementById('dashboardDateFilter').value = '';
+        renderDashboard();
+    }
+
     window.addEventListener('DOMContentLoaded', initDB);
-</script></body>
+</script>
+</body>
 </html>
