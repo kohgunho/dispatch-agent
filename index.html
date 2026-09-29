@@ -117,7 +117,7 @@
 
     textarea {
         resize: vertical;
-        min-height: 100px;
+        min-height: 120px;
         font-family: 'Courier New', monospace;
         font-size: 13px;
     }
@@ -367,168 +367,168 @@
         background: #059669;
     }
 
-    /* Hierarchy styles */
-    .level1-group {
-        background: white;
-        border-left: 4px solid #1e3a8a;
-        padding: 16px;
-        border-radius: 8px;
-        margin-bottom: 16px;
+    .unregistered-tag {
+        background: #fca5a5;
+        color: #7f1d1d;
+        padding: 2px 8px;
+        border-radius: 4px;
+        font-size: 10px;
+        font-weight: 600;
+        margin-left: 4px;
+    }
+
+    .member-item {
+        background: #eff6ff;
+        border-left: 2px solid #06b6d4;
+        padding: 8px 12px;
+        border-radius: 4px;
+        margin-bottom: 6px;
+        font-size: 12px;
+        color: #164e63;
+    }
+
+    .member-item.unregistered {
+        background: #fef3c7;
+        color: #92400e;
+    }
+
+    .volume-display {
+        font-weight: 700;
+        color: #0284c7;
+        font-size: 14px;
+        text-align: right;
+    }
+
+    .volume-display.zero {
+        color: #94a3b8;
+    }
+
+    /* Sub 관리 계층 구조 스타일 */
+    .hierarchy-wrapper {
+        display: flex;
+        flex-direction: column;
+        gap: 24px;
+    }
+
+    .level1-section {
+        background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 100%);
+        color: white;
+        padding: 20px;
+        border-radius: 12px;
+        box-shadow: 0 4px 12px rgba(30, 58, 138, 0.2);
     }
 
     .level1-title {
-        font-size: 16px;
-        font-weight: 700;
-        color: #1e3a8a;
-        margin-bottom: 12px;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-    }
-
-    .level1-volume {
         font-size: 18px;
         font-weight: 700;
-        color: #1e3a8a;
+        margin-bottom: 16px;
+        letter-spacing: 0.5px;
     }
 
-    .level2-group {
-        background: #f0f4ff;
-        border-left: 4px solid #3b82f6;
-        padding: 12px;
-        border-radius: 6px;
-        margin-bottom: 12px;
-        margin-left: 12px;
+    .level2-container {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 16px;
+    }
+
+    .level2-card {
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: 8px;
+        padding: 16px;
+        border-left: 4px solid #0284c7;
     }
 
     .level2-title {
         font-size: 14px;
-        font-weight: 600;
-        color: #1e40af;
-        margin-bottom: 8px;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-    }
-
-    .level2-volume {
-        font-size: 16px;
         font-weight: 700;
-        color: #3b82f6;
-    }
-
-    .level3-group {
-        background: #eff6ff;
-        border-left: 4px solid #0284c7;
-        padding: 10px;
-        border-radius: 6px;
-        margin-bottom: 10px;
-        margin-left: 24px;
-    }
-
-    .level3-title {
-        font-size: 13px;
-        font-weight: 600;
         color: #0369a1;
-        margin-bottom: 8px;
+        margin-bottom: 12px;
         display: flex;
-        justify-content: space-between;
         align-items: center;
+        gap: 8px;
     }
 
-    .level3-volume {
-        font-size: 15px;
-        font-weight: 700;
-        color: #0284c7;
+    .level2-title::before {
+        content: "📍";
+        font-size: 16px;
     }
 
-    .member-item {
+    .sub-list {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .sub-item {
         background: white;
-        border-left: 2px solid #06b6d4;
-        padding: 8px;
-        border-radius: 4px;
-        margin-bottom: 6px;
-        margin-left: 36px;
-        font-size: 12px;
+        border: 1px solid #cbd5e1;
+        border-radius: 6px;
+        padding: 10px 12px;
+        font-size: 13px;
+        color: #0c4a6e;
+        font-weight: 600;
         display: flex;
         justify-content: space-between;
         align-items: center;
+        transition: all 0.2s;
     }
 
-    .member-name {
-        color: #164e63;
-        font-weight: 600;
+    .sub-item:hover {
+        background: #f0f9ff;
+        border-color: #0284c7;
+        box-shadow: 0 2px 8px rgba(2, 132, 199, 0.1);
     }
 
-    .member-value {
-        color: #06b6d4;
-        font-weight: 700;
+    .sub-item.registered {
+        background: #d1fae5;
+        border-color: #10b981;
     }
 
-    .analysis-summary {
-        background: #f0f4ff;
-        border-left: 4px solid #1e3a8a;
-        padding: 16px;
+    .delete-icon {
+        cursor: pointer;
+        color: #ef4444;
+        font-size: 16px;
+        opacity: 0;
+        transition: opacity 0.2s;
+    }
+
+    .sub-item:hover .delete-icon {
+        opacity: 1;
+    }
+
+    .delete-icon:hover {
+        transform: scale(1.2);
+    }
+
+    .date-filter {
+        background: #f8fafc;
         border-radius: 8px;
-        margin-bottom: 24px;
-        font-size: 14px;
-    }
-
-    .analysis-summary strong {
-        color: #1e3a8a;
-    }
-
-    .dashboard-filter {
-        background: #f0f4ff;
-        border-left: 4px solid #1e3a8a;
         padding: 16px;
-        border-radius: 8px;
         margin-bottom: 24px;
-    }
-
-    .filter-row {
         display: flex;
         gap: 12px;
+        align-items: flex-end;
         flex-wrap: wrap;
-        align-items: center;
     }
 
-    .filter-row input {
+    .date-filter input {
         max-width: 200px;
     }
 
-    .analysis-filter {
-        background: #f0f4ff;
-        border-left: 4px solid #1e3a8a;
-        padding: 16px;
+    .inquiry-btn {
+        background: #1e3a8a;
+        color: white;
+        padding: 10px 24px;
+        border: none;
         border-radius: 8px;
-        margin-bottom: 24px;
+        cursor: pointer;
+        font-weight: 600;
+        font-size: 14px;
+        transition: all 0.2s;
     }
 
-    .filter-group {
-        display: flex;
-        gap: 12px;
-        flex-wrap: wrap;
-        align-items: flex-end;
-    }
-
-    .filter-group-item {
-        flex: 1;
-        min-width: 200px;
-    }
-
-    .filter-group-item label {
-        margin-bottom: 8px;
-    }
-
-    .date-info {
-        background: #eff6ff;
-        border-left: 4px solid #3b82f6;
-        padding: 12px;
-        border-radius: 6px;
-        margin-bottom: 16px;
-        font-size: 13px;
-        color: #1e40af;
+    .inquiry-btn:hover {
+        background: #1e40af;
     }
 </style>
 </head>
@@ -538,26 +538,21 @@
             <h1>당일 물량 취합 Agent</h1>
             <p>Kakao Talk 메시지에서 자동으로 배송 물량을 추출하고 분석합니다</p>
         </header>    <div class="tabs">
-        <button class="tab-btn active" onclick="switchTab(event, 'dashboard')">대시보드</button>
-        <button class="tab-btn" onclick="switchTab(event, 'chatrooms')">채팅방</button>
-        <button class="tab-btn" onclick="switchTab(event, 'members')">멤버</button>
-        <button class="tab-btn" onclick="switchTab(event, 'analysis')">분석</button>
+        <button class="tab-btn active" onclick="switchTab('dashboard')">대시보드</button>
+        <button class="tab-btn" onclick="switchTab('chatrooms')">채팅방</button>
+        <button class="tab-btn" onclick="switchTab('members')">멤버</button>
+        <button class="tab-btn" onclick="switchTab('analysis')">분석</button>
+        <button class="tab-btn" onclick="switchTab('subs')">Sub 관리</button>
     </div>
 
     <!-- Dashboard Tab -->
     <div id="dashboard" class="tab-content active">
         <h2 style="margin-bottom: 20px; color: #1e3a8a;">대시보드</h2>
         
-        <div class="dashboard-filter">
-            <div class="filter-row">
-                <label style="margin-bottom: 0; flex-shrink: 0;">검색 날짜:</label>
-                <input type="date" id="dashboardDateFilter">
-                <button class="search-btn" onclick="filterDashboardByDate()">조회</button>
-                <button class="clear-btn" onclick="clearDashboardFilter()">초기화</button>
-            </div>
+        <div class="date-filter">
+            <input type="date" id="dashboardDate">
+            <button class="inquiry-btn" onclick="renderDashboard()">조회</button>
         </div>
-
-        <div id="dateInfo" class="date-info" style="display: none;"></div>
 
         <div id="dashboardContent">
             <div class="empty-state">
@@ -573,7 +568,14 @@
         
         <div class="form-group">
             <label>채팅방 이름</label>
-            <input type="text" id="chatroomName" placeholder="예: 야탑배송팀">
+            <input type="text" id="chatroomName" placeholder="예: 강동배송팀">
+        </div>
+
+        <div class="form-group">
+            <label>Sub 선택</label>
+            <select id="chatroomSub">
+                <option value="">선택해주세요</option>
+            </select>
         </div>
 
         <button onclick="addChatroom()">채팅방 추가</button>
@@ -596,13 +598,14 @@
                 <thead>
                     <tr>
                         <th>채팅방명</th>
+                        <th>Sub</th>
                         <th>메시지 수</th>
                         <th>작업</th>
                     </tr>
                 </thead>
                 <tbody id="chatroomList">
                     <tr>
-                        <td colspan="3" style="text-align: center; color: #94a3b8;">등록된 채팅방이 없습니다.</td>
+                        <td colspan="4" style="text-align: center; color: #94a3b8;">등록된 채팅방이 없습니다.</td>
                     </tr>
                 </tbody>
             </table>
@@ -614,8 +617,8 @@
         <h2 style="margin-bottom: 20px; color: #1e3a8a;">멤버 관리</h2>
         
         <div class="info-box">
-            <strong>계층 구조:</strong> 사업담당 → 지사 → Sub<br>
-            예: 동서울 → 강동 → 강동A Sub
+            <strong>멤버는 Sub에 속합니다.</strong><br>
+            Sub 관리에서 Sub을 먼저 등록한 후 멤버를 추가해주세요.
         </div>
 
         <div class="form-group">
@@ -635,28 +638,10 @@
         </div>
 
         <div class="form-group">
-            <label>사업담당 (Level 1)</label>
-            <select id="memberLevel1">
+            <label>Sub 선택</label>
+            <select id="memberSub">
                 <option value="">선택해주세요</option>
-                <option value="동서울">동서울</option>
-                <option value="남서울">남서울</option>
-                <option value="북서울">북서울</option>
-                <option value="서서울">서서울</option>
-                <option value="충청">충청</option>
-                <option value="경북">경북</option>
-                <option value="경남">경남</option>
-                <option value="호남">호남</option>
             </select>
-        </div>
-
-        <div class="form-group">
-            <label>지사 (Level 2)</label>
-            <input type="text" id="memberLevel2" placeholder="예: 강동, 광진, 송파">
-        </div>
-
-        <div class="form-group">
-            <label>Sub (Level 3)</label>
-            <input type="text" id="memberLevel3" placeholder="예: 강동A Sub, 분당A Sub">
         </div>
 
         <div class="form-group">
@@ -688,8 +673,6 @@
                     <tr>
                         <th>이름</th>
                         <th>역할</th>
-                        <th>사업담당</th>
-                        <th>지사</th>
                         <th>Sub</th>
                         <th>집배점/고객사명</th>
                         <th>작업</th>
@@ -697,7 +680,7 @@
                 </thead>
                 <tbody id="memberList">
                     <tr>
-                        <td colspan="7" style="text-align: center; color: #94a3b8;">등록된 멤버가 없습니다.</td>
+                        <td colspan="5" style="text-align: center; color: #94a3b8;">등록된 멤버가 없습니다.</td>
                     </tr>
                 </tbody>
             </table>
@@ -710,31 +693,21 @@
         
         <div class="info-box">
             <strong>메시지 형식:</strong><br>
-            [사람이름] [시간] Sub명 숫자<br>
-            예: [거거너] [오전 6:29] 강동A Sub 12000<br>
-            <strong>날짜 포함:</strong> "2026년 9월 28일 월요일" 같은 날짜를 첫 줄에 포함하면 대시보드에 반영됩니다
+            [사람이름] [시간] 내용 숫자<br>
+            예: [거거너] [오전 8:55] 강동A Sub 1000<br>
+            <strong>주의:</strong> 선택한 채팅방의 Sub에 속한 메시지만 분석됩니다
         </div>
 
-        <div class="analysis-filter">
-            <div class="filter-group">
-                <div class="filter-group-item">
-                    <label>Sub 선택</label>
-                    <select id="analysisSubSelect">
-                        <option value="">선택해주세요</option>
-                    </select>
-                </div>
-                <div class="filter-group-item">
-                    <label>채팅방 선택</label>
-                    <select id="analysisChatroomSelect">
-                        <option value="">선택해주세요</option>
-                    </select>
-                </div>
-            </div>
+        <div class="form-group">
+            <label>채팅방 선택</label>
+            <select id="analysisChatroomSelect">
+                <option value="">선택해주세요</option>
+            </select>
         </div>
 
         <div class="form-group">
             <label>Kakao Talk 메시지 복붙 (한 줄에 한 메시지)</label>
-            <textarea id="messageInput" placeholder="예:&#10;2026년 9월 28일 월요일&#10;[거거너] [오전 6:29] 강동A Sub 12000&#10;[거거너] [오전 6:31] 아니다 400"></textarea>
+            <textarea id="messageInput" placeholder="예:&#10;2026년 9월 28일 월요일&#10;[거거너] [오전 8:55] 강동A Sub 1000&#10;[거거너] [오전 8:57] 아니다 400"></textarea>
         </div>
 
         <button onclick="previewParse()">분석 미리보기</button>
@@ -746,6 +719,56 @@
 
         <div id="parsePreview"></div>
         <div id="analysisResult" style="margin-top: 24px;"></div>
+    </div>
+
+    <!-- Sub Management Tab -->
+    <div id="subs" class="tab-content">
+        <h2 style="margin-bottom: 20px; color: #1e3a8a;">Sub 관리</h2>
+        
+        <div class="info-box">
+            <strong>계층 구조:</strong> 사업담당 (Level 1) → 지사 (Level 2) → Sub (Level 3)<br>
+            새로운 Sub을 등록하고 계층 구조를 확인해주세요.
+        </div>
+
+        <div style="background: #f8fafc; border-radius: 8px; padding: 16px; margin-bottom: 24px;">
+            <h3 style="color: #1e3a8a; margin-bottom: 16px; font-size: 16px;">Sub 등록</h3>
+            
+            <div class="form-group">
+                <label>Sub 이름</label>
+                <input type="text" id="subName" placeholder="예: 경기광주Sub">
+            </div>
+
+            <div class="form-group">
+                <label>사업담당 (Level 1)</label>
+                <select id="subLevel1">
+                    <option value="">선택해주세요</option>
+                    <option value="동서울">동서울</option>
+                    <option value="남서울">남서울</option>
+                    <option value="북서울">북서울</option>
+                    <option value="서서울">서서울</option>
+                    <option value="충청">충청</option>
+                    <option value="경북">경북</option>
+                    <option value="경남">경남</option>
+                    <option value="호남">호남</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>지사 (Level 2)</label>
+                <select id="subLevel2">
+                    <option value="">선택해주세요</option>
+                </select>
+            </div>
+
+            <button onclick="addSub()">Sub 추가</button>
+
+            <div id="successMessageSub" class="success-message"></div>
+            <div id="errorMessageSub" class="error-message"></div>
+        </div>
+
+        <h3 style="margin-bottom: 20px; color: #1e3a8a; font-size: 16px;">계층 구조</h3>
+
+        <div id="subHierarchy" class="hierarchy-wrapper"></div>
     </div>
 </div>
 
@@ -768,26 +791,10 @@
             </select>
         </div>
         <div class="form-group">
-            <label>사업담당</label>
-            <select id="editMemberLevel1">
-                <option value="">선택해주세요</option>
-                <option value="동서울">동서울</option>
-                <option value="남서울">남서울</option>
-                <option value="북서울">북서울</option>
-                <option value="서서울">서서울</option>
-                <option value="충청">충청</option>
-                <option value="경북">경북</option>
-                <option value="경남">경남</option>
-                <option value="호남">호남</option>
-            </select>
-        </div>
-        <div class="form-group">
-            <label>지사</label>
-            <input type="text" id="editMemberLevel2">
-        </div>
-        <div class="form-group">
             <label>Sub</label>
-            <input type="text" id="editMemberLevel3">
+            <select id="editMemberSub">
+                <option value="">선택해주세요</option>
+            </select>
         </div>
         <div class="form-group">
             <label>집배점/고객사명</label>
@@ -802,12 +809,58 @@
 
 <script>
     let db = {
+        subs: [],
         chatrooms: [],
         members: [],
         analysis: []
     };
 
     let editingMemberId = null;
+
+    // 계층 구조 설정
+    const hierarchyData = {
+        "동서울": ["강동", "광진", "송파", "동대문", "경기광주", "남양주1", "남양주2", "노원", "의정부", "양주", "성남", "북강원", "남강원"],
+        "남서울": ["강남", "서초", "마포", "용산"],
+        "북서울": ["강북", "노원", "도봉"],
+        "서서울": ["은평", "구로", "금천"],
+        "충청": ["청주", "천안"],
+        "경북": ["대구", "포항"],
+        "경남": ["부산", "창원"],
+        "호남": ["광주", "전주"]
+    };
+
+    const subsByLevel2 = {
+        "강동": ["강동Sub", "강동A Sub"],
+        "광진": ["광진Sub"],
+        "송파": ["송파B Sub", "송파C Sub"],
+        "동대문": ["동대문Sub"],
+        "경기광주": ["경기광주Sub", "분당A Sub", "양평 Sub"],
+        "남양주1": ["남양주1Sub"],
+        "남양주2": ["남양주2Sub"],
+        "노원": ["노원Sub"],
+        "의정부": ["의정부Sub"],
+        "양주": ["양주Sub"],
+        "성남": ["성남Sub"],
+        "북강원": ["북강원Sub"],
+        "남강원": ["남강원Sub"],
+        "강남": ["강남C Sub", "강남D Sub"],
+        "서초": ["서초Sub"],
+        "마포": ["마포Sub"],
+        "용산": ["용산Sub"],
+        "강북": ["강북Sub"],
+        "도봉": ["도봉Sub"],
+        "은평": ["은평Sub"],
+        "구로": ["구로Sub"],
+        "금천": ["금천Sub"],
+        "청주": ["청주Sub"],
+        "천안": ["천안Sub"],
+        "대구": ["대구Sub"],
+        "포항": ["포항Sub"],
+        "부산": ["부산Sub"],
+        "창원": ["창원Sub"],
+        "광주": ["광주Sub"],
+        "전주": ["전주Sub"]
+    };
 
     function formatNumber(num) {
         return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
@@ -824,6 +877,399 @@
         return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
     }
 
+    function getTodayDate() {
+        const now = new Date();
+        const year = now.getFullYear();
+        const month = String(now.getMonth() + 1).padStart(2, '0');
+        const day = String(now.getDate()).padStart(2, '0');
+        return `${year}-${month}-${day}`;
+    }
+
+    function saveDB() {
+        localStorage.setItem('dispatch_db', JSON.stringify(db));
+    }
+
+    function loadDB() {
+        const saved = localStorage.getItem('dispatch_db');
+        if (saved) {
+            try {
+                db = JSON.parse(saved);
+            } catch (e) {
+                db = { subs: [], chatrooms: [], members: [], analysis: [] };
+            }
+        }
+    }
+
+    function switchTab(tabName) {
+        document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+        document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+        document.getElementById(tabName).classList.add('active');
+        event.target.classList.add('active');
+        
+        if (tabName === 'dashboard') {
+            renderDashboard();
+        } else if (tabName === 'subs') {
+            renderSubHierarchy(db.subs);
+        }
+    }
+
+    // ===== SUB MANAGEMENT =====
+    function updateLevel2Select() {
+        const level1 = document.getElementById('subLevel1').value;
+        const level2Select = document.getElementById('subLevel2');
+        level2Select.innerHTML = '<option value="">선택해주세요</option>';
+        
+        if (level1 && hierarchyData[level1]) {
+            hierarchyData[level1].forEach(region => {
+                level2Select.innerHTML += `<option value="${region}">${region}</option>`;
+            });
+        }
+    }
+
+    function addSub() {
+        const name = document.getElementById('subName').value.trim();
+        const level1 = document.getElementById('subLevel1').value;
+        const level2 = document.getElementById('subLevel2').value;
+        const successMsg = document.getElementById('successMessageSub');
+        const errorMsg = document.getElementById('errorMessageSub');
+
+        successMsg.style.display = 'none';
+        errorMsg.style.display = 'none';
+
+        if (!name || !level1 || !level2) {
+            errorMsg.textContent = '모든 필드를 입력해주세요.';
+            errorMsg.style.display = 'block';
+            return;
+        }
+
+        if (db.subs.some(s => s.name === name)) {
+            errorMsg.textContent = '이미 존재하는 Sub입니다.';
+            errorMsg.style.display = 'block';
+            return;
+        }
+
+        db.subs.push({
+            id: Date.now(),
+            name,
+            level1,
+            level2
+        });
+
+        saveDB();
+        document.getElementById('subName').value = '';
+        document.getElementById('subLevel1').value = '';
+        document.getElementById('subLevel2').value = '';
+        successMsg.textContent = '✓ Sub이 추가되었습니다.';
+        successMsg.style.display = 'block';
+        renderSubHierarchy(db.subs);
+        updateMemberSubSelect();
+        updateChatroomSubSelect();
+    }
+
+    function renderSubHierarchy(registeredSubs) {
+        const hierarchyDiv = document.getElementById('subHierarchy');
+        let html = '';
+
+        Object.keys(hierarchyData).sort().forEach(level1 => {
+            html += `<div class="level1-section">
+                <div class="level1-title">🏢 ${level1}</div>
+                <div class="level2-container">
+            `;
+
+            hierarchyData[level1].sort().forEach(level2 => {
+                const subsList = subsByLevel2[level2] || [];
+
+                html += `<div class="level2-card">
+                    <div class="level2-title">${level2}</div>
+                    <div class="sub-list">
+                `;
+
+                subsList.forEach(subName => {
+                    const isRegistered = registeredSubs.some(s => s.name === subName);
+                    const sub = registeredSubs.find(s => s.name === subName);
+                    
+                    html += `<div class="sub-item ${isRegistered ? 'registered' : ''}">
+                        <span>${subName}</span>
+                        ${isRegistered ? `<span class="delete-icon" onclick="deleteSub(${sub.id}, event)">✕</span>` : ''}
+                    </div>`;
+                });
+
+                html += `</div></div>`;
+            });
+
+            html += `</div></div>`;
+        });
+
+        hierarchyDiv.innerHTML = html;
+    }
+
+    function deleteSub(id, event) {
+        event.stopPropagation();
+        if (confirm('이 Sub과 관련된 채팅방, 멤버도 함께 삭제됩니다. 정말 삭제하시겠습니까?')) {
+            const sub = db.subs.find(s => s.id === id);
+            db.subs = db.subs.filter(s => s.id !== id);
+            db.members = db.members.filter(m => m.sub !== sub.name);
+            db.chatrooms = db.chatrooms.filter(c => c.sub !== sub.name);
+            saveDB();
+            renderSubHierarchy(db.subs);
+            displayAllMembers();
+            displayAllChatrooms();
+            updateMemberSubSelect();
+            updateChatroomSubSelect();
+            renderDashboard();
+        }
+    }
+
+    // ===== CHATROOM MANAGEMENT =====
+    function updateChatroomSubSelect() {
+        const subSelect = document.getElementById('chatroomSub');
+        const subs = db.subs.map(s => s.name).sort();
+        subSelect.innerHTML = '<option value="">선택해주세요</option>';
+        subs.forEach(sub => {
+            subSelect.innerHTML += `<option value="${sub}">${sub}</option>`;
+        });
+    }
+
+    function addChatroom() {
+        const name = document.getElementById('chatroomName').value.trim();
+        const sub = document.getElementById('chatroomSub').value;
+        const successMsg = document.getElementById('successMessageChatroom');
+        const errorMsg = document.getElementById('errorMessageChatroom');
+
+        successMsg.style.display = 'none';
+        errorMsg.style.display = 'none';
+
+        if (!name || !sub) {
+            errorMsg.textContent = '채팅방 이름과 Sub을 모두 선택해주세요.';
+            errorMsg.style.display = 'block';
+            return;
+        }
+
+        if (db.chatrooms.some(c => c.name === name)) {
+            errorMsg.textContent = '이미 존재하는 채팅방입니다.';
+            errorMsg.style.display = 'block';
+            return;
+        }
+
+        db.chatrooms.push({ id: Date.now(), name, sub });
+        saveDB();
+        document.getElementById('chatroomName').value = '';
+        document.getElementById('chatroomSub').value = '';
+        successMsg.textContent = '✓ 채팅방이 추가되었습니다.';
+        successMsg.style.display = 'block';
+        displayAllChatrooms();
+        updateAnalysisSelects();
+    }
+
+    function displayAllChatrooms() {
+        document.getElementById('chatroomSearchInput').value = '';
+        renderChatroomTable(db.chatrooms);
+    }
+
+    function searchChatrooms() {
+        const searchTerm = document.getElementById('chatroomSearchInput').value.trim().toLowerCase();
+        const filtered = db.chatrooms.filter(c => c.name.toLowerCase().includes(searchTerm) || c.sub.toLowerCase().includes(searchTerm));
+        renderChatroomTable(filtered);
+    }
+
+    function clearChatroomSearch() {
+        displayAllChatrooms();
+    }
+
+    function renderChatroomTable(chatrooms) {
+        const tbody = document.getElementById('chatroomList');
+        tbody.innerHTML = '';
+
+        if (chatrooms.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="4" style="text-align: center; color: #94a3b8;">등록된 채팅방이 없습니다.</td></tr>';
+            return;
+        }
+
+        chatrooms.forEach(chatroom => {
+            const analysisCount = db.analysis.filter(a => a.chatroomId === chatroom.id).length;
+            
+            tbody.innerHTML += `
+                <tr>
+                    <td>${chatroom.name}</td>
+                    <td>${chatroom.sub}</td>
+                    <td>${analysisCount}</td>
+                    <td>
+                        <div class="action-btns">
+                            <button class="delete-btn" onclick="deleteChatroom(${chatroom.id})">삭제</button>
+                        </div>
+                    </td>
+                </tr>
+            `;
+        });
+    }
+
+    function deleteChatroom(id) {
+        if (confirm('정말 삭제하시겠습니까?')) {
+            db.chatrooms = db.chatrooms.filter(c => c.id !== id);
+            saveDB();
+            displayAllChatrooms();
+            updateAnalysisSelects();
+        }
+    }
+
+    // ===== MEMBER MANAGEMENT =====
+    function updateMemberSubSelect() {
+        const subSelect = document.getElementById('memberSub');
+        const editSubSelect = document.getElementById('editMemberSub');
+        const subs = db.subs.map(s => s.name).sort();
+        
+        subSelect.innerHTML = '<option value="">선택해주세요</option>';
+        editSubSelect.innerHTML = '<option value="">선택해주세요</option>';
+        
+        subs.forEach(sub => {
+            subSelect.innerHTML += `<option value="${sub}">${sub}</option>`;
+            editSubSelect.innerHTML += `<option value="${sub}">${sub}</option>`;
+        });
+    }
+
+    function addMember() {
+        const name = document.getElementById('memberName').value.trim();
+        const role = document.getElementById('memberRole').value;
+        const sub = document.getElementById('memberSub').value;
+        const location = document.getElementById('memberLocation').value.trim();
+        const successMsg = document.getElementById('successMessageMember');
+        const errorMsg = document.getElementById('errorMessageMember');
+
+        successMsg.style.display = 'none';
+        errorMsg.style.display = 'none';
+
+        if (!name || !role || !sub || !location) {
+            errorMsg.textContent = '모든 필드를 입력해주세요.';
+            errorMsg.style.display = 'block';
+            return;
+        }
+
+        if (db.members.some(m => m.name === name)) {
+            errorMsg.textContent = '이미 존재하는 멤버입니다.';
+            errorMsg.style.display = 'block';
+            return;
+        }
+
+        db.members.push({
+            id: Date.now(),
+            name,
+            role,
+            sub,
+            location
+        });
+
+        saveDB();
+        document.getElementById('memberName').value = '';
+        document.getElementById('memberRole').value = '';
+        document.getElementById('memberSub').value = '';
+        document.getElementById('memberLocation').value = '';
+        successMsg.textContent = '✓ 멤버가 추가되었습니다.';
+        successMsg.style.display = 'block';
+        displayAllMembers();
+    }
+
+    function displayAllMembers() {
+        document.getElementById('memberSearchInput').value = '';
+        renderMemberTable(db.members);
+    }
+
+    function searchMembers() {
+        const searchTerm = document.getElementById('memberSearchInput').value.trim().toLowerCase();
+        const filtered = db.members.filter(m => 
+            m.name.toLowerCase().includes(searchTerm) ||
+            m.sub.toLowerCase().includes(searchTerm)
+        );
+        renderMemberTable(filtered);
+    }
+
+    function clearMemberSearch() {
+        displayAllMembers();
+    }
+
+    function renderMemberTable(members) {
+        const tbody = document.getElementById('memberList');
+        tbody.innerHTML = '';
+
+        if (members.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: #94a3b8;">등록된 멤버가 없습니다.</td></tr>';
+            return;
+        }
+
+        members.forEach(member => {
+            tbody.innerHTML += `
+                <tr>
+                    <td>${member.name}</td>
+                    <td>${member.role}</td>
+                    <td>${member.sub}</td>
+                    <td>${member.location}</td>
+                    <td>
+                        <div class="action-btns">
+                            <button class="edit-btn" onclick="openEditMemberModal(${member.id})">수정</button>
+                            <button class="delete-btn" onclick="deleteMember(${member.id})">삭제</button>
+                        </div>
+                    </td>
+                </tr>
+            `;
+        });
+    }
+
+    function openEditMemberModal(id) {
+        const member = db.members.find(m => m.id === id);
+        if (!member) return;
+        
+        editingMemberId = id;
+        document.getElementById('editMemberName').value = member.name;
+        document.getElementById('editMemberRole').value = member.role;
+        document.getElementById('editMemberSub').value = member.sub;
+        document.getElementById('editMemberLocation').value = member.location;
+        document.getElementById('editMemberModal').classList.add('active');
+    }
+
+    function closeEditMemberModal() {
+        document.getElementById('editMemberModal').classList.remove('active');
+        editingMemberId = null;
+    }
+
+    function saveEditMember() {
+        const role = document.getElementById('editMemberRole').value;
+        const sub = document.getElementById('editMemberSub').value;
+        const location = document.getElementById('editMemberLocation').value.trim();
+        const errorMsg = document.getElementById('errorMessageMember');
+
+        errorMsg.style.display = 'none';
+
+        if (!role || !sub || !location) {
+            errorMsg.textContent = '모든 필드를 입력해주세요.';
+            errorMsg.style.display = 'block';
+            return;
+        }
+
+        const member = db.members.find(m => m.id === editingMemberId);
+        if (!member) return;
+        
+        member.role = role;
+        member.sub = sub;
+        member.location = location;
+        
+        saveDB();
+        closeEditMemberModal();
+        displayAllMembers();
+        renderDashboard();
+        
+        const successMsg = document.getElementById('successMessageMember');
+        successMsg.textContent = '✓ 멤버가 수정되었습니다.';
+        successMsg.style.display = 'block';
+    }
+
+    function deleteMember(id) {
+        if (confirm('정말 삭제하시겠습니까?')) {
+            db.members = db.members.filter(m => m.id !== id);
+            saveDB();
+            displayAllMembers();
+        }
+    }
+
+    // ===== ANALYSIS =====
     function extractDate(line) {
         const koreanDatePattern = /(\d{4})년\s+(\d{1,2})월\s+(\d{1,2})일/;
         const match = line.match(koreanDatePattern);
@@ -834,37 +1280,7 @@
             const day = String(match[3]).padStart(2, '0');
             return `${year}-${month}-${day}`;
         }
-        
-        const otherDatePattern = /(\d{4})[.\/-](\d{1,2})[.\/-](\d{1,2})/;
-        const match2 = line.match(otherDatePattern);
-        if (match2) {
-            const year = match2[1];
-            const month = String(match2[2]).padStart(2, '0');
-            const day = String(match2[3]).padStart(2, '0');
-            return `${year}-${month}-${day}`;
-        }
-        
         return null;
-    }
-
-    function isDateLine(line) {
-        return extractDate(line) !== null;
-    }
-
-    function isRevisionMessage(content) {
-        const keywords = ['아니다', '아냐', '정정', '수정', '다시', '맞다'];
-        return keywords.some(keyword => content.includes(keyword));
-    }
-
-    function extractAllNumbers(text) {
-        const matches = text.match(/\d+/g);
-        return matches ? matches.map(Number) : [];
-    }
-
-    function extractSmartNumber(content) {
-        const numbers = extractAllNumbers(content);
-        if (numbers.length === 0) return null;
-        return numbers[numbers.length - 1];
     }
 
     function parseMessage(line) {
@@ -900,381 +1316,48 @@
         return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}`;
     }
 
-    function extractLocationAndNumber(name, content) {
-        let sub = null;
-        let level2 = null;
-        let level1 = null;
-        let number = null;
-
-        // 1. 멤버 DB에서 찾기
-        const member = db.members.find(m => m.name === name);
-        if (member) {
-            sub = member.level3;
-            level2 = member.level2;
-            level1 = member.level1;
-        }
-
-        // 2. 메시지 내용에서 "Sub" 패턴 찾기 (예: "강동A Sub", "분당B Sub")
-        const subPattern = /([가-힣A-Z]+\s*Sub)/;
-        const subMatch = content.match(subPattern);
-        if (subMatch) {
-            sub = subMatch[0].trim();
-        }
-
-        number = extractSmartNumber(content);
-
-        return { sub, level2, level1, number };
+    function isRevisionMessage(content) {
+        const keywords = ['아니다', '아냐', '정정', '수정', '다시', '맞다'];
+        return keywords.some(keyword => content.includes(keyword));
     }
 
-    function loadTestData() {
-        db.members = [
-            { id: 1, name: "거거너", role: "배차담당자", level1: "동서울", level2: "강동", level3: "강동A Sub", location: "강동집배점" },
-            { id: 2, name: "사랑하는엄마", role: "지역사업담당", level1: "동서울", level2: "송파", level3: "송파B Sub", location: "CJ대한통운" },
-            { id: 3, name: "테스트1", role: "배차담당자", level1: "동서울", level2: "강동", level3: "강동A Sub", location: "강동배송센터" },
-            { id: 4, name: "테스트2", role: "배차담당자", level1: "남서울", level2: "강남", level3: "강남C Sub", location: "강남고객사" }
-        ];
-        db.chatrooms = [
-            { id: 100, name: "강동배송팀" },
-            { id: 101, name: "송파배송팀" },
-            { id: 102, name: "강남배송팀" }
-        ];
-        db.analysis = [
-            {
-                id: 1000,
-                sub: "강동A Sub",
-                chatroomId: 100,
-                date: "2026-09-22",
-                systemTime: "2026-09-22 10:30:00",
-                messages: [
-                    { name: "거거너", time: "06:29", content: "강동A Sub 12000", number: 12000, isRevision: false },
-                    { name: "테스트1", time: "06:45", content: "강동A Sub 8000", number: 8000, isRevision: false }
-                ],
-                finalByMember: { "거거너": 12000, "테스트1": 8000 }
-            },
-            {
-                id: 1001,
-                sub: "송파B Sub",
-                chatroomId: 101,
-                date: "2026-09-22",
-                systemTime: "2026-09-22 10:31:00",
-                messages: [
-                    { name: "사랑하는엄마", time: "07:00", content: "송파B Sub 15000", number: 15000, isRevision: false }
-                ],
-                finalByMember: { "사랑하는엄마": 15000 }
-            },
-            {
-                id: 1002,
-                sub: "강남C Sub",
-                chatroomId: 102,
-                date: "2026-09-21",
-                systemTime: "2026-09-21 10:15:00",
-                messages: [
-                    { name: "테스트2", time: "08:00", content: "강남C Sub 20000", number: 20000, isRevision: false }
-                ],
-                finalByMember: { "테스트2": 20000 }
-            }
-        ];
-        saveDB();
-        displayAllMembers();
-        displayAllChatrooms();
-        updateAnalysisSelects();
-        renderDashboard();
-        const msg = document.getElementById('successMessageMember');
-        msg.textContent = '✓ 테스트 데이터 로드 완료! (2026-09-22, 2026-09-21 데이터 포함)';
-        msg.style.display = 'block';
+    function extractAllNumbers(text) {
+        const matches = text.match(/\d+/g);
+        return matches ? matches.map(Number) : [];
     }
 
-    function initDB() {
-        const saved = localStorage.getItem('dispatch_db');
-        if (saved) {
-            try {
-                db = JSON.parse(saved);
-            } catch (e) {
-                db = { chatrooms: [], members: [], analysis: [] };
-            }
-        }
-        displayAllChatrooms();
-        displayAllMembers();
-        updateAnalysisSelects();
-        renderDashboard();
-    }
-
-    function saveDB() {
-        localStorage.setItem('dispatch_db', JSON.stringify(db));
-    }
-
-    function switchTab(event, tabName) {
-        event.preventDefault();
-        document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
-        document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
-        document.getElementById(tabName).classList.add('active');
-        event.target.classList.add('active');
-        
-        if (tabName === 'analysis') {
-            updateAnalysisSelects();
-        } else if (tabName === 'dashboard') {
-            renderDashboard();
-        }
-    }
-
-    function addChatroom() {
-        const name = document.getElementById('chatroomName').value.trim();
-        const successMsg = document.getElementById('successMessageChatroom');
-        const errorMsg = document.getElementById('errorMessageChatroom');
-
-        successMsg.style.display = 'none';
-        errorMsg.style.display = 'none';
-
-        if (!name) {
-            errorMsg.textContent = '채팅방 이름을 입력해주세요.';
-            errorMsg.style.display = 'block';
-            return;
-        }
-
-        if (db.chatrooms.some(c => c.name === name)) {
-            errorMsg.textContent = '이미 존재하는 채팅방입니다.';
-            errorMsg.style.display = 'block';
-            return;
-        }
-
-        db.chatrooms.push({ id: Date.now(), name });
-        saveDB();
-        document.getElementById('chatroomName').value = '';
-        successMsg.textContent = '채팅방이 추가되었습니다.';
-        successMsg.style.display = 'block';
-        displayAllChatrooms();
-        updateAnalysisSelects();
-    }
-
-    function displayAllChatrooms() {
-        document.getElementById('chatroomSearchInput').value = '';
-        renderChatroomTable(db.chatrooms);
-    }
-
-    function searchChatrooms() {
-        const searchTerm = document.getElementById('chatroomSearchInput').value.trim().toLowerCase();
-        const filtered = db.chatrooms.filter(c => c.name.toLowerCase().includes(searchTerm));
-        renderChatroomTable(filtered);
-    }
-
-    function clearChatroomSearch() {
-        displayAllChatrooms();
-    }
-
-    function renderChatroomTable(chatrooms) {
-        const tbody = document.getElementById('chatroomList');
-        tbody.innerHTML = '';
-
-        if (chatrooms.length === 0) {
-            tbody.innerHTML = '<tr><td colspan="3" style="text-align: center; color: #94a3b8;">등록된 채팅방이 없습니다.</td></tr>';
-            return;
-        }
-
-        chatrooms.forEach(chatroom => {
-            const messageCount = db.analysis.filter(a => a.chatroomId === chatroom.id).length;
-            
-            tbody.innerHTML += `
-                <tr>
-                    <td>${chatroom.name}</td>
-                    <td>${messageCount}</td>
-                    <td>
-                        <div class="action-btns">
-                            <button class="delete-btn" onclick="deleteChatroom(${chatroom.id})">삭제</button>
-                        </div>
-                    </td>
-                </tr>
-            `;
-        });
-    }
-
-    function deleteChatroom(id) {
-        if (confirm('정말 삭제하시겠습니까?')) {
-            db.chatrooms = db.chatrooms.filter(c => c.id !== id);
-            saveDB();
-            displayAllChatrooms();
-            updateAnalysisSelects();
-        }
-    }
-
-    function addMember() {
-        const name = document.getElementById('memberName').value.trim();
-        const role = document.getElementById('memberRole').value;
-        const level1 = document.getElementById('memberLevel1').value;
-        const level2 = document.getElementById('memberLevel2').value.trim();
-        const level3 = document.getElementById('memberLevel3').value.trim();
-        const location = document.getElementById('memberLocation').value.trim();
-        const successMsg = document.getElementById('successMessageMember');
-        const errorMsg = document.getElementById('errorMessageMember');
-
-        successMsg.style.display = 'none';
-        errorMsg.style.display = 'none';
-
-        if (!name || !role || !level1 || !level2 || !level3 || !location) {
-            errorMsg.textContent = '모든 필드를 입력해주세요.';
-            errorMsg.style.display = 'block';
-            return;
-        }
-
-        if (db.members.some(m => m.name === name)) {
-            errorMsg.textContent = '이미 존재하는 멤버입니다.';
-            errorMsg.style.display = 'block';
-            return;
-        }
-
-        db.members.push({
-            id: Date.now(),
-            name,
-            role,
-            level1,
-            level2,
-            level3,
-            location
-        });
-
-        saveDB();
-        document.getElementById('memberName').value = '';
-        document.getElementById('memberRole').value = '';
-        document.getElementById('memberLevel1').value = '';
-        document.getElementById('memberLevel2').value = '';
-        document.getElementById('memberLevel3').value = '';
-        document.getElementById('memberLocation').value = '';
-        successMsg.textContent = '멤버가 추가되었습니다.';
-        successMsg.style.display = 'block';
-        displayAllMembers();
-        updateAnalysisSelects();
-    }
-
-    function displayAllMembers() {
-        document.getElementById('memberSearchInput').value = '';
-        renderMemberTable(db.members);
-    }
-
-    function searchMembers() {
-        const searchTerm = document.getElementById('memberSearchInput').value.trim().toLowerCase();
-        const filtered = db.members.filter(m => 
-            m.name.toLowerCase().includes(searchTerm) ||
-            m.level3.toLowerCase().includes(searchTerm)
-        );
-        renderMemberTable(filtered);
-    }
-
-    function clearMemberSearch() {
-        displayAllMembers();
-    }
-
-    function renderMemberTable(members) {
-        const tbody = document.getElementById('memberList');
-        tbody.innerHTML = '';
-
-        if (members.length === 0) {
-            tbody.innerHTML = '<tr><td colspan="7" style="text-align: center; color: #94a3b8;">등록된 멤버가 없습니다.</td></tr>';
-            return;
-        }
-
-        members.forEach(member => {
-            tbody.innerHTML += `
-                <tr>
-                    <td>${member.name}</td>
-                    <td>${member.role}</td>
-                    <td>${member.level1}</td>
-                    <td>${member.level2}</td>
-                    <td>${member.level3}</td>
-                    <td>${member.location}</td>
-                    <td>
-                        <div class="action-btns">
-                            <button class="edit-btn" onclick="openEditMemberModal(${member.id})">수정</button>
-                            <button class="delete-btn" onclick="deleteMember(${member.id})">삭제</button>
-                        </div>
-                    </td>
-                </tr>
-            `;
-        });
-    }
-
-    function openEditMemberModal(id) {
-        const member = db.members.find(m => m.id === id);
-        if (!member) return;
-        
-        editingMemberId = id;
-        document.getElementById('editMemberName').value = member.name;
-        document.getElementById('editMemberRole').value = member.role;
-        document.getElementById('editMemberLevel1').value = member.level1;
-        document.getElementById('editMemberLevel2').value = member.level2;
-        document.getElementById('editMemberLevel3').value = member.level3;
-        document.getElementById('editMemberLocation').value = member.location;
-        document.getElementById('editMemberModal').classList.add('active');
-    }
-
-    function closeEditMemberModal() {
-        document.getElementById('editMemberModal').classList.remove('active');
-        editingMemberId = null;
-    }
-
-    function saveEditMember() {
-        const role = document.getElementById('editMemberRole').value;
-        const level1 = document.getElementById('editMemberLevel1').value;
-        const level2 = document.getElementById('editMemberLevel2').value.trim();
-        const level3 = document.getElementById('editMemberLevel3').value.trim();
-        const location = document.getElementById('editMemberLocation').value.trim();
-        const errorMsg = document.getElementById('errorMessageMember');
-
-        errorMsg.style.display = 'none';
-
-        if (!role || !level1 || !level2 || !level3 || !location) {
-            errorMsg.textContent = '모든 필드를 입력해주세요.';
-            errorMsg.style.display = 'block';
-            return;
-        }
-
-        const member = db.members.find(m => m.id === editingMemberId);
-        member.role = role;
-        member.level1 = level1;
-        member.level2 = level2;
-        member.level3 = level3;
-        member.location = location;
-        
-        saveDB();
-        closeEditMemberModal();
-        displayAllMembers();
-        
-        const successMsg = document.getElementById('successMessageMember');
-        successMsg.textContent = '멤버가 수정되었습니다.';
-        successMsg.style.display = 'block';
-    }
-
-    function deleteMember(id) {
-        if (confirm('정말 삭제하시겠습니까?')) {
-            db.members = db.members.filter(m => m.id !== id);
-            saveDB();
-            displayAllMembers();
-        }
+    function extractSmartNumber(content) {
+        const numbers = extractAllNumbers(content);
+        if (numbers.length === 0) return null;
+        return numbers[numbers.length - 1];
     }
 
     function updateAnalysisSelects() {
-        // Sub 목록 업데이트
-        const subSelect = document.getElementById('analysisSubSelect');
-        const subs = [...new Set(db.members.map(m => m.level3))].sort();
-        subSelect.innerHTML = '<option value="">선택해주세요</option>';
-        subs.forEach(sub => {
-            subSelect.innerHTML += `<option value="${sub}">${sub}</option>`;
-        });
-
-        // 채팅방 목록 업데이트
         const chatroomSelect = document.getElementById('analysisChatroomSelect');
         chatroomSelect.innerHTML = '<option value="">선택해주세요</option>';
         db.chatrooms.forEach(c => {
-            chatroomSelect.innerHTML += `<option value="${c.id}">${c.name}</option>`;
+            chatroomSelect.innerHTML += `<option value="${c.id}" data-sub="${c.sub}">${c.name} (${c.sub})</option>`;
         });
     }
 
     function previewParse() {
+        const selectedChatroomId = parseInt(document.getElementById('analysisChatroomSelect').value);
         const messageText = document.getElementById('messageInput').value.trim();
         const lines = messageText.split('\n').filter(l => l.trim());
-        const warningMsg = document.getElementById('warningMessage');
         const previewDiv = document.getElementById('parsePreview');
+        const warningMsg = document.getElementById('warningMessage');
 
-        warningMsg.style.display = 'none';
         previewDiv.innerHTML = '';
+        warningMsg.style.display = 'none';
+
+        if (!selectedChatroomId || isNaN(selectedChatroomId)) {
+            warningMsg.textContent = '채팅방을 선택해주세요.';
+            warningMsg.style.display = 'block';
+            return;
+        }
+
+        const selectedChatroom = db.chatrooms.find(c => c.id === selectedChatroomId);
+        const selectedSub = selectedChatroom.sub;
 
         if (lines.length === 0) {
             warningMsg.textContent = '메시지를 입력해주세요.';
@@ -1282,29 +1365,45 @@
             return;
         }
 
-        let previewHTML = '<div style="margin-bottom: 16px;"><strong>분석 미리보기:</strong><br>';
+        let previewHTML = '<div style="margin-top: 16px; background: #f0f4ff; border-left: 4px solid #3b82f6; padding: 16px; border-radius: 8px;"><strong>분석 미리보기</strong><br>';
+        let detectedDate = null;
 
         for (let i = 0; i < lines.length; i++) {
             const line = lines[i];
-            const extractedDate = extractDate(line);
+            const dateFromLine = extractDate(line);
             
-            if (extractedDate) {
-                previewHTML += `<div style="background: #d1fae5; padding: 8px; border-radius: 4px; margin-bottom: 8px;">📅 ${extractedDate}</div>`;
+            if (dateFromLine) {
+                detectedDate = dateFromLine;
+                previewHTML += `<div style="background: #d1fae5; padding: 8px; border-radius: 4px; margin-bottom: 8px; margin-top: 8px;"><strong>📅 ${dateFromLine}</strong></div>`;
                 continue;
             }
 
             const parsed = parseMessage(line);
             if (!parsed) {
-                previewHTML += `<div style="background: #fee2e2; padding: 6px; border-radius: 4px; margin-bottom: 4px; color: #991b1b;">❌ ${line}</div>`;
+                previewHTML += `<div style="background: #fee2e2; padding: 6px; border-radius: 4px; margin-bottom: 4px; color: #991b1b;">❌ 형식 오류: ${line}</div>`;
                 continue;
             }
 
-            const { sub, level2, level1, number } = extractLocationAndNumber(parsed.name, parsed.content);
-            const displaySub = sub || '(미등록)';
+            const member = db.members.find(m => m.name === parsed.name);
+            const memberSub = member ? member.sub : null;
+
+            if (member && memberSub !== selectedSub) {
+                previewHTML += `<div style="background: #fee2e2; padding: 6px; border-radius: 4px; margin-bottom: 4px; color: #991b1b;">⚠️ 건너뜀: [${parsed.name}]은(는) ${memberSub}에 속함 (선택된 Sub: ${selectedSub})</div>`;
+                continue;
+            }
+
+            const number = extractSmartNumber(parsed.content);
+            if (number === null) {
+                previewHTML += `<div style="background: #fee2e2; padding: 6px; border-radius: 4px; margin-bottom: 4px; color: #991b1b;">❌ 숫자 없음: ${line}</div>`;
+                continue;
+            }
+
+            const isUnregistered = !member;
+            const revisionBadge = isRevisionMessage(parsed.content) ? '<span style="background: #fbbf24; color: #78350f; padding: 2px 6px; border-radius: 3px; font-size: 11px; margin-left: 6px;">수정</span>' : '';
 
             previewHTML += `
-                <div style="background: #f0f9ff; padding: 6px; border-radius: 4px; margin-bottom: 4px; color: #0c4a6e;">
-                    <strong>${parsed.name}</strong> [${parsed.timeStr}] → ${displaySub} / ${number || '?'}
+                <div style="background: #dbeafe; padding: 6px; border-radius: 4px; margin-bottom: 4px; color: #0c4a6e; border-left: 2px solid #0284c7; padding-left: 12px;">
+                    <strong>${parsed.name}</strong> ${isUnregistered ? '<span class="unregistered-tag">미등록</span>' : ''} [${parsed.timeStr}] → ${formatNumber(number)} ${revisionBadge}
                 </div>
             `;
         }
@@ -1314,7 +1413,6 @@
     }
 
     function analyzeMessages() {
-        const selectedSub = document.getElementById('analysisSubSelect').value;
         const selectedChatroomId = parseInt(document.getElementById('analysisChatroomSelect').value);
         const messageText = document.getElementById('messageInput').value.trim();
         const successMsg = document.getElementById('successMessage');
@@ -1326,11 +1424,14 @@
         errorMsg.style.display = 'none';
         resultDiv.innerHTML = '';
 
-        if (!selectedSub || !selectedChatroomId || isNaN(selectedChatroomId)) {
-            errorMsg.textContent = 'Sub과 채팅방을 모두 선택해주세요.';
+        if (!selectedChatroomId || isNaN(selectedChatroomId)) {
+            errorMsg.textContent = '채팅방을 선택해주세요.';
             errorMsg.style.display = 'block';
             return;
         }
+
+        const selectedChatroom = db.chatrooms.find(c => c.id === selectedChatroomId);
+        const selectedSub = selectedChatroom.sub;
 
         if (!messageText) {
             errorMsg.textContent = '메시지를 입력해주세요.';
@@ -1339,9 +1440,11 @@
         }
 
         const lines = messageText.split('\n').filter(l => l.trim());
-        const messages = [];
+        const resultsByDate = {};
+        let currentDate = null;
         let parseErrors = [];
-        let extractedDate = null;
+        let skippedMessages = [];
+        let totalMessages = 0;
         let revisionCount = 0;
 
         for (let i = 0; i < lines.length; i++) {
@@ -1349,8 +1452,32 @@
             const dateFromLine = extractDate(line);
             
             if (dateFromLine) {
-                extractedDate = dateFromLine;
+                currentDate = dateFromLine;
+                if (!resultsByDate[currentDate]) {
+                    resultsByDate[currentDate] = {
+                        messages: [],
+                        analysisByPerson: {},
+                        date: currentDate,
+                        systemTime,
+                        sub: selectedSub,
+                        chatroomId: selectedChatroomId
+                    };
+                }
                 continue;
+            }
+
+            if (!currentDate) {
+                currentDate = new Date().toISOString().split('T')[0];
+                if (!resultsByDate[currentDate]) {
+                    resultsByDate[currentDate] = {
+                        messages: [],
+                        analysisByPerson: {},
+                        date: currentDate,
+                        systemTime,
+                        sub: selectedSub,
+                        chatroomId: selectedChatroomId
+                    };
+                }
             }
 
             const parsed = parseMessage(line);
@@ -1365,13 +1492,15 @@
                 continue;
             }
 
-            const { sub, number } = extractLocationAndNumber(parsed.name, parsed.content);
+            const member = db.members.find(m => m.name === parsed.name);
+            const memberSub = member ? member.sub : null;
 
-            // 선택한 Sub과 메시지 Sub이 일치해야 함
-            if (sub && sub !== selectedSub) {
+            if (member && memberSub !== selectedSub) {
+                skippedMessages.push(`${i + 1}번: [${parsed.name}]은(는) ${memberSub}에 속함 (${selectedSub}와 불일치)`);
                 continue;
             }
 
+            const number = extractSmartNumber(parsed.content);
             if (number === null) {
                 parseErrors.push(`${i + 1}번: 숫자 없음`);
                 continue;
@@ -1380,111 +1509,101 @@
             const isRevision = isRevisionMessage(parsed.content);
             if (isRevision) revisionCount++;
 
-            messages.push({
+            const msg = {
                 name: parsed.name,
                 time: normalizedTime,
                 content: parsed.content,
                 number,
                 isRevision
-            });
+            };
+
+            resultsByDate[currentDate].messages.push(msg);
+            resultsByDate[currentDate].analysisByPerson[parsed.name] = number;
+            totalMessages++;
         }
 
+        let allErrors = [];
+        if (skippedMessages.length > 0) {
+            allErrors.push('건너뛴 메시지:\n' + skippedMessages.join('\n'));
+        }
         if (parseErrors.length > 0) {
-            errorMsg.textContent = '일부 메시지 분석 오류:\n\n' + parseErrors.join('\n');
+            allErrors.push('분석 오류:\n' + parseErrors.join('\n'));
+        }
+
+        if (allErrors.length > 0) {
+            errorMsg.textContent = allErrors.join('\n\n');
             errorMsg.style.display = 'block';
         }
 
-        if (messages.length === 0) {
-            errorMsg.textContent = '분석할 수 있는 메시지가 없습니다.';
-            errorMsg.style.display = 'block';
+        if (totalMessages === 0) {
+            if (allErrors.length === 0) {
+                errorMsg.textContent = '분석할 수 있는 메시지가 없습니다.';
+                errorMsg.style.display = 'block';
+            }
             return;
         }
-
-        messages.sort((a, b) => {
-            const timeA = a.time.split(':').reduce((h, m) => h * 60 + parseInt(m), 0);
-            const timeB = b.time.split(':').reduce((h, m) => h * 60 + parseInt(m), 0);
-            return timeA - timeB;
-        });
-
-        // 사람별로 최종 값 추적
-        const finalByMember = {};
-        messages.forEach(msg => {
-            finalByMember[msg.name] = msg.number;
-        });
-
-        const analysisDate = extractedDate || new Date().toISOString().split('T')[0];
 
         if (!Array.isArray(db.analysis)) {
             db.analysis = [];
         }
 
-        const result = {
-            id: Date.now(),
-            sub: selectedSub,
-            chatroomId: selectedChatroomId,
-            date: analysisDate,
-            systemTime,
-            messages,
-            finalByMember
-        };
+        Object.values(resultsByDate).forEach(result => {
+            result.id = Date.now() + Math.random();
+            db.analysis.push(result);
+        });
 
-        db.analysis.push(result);
         saveDB();
 
-        const revisionText = revisionCount > 0 ? `수정 ${revisionCount}개 감지됨 - ` : '';
-        successMsg.textContent = `✓ 분석 완료! (${revisionText}메시지 ${messages.length}개, 날짜: ${analysisDate})`;
+        const revisionText = revisionCount > 0 ? `수정 ${revisionCount}개 감지 - ` : '';
+        successMsg.textContent = `✓ 분석 완료! (${revisionText}메시지 ${totalMessages}개)`;
         successMsg.style.display = 'block';
 
         document.getElementById('messageInput').value = '';
-        renderAnalysisDetail(result);
+        renderAnalysisDetail(resultsByDate);
         renderDashboard();
     }
 
-    function renderAnalysisDetail(result) {
+    function renderAnalysisDetail(resultsByDate) {
         const resultDiv = document.getElementById('analysisResult');
-        const chatroom = db.chatrooms.find(c => c.id === result.chatroomId);
         
-        if (!chatroom) {
-            resultDiv.innerHTML = '<div class="error-message">채팅방을 찾을 수 없습니다.</div>';
-            return;
-        }
+        let html = '';
 
-        let html = `
-            <div class="analysis-summary">
-                <strong>📅 ${result.date}</strong> | <strong>⏰ ${result.systemTime}</strong><br>
-                <strong>Sub:</strong> ${result.sub}<br>
-                <strong>채팅방:</strong> ${chatroom.name}<br>
-        `;
+        Object.keys(resultsByDate).sort().reverse().forEach(date => {
+            const result = resultsByDate[date];
+            let totalVolume = 0;
+            Object.values(result.analysisByPerson).forEach(val => {
+                totalVolume += val;
+            });
 
-        let totalVolume = 0;
-        Object.values(result.finalByMember).forEach(val => {
-            totalVolume += val;
-        });
-        
-        html += `<strong>총 물량: ${formatNumber(totalVolume)}</strong></div>`;
+            html += `
+                <div style="background: #f0f4ff; border-left: 4px solid #1e3a8a; padding: 16px; border-radius: 8px; margin-bottom: 24px; font-size: 14px;">
+                    <strong style="color: #1e3a8a;">📅 ${result.date}</strong> | <strong style="color: #1e3a8a;">⏰ ${result.systemTime}</strong><br>
+                    <strong style="color: #1e3a8a;">Sub:</strong> ${result.sub}<br>
+                    <strong style="color: #1e3a8a;">총 물량: ${formatNumber(totalVolume)}</strong><br>
+                    <strong style="color: #1e3a8a;">멤버별 물량:</strong>
+            `;
 
-        html += '<div style="background: #f0f4ff; border-left: 4px solid #1e3a8a; padding: 16px; border-radius: 8px;"><strong>구성원별 물량</strong><br>';
+            Object.keys(result.analysisByPerson).sort().forEach(name => {
+                const value = result.analysisByPerson[name];
+                const member = db.members.find(m => m.name === name);
+                const location = member ? member.location : '미등록';
+                html += `<div style="margin-top: 6px; margin-left: 16px;"><strong>${name}</strong> ${!member ? '<span class="unregistered-tag">미등록</span>' : ''} (${location}) → ${formatNumber(value)}</div>`;
+            });
 
-        Object.keys(result.finalByMember).sort().forEach(name => {
-            const value = result.finalByMember[name];
-            const member = db.members.find(m => m.name === name);
-            const location = member ? member.location : '미등록';
-            html += `<div style="margin-top: 8px; display: flex; justify-content: space-between;">
-                <span><strong>${name}</strong> [${location}]</span>
-                <span style="font-weight: 700; color: #1e3a8a;">${formatNumber(value)}</span>
-            </div>`;
+            html += '</div>';
         });
 
-        html += '</div>';
         resultDiv.innerHTML = html;
     }
 
     function renderDashboard() {
         const dashboardContent = document.getElementById('dashboardContent');
-        const dateInfoDiv = document.getElementById('dateInfo');
+        const selectedDate = document.getElementById('dashboardDate').value || getTodayDate();
 
-        if (!db.analysis || db.analysis.length === 0) {
-            dateInfoDiv.style.display = 'none';
+        // 선택된 날짜의 분석 데이터만 필터링
+        const filteredAnalysis = db.analysis.filter(a => a.date === selectedDate);
+
+        if (!filteredAnalysis || filteredAnalysis.length === 0) {
             dashboardContent.innerHTML = `
                 <div class="empty-state">
                     <p>분석 데이터가 없습니다.</p>
@@ -1494,240 +1613,174 @@
             return;
         }
 
-        // 사용 가능한 날짜 목록
-        const availableDates = [...new Set(db.analysis.map(a => a.date))].sort().reverse();
-        dateInfoDiv.textContent = `사용 가능한 날짜: ${availableDates.join(', ')}`;
-        dateInfoDiv.style.display = 'block';
-
-        // 날짜별로 그룹화
-        const byDate = {};
-        db.analysis.forEach(a => {
-            if (!byDate[a.date]) byDate[a.date] = [];
-            byDate[a.date].push(a);
-        });
-
-        let html = '';
-
-        // 최신 날짜부터 역순으로
-        Object.keys(byDate).sort().reverse().forEach(date => {
-            html += `<div style="margin-bottom: 32px;">
-                <h3 style="color: #1e3a8a; margin-bottom: 16px;">📅 ${date}</h3>`;
-
-            // 사업담당별 그룹화
-            const byLevel1 = {};
-            byDate[date].forEach(a => {
-                const members = db.members.filter(m => m.level3 === a.sub);
-                const level1 = members.length > 0 ? members[0].level1 : '미등록';
-                if (!byLevel1[level1]) byLevel1[level1] = {};
-                byLevel1[level1][a.sub] = a;
-            });
-
-            Object.keys(byLevel1).sort().forEach(level1 => {
-                let level1Total = 0;
-                Object.values(byLevel1[level1]).forEach(a => {
-                    Object.values(a.finalByMember).forEach(v => level1Total += v);
-                });
-
-                html += `
-                    <div class="level1-group">
-                        <div class="level1-title">
-                            <span>${level1}</span>
-                            <span class="level1-volume">${formatNumber(level1Total)}</span>
-                        </div>
-                `;
-
-                // 지사별 그룹화
-                const byLevel2 = {};
-                Object.keys(byLevel1[level1]).forEach(sub => {
-                    const a = byLevel1[level1][sub];
-                    const members = db.members.filter(m => m.level3 === a.sub);
-                    const level2 = members.length > 0 ? members[0].level2 : '미등록';
-                    if (!byLevel2[level2]) byLevel2[level2] = {};
-                    byLevel2[level2][sub] = a;
-                });
-
-                Object.keys(byLevel2).sort().forEach(level2 => {
-                    let level2Total = 0;
-                    Object.values(byLevel2[level2]).forEach(a => {
-                        Object.values(a.finalByMember).forEach(v => level2Total += v);
+        // 모든 사업담당/지사/Sub 구조 생성
+        let structure = {};
+        Object.keys(hierarchyData).forEach(level1 => {
+            structure[level1] = {};
+            hierarchyData[level1].forEach(level2 => {
+                structure[level1][level2] = [];
+                const subsList = subsByLevel2[level2] || [];
+                subsList.forEach(subName => {
+                    structure[level1][level2].push({
+                        name: subName,
+                        volume: 0,
+                        members: {},
+                        isRegistered: false
                     });
-
-                    html += `
-                        <div class="level2-group">
-                            <div class="level2-title">
-                                <span>${level2}</span>
-                                <span class="level2-volume">${formatNumber(level2Total)}</span>
-                            </div>
-                    `;
-
-                    // Sub별 그룹화
-                    Object.keys(byLevel2[level2]).sort().forEach(sub => {
-                        const a = byLevel2[level2][sub];
-                        let subTotal = 0;
-                        Object.values(a.finalByMember).forEach(v => subTotal += v);
-
-                        const chatroom = db.chatrooms.find(c => c.id === a.chatroomId);
-
-                        html += `
-                            <div class="level3-group">
-                                <div class="level3-title">
-                                    <span>${sub} (${chatroom?.name || '미등록'})</span>
-                                    <span class="level3-volume">${formatNumber(subTotal)}</span>
-                                </div>
-                        `;
-
-                        // 구성원별 표시 - 집배점/고객사명으로 표시
-                        Object.keys(a.finalByMember).sort().forEach(name => {
-                            const value = a.finalByMember[name];
-                            const member = db.members.find(m => m.name === name);
-                            const location = member ? member.location : '미등록';
-
-                            html += `
-                                <div class="member-item">
-                                    <span class="member-name">${name} [${location}]</span>
-                                    <span class="member-value">${formatNumber(value)}</span>
-                                </div>
-                            `;
-                        });
-
-                        html += '</div>';
-                    });
-
-                    html += '</div>';
                 });
-
-                html += '</div>';
             });
-
-            html += '</div>';
         });
 
-        dashboardContent.innerHTML = html;
-    }
-
-    function filterDashboardByDate() {
-        const selectedDate = document.getElementById('dashboardDateFilter').value;
-        const dashboardContent = document.getElementById('dashboardContent');
-        const dateInfoDiv = document.getElementById('dateInfo');
-
-        if (!selectedDate) {
-            renderDashboard();
-            return;
-        }
-
-        const filtered = db.analysis.filter(a => a.date === selectedDate);
-
-        if (filtered.length === 0) {
-            dateInfoDiv.innerHTML = `<strong>조회 결과:</strong> ${selectedDate}에 분석 데이터가 없습니다.`;
-            dateInfoDiv.style.display = 'block';
-            dashboardContent.innerHTML = `
-                <div class="empty-state">
-                    <p>${selectedDate}에 분석 데이터가 없습니다.</p>
-                </div>
-            `;
-            return;
-        }
-
-        dateInfoDiv.innerHTML = `<strong>조회 결과:</strong> ${selectedDate} (${filtered.length}개 Sub)`;
-        dateInfoDiv.style.display = 'block';
-
-        let html = `<h3 style="color: #1e3a8a; margin-bottom: 16px;">📅 ${selectedDate}</h3>`;
-
-        // 사업담당별 그룹화
-        const byLevel1 = {};
-        filtered.forEach(a => {
-            const members = db.members.filter(m => m.level3 === a.sub);
-            const level1 = members.length > 0 ? members[0].level1 : '미등록';
-            if (!byLevel1[level1]) byLevel1[level1] = {};
-            byLevel1[level1][a.sub] = a;
-        });
-
-        Object.keys(byLevel1).sort().forEach(level1 => {
-            let level1Total = 0;
-            Object.values(byLevel1[level1]).forEach(a => {
-                Object.values(a.finalByMember).forEach(v => level1Total += v);
-            });
-
-            html += `
-                <div class="level1-group">
-                    <div class="level1-title">
-                        <span>${level1}</span>
-                        <span class="level1-volume">${formatNumber(level1Total)}</span>
-                    </div>
-            `;
-
-            // 지사별 그룹화
-            const byLevel2 = {};
-            Object.keys(byLevel1[level1]).forEach(sub => {
-                const a = byLevel1[level1][sub];
-                const members = db.members.filter(m => m.level3 === a.sub);
-                const level2 = members.length > 0 ? members[0].level2 : '미등록';
-                if (!byLevel2[level2]) byLevel2[level2] = {};
-                byLevel2[level2][sub] = a;
-            });
-
-            Object.keys(byLevel2).sort().forEach(level2 => {
-                let level2Total = 0;
-                Object.values(byLevel2[level2]).forEach(a => {
-                    Object.values(a.finalByMember).forEach(v => level2Total += v);
-                });
-
-                html += `
-                    <div class="level2-group">
-                        <div class="level2-title">
-                            <span>${level2}</span>
-                            <span class="level2-volume">${formatNumber(level2Total)}</span>
-                        </div>
-                `;
-
-                // Sub별 그룹화
-                Object.keys(byLevel2[level2]).sort().forEach(sub => {
-                    const a = byLevel2[level2][sub];
-                    let subTotal = 0;
-                    Object.values(a.finalByMember).forEach(v => subTotal += v);
-
-                    const chatroom = db.chatrooms.find(c => c.id === a.chatroomId);
-
-                    html += `
-                        <div class="level3-group">
-                            <div class="level3-title">
-                                <span>${sub} (${chatroom?.name || '미등록'})</span>
-                                <span class="level3-volume">${formatNumber(subTotal)}</span>
-                            </div>
-                    `;
-
-                    // 구성원별 표시 - 집배점/고객사명으로 표시
-                    Object.keys(a.finalByMember).sort().forEach(name => {
-                        const value = a.finalByMember[name];
+        // 선택된 날짜의 분석 데이터만 적용
+        filteredAnalysis.forEach(result => {
+            const sub = db.subs.find(s => s.name === result.sub);
+            if (sub && structure[sub.level1] && structure[sub.level1][sub.level2]) {
+                const subItem = structure[sub.level1][sub.level2].find(s => s.name === result.sub);
+                if (subItem) {
+                    subItem.isRegistered = true;
+                    Object.keys(result.analysisByPerson).forEach(name => {
+                        const value = result.analysisByPerson[name];
+                        subItem.volume += value;
                         const member = db.members.find(m => m.name === name);
-                        const location = member ? member.location : '미등록';
-
-                        html += `
-                            <div class="member-item">
-                                <span class="member-name">${name} [${location}]</span>
-                                <span class="member-value">${formatNumber(value)}</span>
-                            </div>
-                        `;
+                        if (!subItem.members[name]) {
+                            subItem.members[name] = {
+                                volume: 0,
+                                location: member ? member.location : '미등록',
+                                isRegistered: !!member
+                            };
+                        }
+                        subItem.members[name].volume += value;
                     });
+                }
+            }
+        });
 
-                    html += '</div>';
+        // 렌더링
+        let html = '';
+        Object.keys(structure).sort().forEach(level1 => {
+            let level1Total = 0;
+            Object.values(structure[level1]).forEach(level2Array => {
+                level2Array.forEach(sub => {
+                    level1Total += sub.volume;
                 });
-
-                html += '</div>';
             });
 
-            html += '</div>';
+            html += `<div class="level1-section">
+                <div class="level1-title">🏢 ${level1}
+                    <span style="float: right; font-size: 14px; color: white;">합계: ${formatNumber(level1Total)}</span>
+                </div>
+                <div class="level2-container">
+            `;
+
+            Object.keys(structure[level1]).sort().forEach(level2 => {
+                const subs = structure[level1][level2];
+                let level2Total = 0;
+                subs.forEach(sub => {
+                    level2Total += sub.volume;
+                });
+
+                html += `<div class="level2-card">
+                    <div class="level2-title">
+                        ${level2}
+                        <span style="float: right; font-size: 12px; color: #0369a1; font-weight: 700;">${formatNumber(level2Total)}</span>
+                    </div>
+                `;
+
+                subs.forEach(sub => {
+                    const volumeClass = sub.volume === 0 ? 'zero' : '';
+                    html += `<div class="sub-item ${!sub.isRegistered ? 'unregistered' : ''}" style="margin-bottom: 12px;">
+                        <div style="flex: 1;">
+                            <div style="font-weight: 700; color: #0c4a6e; margin-bottom: 4px;">${sub.name}</div>
+                    `;
+
+                    Object.keys(sub.members).sort().forEach(memberName => {
+                        const memberData = sub.members[memberName];
+                        html += `<div class="member-item" style="margin-bottom: 4px;">
+                            <strong>${memberName}</strong> 
+                            ${!memberData.isRegistered ? '<span class="unregistered-tag">미등록</span>' : ''} 
+                            (${memberData.location}) → <strong>${formatNumber(memberData.volume)}</strong>
+                        </div>`;
+                    });
+
+                    html += `</div><div class="volume-display ${volumeClass}">${formatNumber(sub.volume)}</div></div>`;
+                });
+
+                html += `</div>`;
+            });
+
+            html += `</div></div>`;
         });
 
         dashboardContent.innerHTML = html;
     }
 
-    function clearDashboardFilter() {
-        document.getElementById('dashboardDateFilter').value = '';
+    function loadTestData() {
+        const today = getTodayDate();
+        const dongseoulSubs = [
+            { id: 1, name: "강동Sub", level1: "동서울", level2: "강동" },
+            { id: 2, name: "송파B Sub", level1: "동서울", level2: "송파" },
+            { id: 3, name: "경기광주Sub", level1: "동서울", level2: "경기광주" },
+            { id: 4, name: "분당A Sub", level1: "동서울", level2: "경기광주" },
+            { id: 5, name: "양평 Sub", level1: "동서울", level2: "경기광주" }
+        ];
+
+        db.subs = dongseoulSubs;
+        db.members = [
+            { id: 1, name: "거거너", role: "배차담당자", sub: "강동Sub", location: "강동집배점" },
+            { id: 2, name: "사랑하는엄마", role: "지역사업담당", sub: "송파B Sub", location: "CJ대한통운" },
+            { id: 3, name: "테스트1", role: "배차담당자", sub: "강동Sub", location: "강동배송센터" },
+            { id: 4, name: "테스트2", role: "배차담당자", sub: "경기광주Sub", location: "경기광주고객사" }
+        ];
+        db.chatrooms = [
+            { id: 100, name: "강동배송팀", sub: "강동Sub" },
+            { id: 101, name: "송파배송팀", sub: "송파B Sub" },
+            { id: 102, name: "경기광주팀", sub: "경기광주Sub" }
+        ];
+        db.analysis = [
+            {
+                id: 1001,
+                date: today,
+                systemTime: getSystemTime(),
+                sub: "강동Sub",
+                chatroomId: 100,
+                analysisByPerson: { "거거너": 20000, "테스트1": 15000 }
+            },
+            {
+                id: 1002,
+                date: today,
+                systemTime: getSystemTime(),
+                sub: "송파B Sub",
+                chatroomId: 101,
+                analysisByPerson: { "사랑하는엄마": 25000 }
+            }
+        ];
+        saveDB();
+        renderSubHierarchy(db.subs);
+        displayAllMembers();
+        displayAllChatrooms();
+        updateAnalysisSelects();
+        updateMemberSubSelect();
+        updateChatroomSubSelect();
+        document.getElementById('dashboardDate').value = today;
         renderDashboard();
+        const msg = document.getElementById('successMessageMember');
+        msg.textContent = '✓ 테스트 데이터 로드 완료!';
+        msg.style.display = 'block';
     }
 
-    window.addEventListener('DOMContentLoaded', initDB);
+    // 초기화
+    window.addEventListener('load', () => {
+        loadDB();
+        document.getElementById('subLevel1').addEventListener('change', updateLevel2Select);
+        document.getElementById('dashboardDate').value = getTodayDate();
+        renderSubHierarchy(db.subs);
+        displayAllMembers();
+        displayAllChatrooms();
+        updateAnalysisSelects();
+        updateMemberSubSelect();
+        updateChatroomSubSelect();
+        renderDashboard();
+    });
 </script>
 </body>
 </html>
