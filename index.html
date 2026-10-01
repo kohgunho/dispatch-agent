@@ -1,1786 +1,263 @@
-<!DOCTYPE html><html lang="ko">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>당일 물량 취합 Agent</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }    body {
-        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-        background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 100%);
-        min-height: 100vh;
-        padding: 20px;
-        color: #1e293b;
-    }
-
-    .container {
-        max-width: 1400px;
-        margin: 0 auto;
-    }
-
-    header {
-        background: white;
-        padding: 24px;
-        border-radius: 12px;
-        margin-bottom: 24px;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    }
-
-    header h1 {
-        font-size: 28px;
-        color: #1e3a8a;
-        margin-bottom: 8px;
-    }
-
-    header p {
-        color: #64748b;
-        font-size: 14px;
-    }
-
-    .tabs {
-        display: flex;
-        gap: 8px;
-        margin-bottom: 24px;
-        background: white;
-        padding: 12px;
-        border-radius: 12px;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-        flex-wrap: wrap;
-    }
-
-    .tab-btn {
-        padding: 10px 20px;
-        border: none;
-        background: #f1f5f9;
-        color: #64748b;
-        border-radius: 8px;
-        cursor: pointer;
-        font-weight: 500;
-        transition: all 0.2s;
-    }
-
-    .tab-btn.active {
-        background: #1e3a8a;
-        color: white;
-    }
-
-    .tab-btn:hover {
-        background: #e2e8f0;
-    }
-
-    .tab-btn.active:hover {
-        background: #1e40af;
-    }
-
-    .tab-content {
-        display: none;
-        background: white;
-        border-radius: 12px;
-        padding: 24px;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    }
-
-    .tab-content.active {
-        display: block;
-    }
-
-    .form-group {
-        margin-bottom: 16px;
-    }
-
-    label {
-        display: block;
-        margin-bottom: 8px;
-        font-weight: 600;
-        color: #1e3a8a;
-        font-size: 14px;
-    }
-
-    input, select, textarea {
-        width: 100%;
-        padding: 10px 12px;
-        border: 1.5px solid #cbd5e1;
-        border-radius: 8px;
-        font-size: 14px;
-        font-family: inherit;
-        transition: border-color 0.2s;
-    }
-
-    input:focus, select:focus, textarea:focus {
-        outline: none;
-        border-color: #1e3a8a;
-        box-shadow: 0 0 0 3px rgba(30, 58, 138, 0.1);
-    }
-
-    textarea {
-        resize: vertical;
-        min-height: 120px;
-        font-family: 'Courier New', monospace;
-        font-size: 13px;
-    }
-
-    button {
-        background: #1e3a8a;
-        color: white;
-        padding: 10px 24px;
-        border: none;
-        border-radius: 8px;
-        cursor: pointer;
-        font-weight: 600;
-        font-size: 14px;
-        transition: all 0.2s;
-    }
-
-    button:hover {
-        background: #1e40af;
-        transform: translateY(-1px);
-        box-shadow: 0 4px 8px rgba(30, 58, 138, 0.3);
-    }
-
-    button:active {
-        transform: translateY(0);
-    }
-
-    .success-message {
-        background: #d1fae5;
-        color: #065f46;
-        padding: 12px 16px;
-        border-radius: 8px;
-        margin-bottom: 16px;
-        font-size: 14px;
-        display: none;
-    }
-
-    .error-message {
-        background: #fee2e2;
-        color: #991b1b;
-        padding: 12px 16px;
-        border-radius: 8px;
-        margin-bottom: 16px;
-        font-size: 14px;
-        display: none;
-        white-space: pre-wrap;
-        word-wrap: break-word;
-    }
-
-    .warning-message {
-        background: #fef3c7;
-        color: #92400e;
-        padding: 12px 16px;
-        border-radius: 8px;
-        margin-bottom: 16px;
-        font-size: 14px;
-        display: none;
-        white-space: pre-wrap;
-        word-wrap: break-word;
-    }
-
-    table {
-        width: 100%;
-        border-collapse: collapse;
-        margin-top: 16px;
-        background: white;
-    }
-
-    th {
-        background: #f8fafc;
-        padding: 12px;
-        text-align: left;
-        font-weight: 600;
-        color: #1e3a8a;
-        border-bottom: 2px solid #cbd5e1;
-        font-size: 14px;
-    }
-
-    td {
-        padding: 12px;
-        border-bottom: 1px solid #e2e8f0;
-        font-size: 14px;
-        color: #1e293b;
-    }
-
-    tbody tr:hover {
-        background: #f8fafc;
-    }
-
-    .action-btns {
-        display: flex;
-        gap: 8px;
-    }
-
-    .edit-btn {
-        background: #3b82f6;
-        color: white;
-        padding: 6px 12px;
-        border: none;
-        border-radius: 6px;
-        cursor: pointer;
-        font-size: 12px;
-        transition: all 0.2s;
-    }
-
-    .edit-btn:hover {
-        background: #2563eb;
-    }
-
-    .delete-btn {
-        background: #ef4444;
-        color: white;
-        padding: 6px 12px;
-        border: none;
-        border-radius: 6px;
-        cursor: pointer;
-        font-size: 12px;
-        transition: all 0.2s;
-    }
-
-    .delete-btn:hover {
-        background: #dc2626;
-    }
-
-    .empty-state {
-        text-align: center;
-        padding: 40px 20px;
-        color: #94a3b8;
-    }
-
-    .empty-state p {
-        font-size: 16px;
-        margin-bottom: 8px;
-    }
-
-    .info-box {
-        background: #eff6ff;
-        border-left: 4px solid #3b82f6;
-        padding: 12px 16px;
-        border-radius: 8px;
-        margin-bottom: 16px;
-        font-size: 13px;
-        color: #1e40af;
-        line-height: 1.6;
-    }
-
-    .search-group {
-        display: flex;
-        gap: 12px;
-        margin-bottom: 16px;
-        flex-wrap: wrap;
-    }
-
-    .search-group input {
-        flex: 1;
-        min-width: 200px;
-    }
-
-    .search-btn {
-        background: #1e3a8a;
-        color: white;
-        padding: 10px 20px;
-        border: none;
-        border-radius: 8px;
-        cursor: pointer;
-        font-weight: 600;
-        font-size: 14px;
-    }
-
-    .search-btn:hover {
-        background: #1e40af;
-    }
-
-    .clear-btn {
-        background: #94a3b8;
-        color: white;
-        padding: 10px 20px;
-        border: none;
-        border-radius: 8px;
-        cursor: pointer;
-        font-weight: 600;
-        font-size: 14px;
-    }
-
-    .clear-btn:hover {
-        background: #64748b;
-    }
-
-    .modal {
-        display: none;
-        position: fixed;
-        z-index: 1000;
-        left: 0;
-        top: 0;
-        width: 100%;
-        height: 100%;
-        background-color: rgba(0, 0, 0, 0.5);
-    }
-
-    .modal.active {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-
-    .modal-content {
-        background-color: white;
-        padding: 24px;
-        border-radius: 12px;
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
-        max-width: 500px;
-        width: 90%;
-        max-height: 80vh;
-        overflow-y: auto;
-    }
-
-    .modal-header {
-        font-size: 18px;
-        font-weight: 700;
-        color: #1e3a8a;
-        margin-bottom: 20px;
-    }
-
-    .modal-buttons {
-        display: flex;
-        gap: 12px;
-        margin-top: 24px;
-    }
-
-    .modal-buttons button {
-        flex: 1;
-    }
-
-    .cancel-btn {
-        background: #94a3b8;
-    }
-
-    .cancel-btn:hover {
-        background: #64748b;
-    }
-
-    .test-btn {
-        background: #10b981;
-        margin-left: 8px;
-    }
-
-    .test-btn:hover {
-        background: #059669;
-    }
-
-    .unregistered-tag {
-        background: #fca5a5;
-        color: #7f1d1d;
-        padding: 2px 8px;
-        border-radius: 4px;
-        font-size: 10px;
-        font-weight: 600;
-        margin-left: 4px;
-    }
-
-    .member-item {
-        background: #eff6ff;
-        border-left: 2px solid #06b6d4;
-        padding: 8px 12px;
-        border-radius: 4px;
-        margin-bottom: 6px;
-        font-size: 12px;
-        color: #164e63;
-    }
-
-    .member-item.unregistered {
-        background: #fef3c7;
-        color: #92400e;
-    }
-
-    .volume-display {
-        font-weight: 700;
-        color: #0284c7;
-        font-size: 14px;
-        text-align: right;
-    }
-
-    .volume-display.zero {
-        color: #94a3b8;
-    }
-
-    /* Sub 관리 계층 구조 스타일 */
-    .hierarchy-wrapper {
-        display: flex;
-        flex-direction: column;
-        gap: 24px;
-    }
-
-    .level1-section {
-        background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 100%);
-        color: white;
-        padding: 20px;
-        border-radius: 12px;
-        box-shadow: 0 4px 12px rgba(30, 58, 138, 0.2);
-    }
-
-    .level1-title {
-        font-size: 18px;
-        font-weight: 700;
-        margin-bottom: 16px;
-        letter-spacing: 0.5px;
-    }
-
-    .level2-container {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-        gap: 16px;
-    }
-
-    .level2-card {
-        background: rgba(255, 255, 255, 0.95);
-        border-radius: 8px;
-        padding: 16px;
-        border-left: 4px solid #0284c7;
-    }
-
-    .level2-title {
-        font-size: 14px;
-        font-weight: 700;
-        color: #0369a1;
-        margin-bottom: 12px;
-        display: flex;
-        align-items: center;
-        gap: 8px;
-    }
-
-    .level2-title::before {
-        content: "📍";
-        font-size: 16px;
-    }
-
-    .sub-list {
-        display: flex;
-        flex-direction: column;
-        gap: 8px;
-    }
-
-    .sub-item {
-        background: white;
-        border: 1px solid #cbd5e1;
-        border-radius: 6px;
-        padding: 10px 12px;
-        font-size: 13px;
-        color: #0c4a6e;
-        font-weight: 600;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        transition: all 0.2s;
-    }
-
-    .sub-item:hover {
-        background: #f0f9ff;
-        border-color: #0284c7;
-        box-shadow: 0 2px 8px rgba(2, 132, 199, 0.1);
-    }
-
-    .sub-item.registered {
-        background: #d1fae5;
-        border-color: #10b981;
-    }
-
-    .delete-icon {
-        cursor: pointer;
-        color: #ef4444;
-        font-size: 16px;
-        opacity: 0;
-        transition: opacity 0.2s;
-    }
-
-    .sub-item:hover .delete-icon {
-        opacity: 1;
-    }
-
-    .delete-icon:hover {
-        transform: scale(1.2);
-    }
-
-    .date-filter {
-        background: #f8fafc;
-        border-radius: 8px;
-        padding: 16px;
-        margin-bottom: 24px;
-        display: flex;
-        gap: 12px;
-        align-items: flex-end;
-        flex-wrap: wrap;
-    }
-
-    .date-filter input {
-        max-width: 200px;
-    }
-
-    .inquiry-btn {
-        background: #1e3a8a;
-        color: white;
-        padding: 10px 24px;
-        border: none;
-        border-radius: 8px;
-        cursor: pointer;
-        font-weight: 600;
-        font-size: 14px;
-        transition: all 0.2s;
-    }
-
-    .inquiry-btn:hover {
-        background: #1e40af;
-    }
-</style>
-</head>
-<body>
-    <div class="container">
-        <header>
-            <h1>당일 물량 취합 Agent</h1>
-            <p>Kakao Talk 메시지에서 자동으로 배송 물량을 추출하고 분석합니다</p>
-        </header>    <div class="tabs">
-        <button class="tab-btn active" onclick="switchTab('dashboard')">대시보드</button>
-        <button class="tab-btn" onclick="switchTab('chatrooms')">채팅방</button>
-        <button class="tab-btn" onclick="switchTab('members')">멤버</button>
-        <button class="tab-btn" onclick="switchTab('analysis')">분석</button>
-        <button class="tab-btn" onclick="switchTab('subs')">Sub 관리</button>
-    </div>
-
-    <!-- Dashboard Tab -->
-    <div id="dashboard" class="tab-content active">
-        <h2 style="margin-bottom: 20px; color: #1e3a8a;">대시보드</h2>
-        
-        <div class="date-filter">
-            <input type="date" id="dashboardDate">
-            <button class="inquiry-btn" onclick="renderDashboard()">조회</button>
-        </div>
-
-        <div id="dashboardContent">
-            <div class="empty-state">
-                <p>분석 데이터가 없습니다.</p>
-                <p style="font-size: 14px;">분석 탭에서 메시지를 입력하면 여기에 결과가 표시됩니다.</p>
-            </div>
-        </div>
-    </div>
-
-    <!-- Chatrooms Tab -->
-    <div id="chatrooms" class="tab-content">
-        <h2 style="margin-bottom: 20px; color: #1e3a8a;">채팅방 관리</h2>
-        
-        <div class="form-group">
-            <label>채팅방 이름</label>
-            <input type="text" id="chatroomName" placeholder="예: 강동배송팀">
-        </div>
-
-        <div class="form-group">
-            <label>Sub 선택</label>
-            <select id="chatroomSub">
-                <option value="">선택해주세요</option>
-            </select>
-        </div>
-
-        <button onclick="addChatroom()">채팅방 추가</button>
-
-        <div id="successMessageChatroom" class="success-message"></div>
-        <div id="errorMessageChatroom" class="error-message"></div>
-
-        <h3 style="margin-top: 32px; margin-bottom: 16px; color: #1e3a8a; font-size: 18px;">등록된 채팅방</h3>
-        
-        <div style="margin-bottom: 16px;">
-            <div class="search-group">
-                <input type="text" id="chatroomSearchInput" placeholder="채팅방 검색...">
-                <button class="search-btn" onclick="searchChatrooms()">검색</button>
-                <button class="clear-btn" onclick="clearChatroomSearch()">초기화</button>
-            </div>
-        </div>
-
-        <div style="overflow-x: auto;">
-            <table>
-                <thead>
-                    <tr>
-                        <th>채팅방명</th>
-                        <th>Sub</th>
-                        <th>메시지 수</th>
-                        <th>작업</th>
-                    </tr>
-                </thead>
-                <tbody id="chatroomList">
-                    <tr>
-                        <td colspan="4" style="text-align: center; color: #94a3b8;">등록된 채팅방이 없습니다.</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-    </div>
-
-    <!-- Members Tab -->
-    <div id="members" class="tab-content">
-        <h2 style="margin-bottom: 20px; color: #1e3a8a;">멤버 관리</h2>
-        
-        <div class="info-box">
-            <strong>멤버는 Sub에 속합니다.</strong><br>
-            Sub 관리에서 Sub을 먼저 등록한 후 멤버를 추가해주세요.
-        </div>
-
-        <div class="form-group">
-            <label>이름</label>
-            <input type="text" id="memberName" placeholder="예: 거거너">
-        </div>
-
-        <div class="form-group">
-            <label>역할</label>
-            <select id="memberRole">
-                <option value="">선택해주세요</option>
-                <option value="배차담당자">배차담당자</option>
-                <option value="지역사업담당">지역사업담당</option>
-                <option value="집배점">집배점</option>
-                <option value="고객사">고객사</option>
-            </select>
-        </div>
-
-        <div class="form-group">
-            <label>Sub 선택</label>
-            <select id="memberSub">
-                <option value="">선택해주세요</option>
-            </select>
-        </div>
-
-        <div class="form-group">
-            <label>집배점/고객사명</label>
-            <input type="text" id="memberLocation" placeholder="예: 강동집배점, 배송사A">
-        </div>
-
-        <div>
-            <button onclick="addMember()">멤버 추가</button>
-            <button class="test-btn" onclick="loadTestData()">테스트 데이터 로드</button>
-        </div>
-
-        <div id="successMessageMember" class="success-message"></div>
-        <div id="errorMessageMember" class="error-message"></div>
-
-        <h3 style="margin-top: 32px; margin-bottom: 16px; color: #1e3a8a; font-size: 18px;">등록된 멤버</h3>
-        
-        <div style="margin-bottom: 16px;">
-            <div class="search-group">
-                <input type="text" id="memberSearchInput" placeholder="이름, Sub으로 검색...">
-                <button class="search-btn" onclick="searchMembers()">검색</button>
-                <button class="clear-btn" onclick="clearMemberSearch()">초기화</button>
-            </div>
-        </div>
-
-        <div style="overflow-x: auto;">
-            <table>
-                <thead>
-                    <tr>
-                        <th>이름</th>
-                        <th>역할</th>
-                        <th>Sub</th>
-                        <th>집배점/고객사명</th>
-                        <th>작업</th>
-                    </tr>
-                </thead>
-                <tbody id="memberList">
-                    <tr>
-                        <td colspan="5" style="text-align: center; color: #94a3b8;">등록된 멤버가 없습니다.</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-    </div>
-
-    <!-- Analysis Tab -->
-    <div id="analysis" class="tab-content">
-        <h2 style="margin-bottom: 20px; color: #1e3a8a;">메시지 분석</h2>
-        
-        <div class="info-box">
-            <strong>메시지 형식:</strong><br>
-            [사람이름] [시간] 내용 숫자<br>
-            예: [거거너] [오전 8:55] 강동A Sub 1000<br>
-            <strong>주의:</strong> 선택한 채팅방의 Sub에 속한 메시지만 분석됩니다
-        </div>
-
-        <div class="form-group">
-            <label>채팅방 선택</label>
-            <select id="analysisChatroomSelect">
-                <option value="">선택해주세요</option>
-            </select>
-        </div>
-
-        <div class="form-group">
-            <label>Kakao Talk 메시지 복붙 (한 줄에 한 메시지)</label>
-            <textarea id="messageInput" placeholder="예:&#10;2026년 9월 28일 월요일&#10;[거거너] [오전 8:55] 강동A Sub 1000&#10;[거거너] [오전 8:57] 아니다 400"></textarea>
-        </div>
-
-        <button onclick="previewParse()">분석 미리보기</button>
-        <button onclick="analyzeMessages()" style="margin-left: 8px;">분석하기</button>
-
-        <div id="warningMessage" class="warning-message"></div>
-        <div id="successMessage" class="success-message"></div>
-        <div id="errorMessage" class="error-message"></div>
-
-        <div id="parsePreview"></div>
-        <div id="analysisResult" style="margin-top: 24px;"></div>
-    </div>
-
-    <!-- Sub Management Tab -->
-    <div id="subs" class="tab-content">
-        <h2 style="margin-bottom: 20px; color: #1e3a8a;">Sub 관리</h2>
-        
-        <div class="info-box">
-            <strong>계층 구조:</strong> 사업담당 (Level 1) → 지사 (Level 2) → Sub (Level 3)<br>
-            새로운 Sub을 등록하고 계층 구조를 확인해주세요.
-        </div>
-
-        <div style="background: #f8fafc; border-radius: 8px; padding: 16px; margin-bottom: 24px;">
-            <h3 style="color: #1e3a8a; margin-bottom: 16px; font-size: 16px;">Sub 등록</h3>
-            
-            <div class="form-group">
-                <label>Sub 이름</label>
-                <input type="text" id="subName" placeholder="예: 경기광주Sub">
-            </div>
-
-            <div class="form-group">
-                <label>사업담당 (Level 1)</label>
-                <select id="subLevel1">
-                    <option value="">선택해주세요</option>
-                    <option value="동서울">동서울</option>
-                    <option value="남서울">남서울</option>
-                    <option value="북서울">북서울</option>
-                    <option value="서서울">서서울</option>
-                    <option value="충청">충청</option>
-                    <option value="경북">경북</option>
-                    <option value="경남">경남</option>
-                    <option value="호남">호남</option>
-                </select>
-            </div>
-
-            <div class="form-group">
-                <label>지사 (Level 2)</label>
-                <select id="subLevel2">
-                    <option value="">선택해주세요</option>
-                </select>
-            </div>
-
-            <button onclick="addSub()">Sub 추가</button>
-
-            <div id="successMessageSub" class="success-message"></div>
-            <div id="errorMessageSub" class="error-message"></div>
-        </div>
-
-        <h3 style="margin-bottom: 20px; color: #1e3a8a; font-size: 16px;">계층 구조</h3>
-
-        <div id="subHierarchy" class="hierarchy-wrapper"></div>
-    </div>
-</div>
-
-<!-- Edit Member Modal -->
-<div id="editMemberModal" class="modal">
-    <div class="modal-content">
-        <div class="modal-header">멤버 수정</div>
-        <div class="form-group">
-            <label>이름</label>
-            <input type="text" id="editMemberName" disabled style="background: #f1f5f9; cursor: not-allowed;">
-        </div>
-        <div class="form-group">
-            <label>역할</label>
-            <select id="editMemberRole">
-                <option value="">선택해주세요</option>
-                <option value="배차담당자">배차담당자</option>
-                <option value="지역사업담당">지역사업담당</option>
-                <option value="집배점">집배점</option>
-                <option value="고객사">고객사</option>
-            </select>
-        </div>
-        <div class="form-group">
-            <label>Sub</label>
-            <select id="editMemberSub">
-                <option value="">선택해주세요</option>
-            </select>
-        </div>
-        <div class="form-group">
-            <label>집배점/고객사명</label>
-            <input type="text" id="editMemberLocation">
-        </div>
-        <div class="modal-buttons">
-            <button onclick="saveEditMember()">저장</button>
-            <button class="cancel-btn" onclick="closeEditMemberModal()">취소</button>
-        </div>
-    </div>
-</div>
-
+<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Requirements Analysis Agent v3.6.1</title>
+<style>
+*{box-sizing:border-box}body{margin:0;font-family:Arial,'Noto Sans KR',sans-serif;background:#f1f5f9;color:#0f172a}.side{position:fixed;width:272px;height:100vh;background:linear-gradient(#020617,#1e293b);color:#fff;padding:18px;overflow:auto}.brand{font-size:18px;font-weight:800;margin-bottom:24px}.nav button{width:100%;border:0;background:transparent;color:#cbd5e1;text-align:left;padding:10px;border-radius:7px;margin:2px 0;font-weight:700}.nav button.on{background:#2563eb;color:white}.team{margin-top:24px;background:#334155;padding:14px;border-radius:10px;font-size:12px}.stat{display:flex;justify-content:space-between;margin:8px 0}.main{margin-left:272px;padding:30px}.head h1{margin:0;font-size:30px}.head p{color:#64748b}.card{background:#fff;border:1px solid #e2e8f0;border-radius:12px;padding:20px;margin:16px 0}.steps{display:flex;gap:8px;flex-wrap:wrap}.pill{padding:7px 11px;border-radius:99px;background:#f1f5f9;font-size:12px}.pill.on{background:#2563eb;color:#fff}.grid{display:grid;gap:12px}.g4{grid-template-columns:repeat(4,1fr)}.g3{grid-template-columns:repeat(3,1fr)}.g2{grid-template-columns:repeat(2,1fr)}.kpi{text-align:center;background:#fff;border:1px solid #e2e8f0;border-radius:12px;padding:15px}.kpi b{font-size:24px;color:#2563eb}.btn{border:0;border-radius:8px;padding:10px 14px;font-weight:700;cursor:pointer}.blue{background:#2563eb;color:#fff}.gray{background:#e2e8f0}.purple{background:#7c3aed;color:#fff}.green{background:#16a34a;color:#fff}.type{border:1px solid #d1d5db;background:#fff;border-radius:8px;padding:12px}.type.on{border:2px solid #2563eb;background:#eff6ff;color:#1d4ed8}.row{display:flex;justify-content:space-between;gap:12px;align-items:center}label{display:block;font-size:13px;font-weight:700;margin:10px 0 7px}input,textarea,select{width:100%;border:1px solid #cbd5e1;border-radius:8px;padding:11px;background:#fff}.drop{position:relative}.dropmenu{display:none;position:absolute;z-index:20;width:100%;max-height:360px;overflow:auto;background:#fff;border:1px solid #d1d5db;border-radius:8px;box-shadow:0 8px 24px #0002}.dropmenu.show{display:block}.item{padding:8px;border-bottom:1px solid #f1f5f9;font-size:12px;cursor:pointer}.item:hover{background:#eff6ff}.item b{color:#2563eb}.hidden{display:none!important}.mock{min-height:95px;background:#f8fafc;border:1px solid #e2e8f0;border-radius:9px;padding:13px}.tbl{width:100%;border-collapse:collapse;font-size:13px}.tbl th,.tbl td{padding:10px;border-bottom:1px solid #e2e8f0;text-align:left}.tag{font-size:11px;padding:4px 8px;border-radius:99px;background:#eff6ff}.bar{height:8px;background:#e2e8f0;border-radius:99px}.bar div{height:8px;background:#2563eb;border-radius:99px}.flow{display:flex;align-items:stretch;overflow-x:auto;padding:8px 0 14px}.flowstep{position:relative;min-width:150px;flex:1;background:#fff7ed;border:1px solid #fed7aa;padding:15px 22px 15px 16px;cursor:pointer;clip-path:polygon(0 0,calc(100% - 18px) 0,100% 50%,calc(100% - 18px) 100%,0 100%,18px 50%)}.flowstep:first-child{clip-path:polygon(0 0,calc(100% - 18px) 0,100% 50%,calc(100% - 18px) 100%,0 100%)}.flowstep:hover{background:#ffedd5}.flowstep.active{background:#2563eb;color:white;border-color:#2563eb}.flowstep .n{font-size:11px;opacity:.7}.flowstep .count{font-size:23px;font-weight:800;margin-top:5px}.flowstep .name{font-size:12px;font-weight:700;margin-top:2px;white-space:nowrap}.flowstep .cum{font-size:10px;margin-top:5px;opacity:.75}.flowlegend{font-size:12px;color:#64748b;margin-top:4px}
+.chartbox{height:230px;display:flex;align-items:flex-end;gap:12px;padding:18px 10px 28px;border-left:1px solid #e2e8f0;border-bottom:1px solid #e2e8f0}.barcol{flex:1;min-width:34px;text-align:center;position:relative}.barv{width:70%;margin:auto;background:#93c5fd;border-radius:6px 6px 0 0;min-height:3px}.barlabel{font-size:10px;color:#64748b;position:absolute;top:100%;left:0;right:0;margin-top:6px}.barval{font-size:10px;font-weight:700;margin-bottom:4px}.donut{width:170px;height:170px;border-radius:50%;background:conic-gradient(#2563eb 0 34%,#7c3aed 34% 58%,#0f766e 58% 76%,#ea580c 76% 89%,#94a3b8 89% 100%);position:relative;margin:18px auto}.donut:after{content:'';position:absolute;inset:38px;background:white;border-radius:50%}.clickkpi{cursor:pointer;transition:.15s}.clickkpi:hover{transform:translateY(-2px);box-shadow:0 5px 16px #00000014;border-color:#93c5fd}
+@media(max-width:900px){.side{position:relative;width:100%;height:auto}.main{margin-left:0}.g4,.g3,.g2{grid-template-columns:1fr}.flowstep{min-width:145px}}
+</style></head><body><aside class="side"><div class="brand">⚡ AI 기반 Agent<div style="font-size:12px;color:#94a3b8;margin-top:4px">LoIS Parcel 요구사항관리</div></div><div class="nav" id="nav"></div><div class="team"><b>📊 팀 현황</b><div id="teamSummary"></div></div></aside><main class="main"><div class="head"><h1 id="title">📝 요구사항 입력</h1><p>Requirements Analysis Agent | 요구사항 정의 · 영향도 분석 · ServIN/Jira Lifecycle 추적</p></div><div id="view"></div></main>
 <script>
-    let db = {
-        subs: [],
-        chatrooms: [],
-        members: [],
-        analysis: []
-    };
-
-    let editingMemberId = null;
-
-    // 계층 구조 설정
-    const hierarchyData = {
-        "동서울": ["강동", "광진", "송파", "동대문", "경기광주", "남양주1", "남양주2", "노원", "의정부", "양주", "성남", "북강원", "남강원"],
-        "남서울": ["강남", "서초", "마포", "용산"],
-        "북서울": ["강북", "노원", "도봉"],
-        "서서울": ["은평", "구로", "금천"],
-        "충청": ["청주", "천안"],
-        "경북": ["대구", "포항"],
-        "경남": ["부산", "창원"],
-        "호남": ["광주", "전주"]
-    };
-
-    const subsByLevel2 = {
-        "강동": ["강동Sub", "강동A Sub"],
-        "광진": ["광진Sub"],
-        "송파": ["송파B Sub", "송파C Sub"],
-        "동대문": ["동대문Sub"],
-        "경기광주": ["경기광주Sub", "분당A Sub", "양평 Sub"],
-        "남양주1": ["남양주1Sub"],
-        "남양주2": ["남양주2Sub"],
-        "노원": ["노원Sub"],
-        "의정부": ["의정부Sub"],
-        "양주": ["양주Sub"],
-        "성남": ["성남Sub"],
-        "북강원": ["북강원Sub"],
-        "남강원": ["남강원Sub"],
-        "강남": ["강남C Sub", "강남D Sub"],
-        "서초": ["서초Sub"],
-        "마포": ["마포Sub"],
-        "용산": ["용산Sub"],
-        "강북": ["강북Sub"],
-        "도봉": ["도봉Sub"],
-        "은평": ["은평Sub"],
-        "구로": ["구로Sub"],
-        "금천": ["금천Sub"],
-        "청주": ["청주Sub"],
-        "천안": ["천안Sub"],
-        "대구": ["대구Sub"],
-        "포항": ["포항Sub"],
-        "부산": ["부산Sub"],
-        "창원": ["창원Sub"],
-        "광주": ["광주Sub"],
-        "전주": ["전주Sub"]
-    };
-
-    function formatNumber(num) {
-        return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-    }
-
-    function getSystemTime() {
-        const now = new Date();
-        const year = now.getFullYear();
-        const month = String(now.getMonth() + 1).padStart(2, '0');
-        const day = String(now.getDate()).padStart(2, '0');
-        const hours = String(now.getHours()).padStart(2, '0');
-        const minutes = String(now.getMinutes()).padStart(2, '0');
-        const seconds = String(now.getSeconds()).padStart(2, '0');
-        return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
-    }
-
-    function getTodayDate() {
-        const now = new Date();
-        const year = now.getFullYear();
-        const month = String(now.getMonth() + 1).padStart(2, '0');
-        const day = String(now.getDate()).padStart(2, '0');
-        return `${year}-${month}-${day}`;
-    }
-
-    function saveDB() {
-        localStorage.setItem('dispatch_db', JSON.stringify(db));
-    }
-
-    function loadDB() {
-        const saved = localStorage.getItem('dispatch_db');
-        if (saved) {
-            try {
-                db = JSON.parse(saved);
-            } catch (e) {
-                db = { subs: [], chatrooms: [], members: [], analysis: [] };
-            }
-        }
-    }
-
-    function switchTab(tabName) {
-        document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
-        document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
-        document.getElementById(tabName).classList.add('active');
-        event.target.classList.add('active');
-        
-        if (tabName === 'dashboard') {
-            renderDashboard();
-        } else if (tabName === 'subs') {
-            renderSubHierarchy(db.subs);
-        }
-    }
-
-    // ===== SUB MANAGEMENT =====
-    function updateLevel2Select() {
-        const level1 = document.getElementById('subLevel1').value;
-        const level2Select = document.getElementById('subLevel2');
-        level2Select.innerHTML = '<option value="">선택해주세요</option>';
-        
-        if (level1 && hierarchyData[level1]) {
-            hierarchyData[level1].forEach(region => {
-                level2Select.innerHTML += `<option value="${region}">${region}</option>`;
-            });
-        }
-    }
-
-    function addSub() {
-        const name = document.getElementById('subName').value.trim();
-        const level1 = document.getElementById('subLevel1').value;
-        const level2 = document.getElementById('subLevel2').value;
-        const successMsg = document.getElementById('successMessageSub');
-        const errorMsg = document.getElementById('errorMessageSub');
-
-        successMsg.style.display = 'none';
-        errorMsg.style.display = 'none';
-
-        if (!name || !level1 || !level2) {
-            errorMsg.textContent = '모든 필드를 입력해주세요.';
-            errorMsg.style.display = 'block';
-            return;
-        }
-
-        if (db.subs.some(s => s.name === name)) {
-            errorMsg.textContent = '이미 존재하는 Sub입니다.';
-            errorMsg.style.display = 'block';
-            return;
-        }
-
-        db.subs.push({
-            id: Date.now(),
-            name,
-            level1,
-            level2
-        });
-
-        saveDB();
-        document.getElementById('subName').value = '';
-        document.getElementById('subLevel1').value = '';
-        document.getElementById('subLevel2').value = '';
-        successMsg.textContent = '✓ Sub이 추가되었습니다.';
-        successMsg.style.display = 'block';
-        renderSubHierarchy(db.subs);
-        updateMemberSubSelect();
-        updateChatroomSubSelect();
-    }
-
-    function renderSubHierarchy(registeredSubs) {
-        const hierarchyDiv = document.getElementById('subHierarchy');
-        let html = '';
-
-        Object.keys(hierarchyData).sort().forEach(level1 => {
-            html += `<div class="level1-section">
-                <div class="level1-title">🏢 ${level1}</div>
-                <div class="level2-container">
-            `;
-
-            hierarchyData[level1].sort().forEach(level2 => {
-                const subsList = subsByLevel2[level2] || [];
-
-                html += `<div class="level2-card">
-                    <div class="level2-title">${level2}</div>
-                    <div class="sub-list">
-                `;
-
-                subsList.forEach(subName => {
-                    const isRegistered = registeredSubs.some(s => s.name === subName);
-                    const sub = registeredSubs.find(s => s.name === subName);
-                    
-                    html += `<div class="sub-item ${isRegistered ? 'registered' : ''}">
-                        <span>${subName}</span>
-                        ${isRegistered ? `<span class="delete-icon" onclick="deleteSub(${sub.id}, event)">✕</span>` : ''}
-                    </div>`;
-                });
-
-                html += `</div></div>`;
-            });
-
-            html += `</div></div>`;
-        });
-
-        hierarchyDiv.innerHTML = html;
-    }
-
-    function deleteSub(id, event) {
-        event.stopPropagation();
-        if (confirm('이 Sub과 관련된 채팅방, 멤버도 함께 삭제됩니다. 정말 삭제하시겠습니까?')) {
-            const sub = db.subs.find(s => s.id === id);
-            db.subs = db.subs.filter(s => s.id !== id);
-            db.members = db.members.filter(m => m.sub !== sub.name);
-            db.chatrooms = db.chatrooms.filter(c => c.sub !== sub.name);
-            saveDB();
-            renderSubHierarchy(db.subs);
-            displayAllMembers();
-            displayAllChatrooms();
-            updateMemberSubSelect();
-            updateChatroomSubSelect();
-            renderDashboard();
-        }
-    }
-
-    // ===== CHATROOM MANAGEMENT =====
-    function updateChatroomSubSelect() {
-        const subSelect = document.getElementById('chatroomSub');
-        const subs = db.subs.map(s => s.name).sort();
-        subSelect.innerHTML = '<option value="">선택해주세요</option>';
-        subs.forEach(sub => {
-            subSelect.innerHTML += `<option value="${sub}">${sub}</option>`;
-        });
-    }
-
-    function addChatroom() {
-        const name = document.getElementById('chatroomName').value.trim();
-        const sub = document.getElementById('chatroomSub').value;
-        const successMsg = document.getElementById('successMessageChatroom');
-        const errorMsg = document.getElementById('errorMessageChatroom');
-
-        successMsg.style.display = 'none';
-        errorMsg.style.display = 'none';
-
-        if (!name || !sub) {
-            errorMsg.textContent = '채팅방 이름과 Sub을 모두 선택해주세요.';
-            errorMsg.style.display = 'block';
-            return;
-        }
-
-        if (db.chatrooms.some(c => c.name === name)) {
-            errorMsg.textContent = '이미 존재하는 채팅방입니다.';
-            errorMsg.style.display = 'block';
-            return;
-        }
-
-        db.chatrooms.push({ id: Date.now(), name, sub });
-        saveDB();
-        document.getElementById('chatroomName').value = '';
-        document.getElementById('chatroomSub').value = '';
-        successMsg.textContent = '✓ 채팅방이 추가되었습니다.';
-        successMsg.style.display = 'block';
-        displayAllChatrooms();
-        updateAnalysisSelects();
-    }
-
-    function displayAllChatrooms() {
-        document.getElementById('chatroomSearchInput').value = '';
-        renderChatroomTable(db.chatrooms);
-    }
-
-    function searchChatrooms() {
-        const searchTerm = document.getElementById('chatroomSearchInput').value.trim().toLowerCase();
-        const filtered = db.chatrooms.filter(c => c.name.toLowerCase().includes(searchTerm) || c.sub.toLowerCase().includes(searchTerm));
-        renderChatroomTable(filtered);
-    }
-
-    function clearChatroomSearch() {
-        displayAllChatrooms();
-    }
-
-    function renderChatroomTable(chatrooms) {
-        const tbody = document.getElementById('chatroomList');
-        tbody.innerHTML = '';
-
-        if (chatrooms.length === 0) {
-            tbody.innerHTML = '<tr><td colspan="4" style="text-align: center; color: #94a3b8;">등록된 채팅방이 없습니다.</td></tr>';
-            return;
-        }
-
-        chatrooms.forEach(chatroom => {
-            const analysisCount = db.analysis.filter(a => a.chatroomId === chatroom.id).length;
-            
-            tbody.innerHTML += `
-                <tr>
-                    <td>${chatroom.name}</td>
-                    <td>${chatroom.sub}</td>
-                    <td>${analysisCount}</td>
-                    <td>
-                        <div class="action-btns">
-                            <button class="delete-btn" onclick="deleteChatroom(${chatroom.id})">삭제</button>
-                        </div>
-                    </td>
-                </tr>
-            `;
-        });
-    }
-
-    function deleteChatroom(id) {
-        if (confirm('정말 삭제하시겠습니까?')) {
-            db.chatrooms = db.chatrooms.filter(c => c.id !== id);
-            saveDB();
-            displayAllChatrooms();
-            updateAnalysisSelects();
-        }
-    }
-
-    // ===== MEMBER MANAGEMENT =====
-    function updateMemberSubSelect() {
-        const subSelect = document.getElementById('memberSub');
-        const editSubSelect = document.getElementById('editMemberSub');
-        const subs = db.subs.map(s => s.name).sort();
-        
-        subSelect.innerHTML = '<option value="">선택해주세요</option>';
-        editSubSelect.innerHTML = '<option value="">선택해주세요</option>';
-        
-        subs.forEach(sub => {
-            subSelect.innerHTML += `<option value="${sub}">${sub}</option>`;
-            editSubSelect.innerHTML += `<option value="${sub}">${sub}</option>`;
-        });
-    }
-
-    function addMember() {
-        const name = document.getElementById('memberName').value.trim();
-        const role = document.getElementById('memberRole').value;
-        const sub = document.getElementById('memberSub').value;
-        const location = document.getElementById('memberLocation').value.trim();
-        const successMsg = document.getElementById('successMessageMember');
-        const errorMsg = document.getElementById('errorMessageMember');
-
-        successMsg.style.display = 'none';
-        errorMsg.style.display = 'none';
-
-        if (!name || !role || !sub || !location) {
-            errorMsg.textContent = '모든 필드를 입력해주세요.';
-            errorMsg.style.display = 'block';
-            return;
-        }
-
-        if (db.members.some(m => m.name === name)) {
-            errorMsg.textContent = '이미 존재하는 멤버입니다.';
-            errorMsg.style.display = 'block';
-            return;
-        }
-
-        db.members.push({
-            id: Date.now(),
-            name,
-            role,
-            sub,
-            location
-        });
-
-        saveDB();
-        document.getElementById('memberName').value = '';
-        document.getElementById('memberRole').value = '';
-        document.getElementById('memberSub').value = '';
-        document.getElementById('memberLocation').value = '';
-        successMsg.textContent = '✓ 멤버가 추가되었습니다.';
-        successMsg.style.display = 'block';
-        displayAllMembers();
-    }
-
-    function displayAllMembers() {
-        document.getElementById('memberSearchInput').value = '';
-        renderMemberTable(db.members);
-    }
-
-    function searchMembers() {
-        const searchTerm = document.getElementById('memberSearchInput').value.trim().toLowerCase();
-        const filtered = db.members.filter(m => 
-            m.name.toLowerCase().includes(searchTerm) ||
-            m.sub.toLowerCase().includes(searchTerm)
-        );
-        renderMemberTable(filtered);
-    }
-
-    function clearMemberSearch() {
-        displayAllMembers();
-    }
-
-    function renderMemberTable(members) {
-        const tbody = document.getElementById('memberList');
-        tbody.innerHTML = '';
-
-        if (members.length === 0) {
-            tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: #94a3b8;">등록된 멤버가 없습니다.</td></tr>';
-            return;
-        }
-
-        members.forEach(member => {
-            tbody.innerHTML += `
-                <tr>
-                    <td>${member.name}</td>
-                    <td>${member.role}</td>
-                    <td>${member.sub}</td>
-                    <td>${member.location}</td>
-                    <td>
-                        <div class="action-btns">
-                            <button class="edit-btn" onclick="openEditMemberModal(${member.id})">수정</button>
-                            <button class="delete-btn" onclick="deleteMember(${member.id})">삭제</button>
-                        </div>
-                    </td>
-                </tr>
-            `;
-        });
-    }
-
-    function openEditMemberModal(id) {
-        const member = db.members.find(m => m.id === id);
-        if (!member) return;
-        
-        editingMemberId = id;
-        document.getElementById('editMemberName').value = member.name;
-        document.getElementById('editMemberRole').value = member.role;
-        document.getElementById('editMemberSub').value = member.sub;
-        document.getElementById('editMemberLocation').value = member.location;
-        document.getElementById('editMemberModal').classList.add('active');
-    }
-
-    function closeEditMemberModal() {
-        document.getElementById('editMemberModal').classList.remove('active');
-        editingMemberId = null;
-    }
-
-    function saveEditMember() {
-        const role = document.getElementById('editMemberRole').value;
-        const sub = document.getElementById('editMemberSub').value;
-        const location = document.getElementById('editMemberLocation').value.trim();
-        const errorMsg = document.getElementById('errorMessageMember');
-
-        errorMsg.style.display = 'none';
-
-        if (!role || !sub || !location) {
-            errorMsg.textContent = '모든 필드를 입력해주세요.';
-            errorMsg.style.display = 'block';
-            return;
-        }
-
-        const member = db.members.find(m => m.id === editingMemberId);
-        if (!member) return;
-        
-        member.role = role;
-        member.sub = sub;
-        member.location = location;
-        
-        saveDB();
-        closeEditMemberModal();
-        displayAllMembers();
-        renderDashboard();
-        
-        const successMsg = document.getElementById('successMessageMember');
-        successMsg.textContent = '✓ 멤버가 수정되었습니다.';
-        successMsg.style.display = 'block';
-    }
-
-    function deleteMember(id) {
-        if (confirm('정말 삭제하시겠습니까?')) {
-            db.members = db.members.filter(m => m.id !== id);
-            saveDB();
-            displayAllMembers();
-        }
-    }
-
-    // ===== ANALYSIS =====
-    function extractDate(line) {
-        const koreanDatePattern = /(\d{4})년\s+(\d{1,2})월\s+(\d{1,2})일/;
-        const match = line.match(koreanDatePattern);
-        
-        if (match) {
-            const year = match[1];
-            const month = String(match[2]).padStart(2, '0');
-            const day = String(match[3]).padStart(2, '0');
-            return `${year}-${month}-${day}`;
-        }
-        return null;
-    }
-
-    function parseMessage(line) {
-        const regex = /\[([^\]]+)\]\s*\[([^\]]+)\]\s*(.+)/;
-        const match = line.match(regex);
-        if (!match) return null;
-
-        const name = match[1].trim();
-        const timeStr = match[2].trim();
-        const content = match[3].trim();
-
-        return { name, timeStr, content };
-    }
-
-    function normalizeTime(timeStr) {
-        const parts = timeStr.split(/\s+/);
-        if (parts.length < 2) return null;
-        
-        const period = parts[0];
-        const timeOnly = parts[1];
-        const timeParts = timeOnly.split(':');
-        
-        if (timeParts.length < 2) return null;
-        
-        let hours = parseInt(timeParts[0]);
-        let minutes = parseInt(timeParts[1]);
-
-        if (isNaN(hours) || isNaN(minutes)) return null;
-
-        if (period === '오후' && hours !== 12) hours += 12;
-        if (period === '오전' && hours === 12) hours = 0;
-
-        return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}`;
-    }
-
-    function isRevisionMessage(content) {
-        const keywords = ['아니다', '아냐', '정정', '수정', '다시', '맞다'];
-        return keywords.some(keyword => content.includes(keyword));
-    }
-
-    function extractAllNumbers(text) {
-        const matches = text.match(/\d+/g);
-        return matches ? matches.map(Number) : [];
-    }
-
-    function extractSmartNumber(content) {
-        const numbers = extractAllNumbers(content);
-        if (numbers.length === 0) return null;
-        return numbers[numbers.length - 1];
-    }
-
-    function updateAnalysisSelects() {
-        const chatroomSelect = document.getElementById('analysisChatroomSelect');
-        chatroomSelect.innerHTML = '<option value="">선택해주세요</option>';
-        db.chatrooms.forEach(c => {
-            chatroomSelect.innerHTML += `<option value="${c.id}" data-sub="${c.sub}">${c.name} (${c.sub})</option>`;
-        });
-    }
-
-    function previewParse() {
-        const selectedChatroomId = parseInt(document.getElementById('analysisChatroomSelect').value);
-        const messageText = document.getElementById('messageInput').value.trim();
-        const lines = messageText.split('\n').filter(l => l.trim());
-        const previewDiv = document.getElementById('parsePreview');
-        const warningMsg = document.getElementById('warningMessage');
-
-        previewDiv.innerHTML = '';
-        warningMsg.style.display = 'none';
-
-        if (!selectedChatroomId || isNaN(selectedChatroomId)) {
-            warningMsg.textContent = '채팅방을 선택해주세요.';
-            warningMsg.style.display = 'block';
-            return;
-        }
-
-        const selectedChatroom = db.chatrooms.find(c => c.id === selectedChatroomId);
-        const selectedSub = selectedChatroom.sub;
-
-        if (lines.length === 0) {
-            warningMsg.textContent = '메시지를 입력해주세요.';
-            warningMsg.style.display = 'block';
-            return;
-        }
-
-        let previewHTML = '<div style="margin-top: 16px; background: #f0f4ff; border-left: 4px solid #3b82f6; padding: 16px; border-radius: 8px;"><strong>분석 미리보기</strong><br>';
-        let detectedDate = null;
-
-        for (let i = 0; i < lines.length; i++) {
-            const line = lines[i];
-            const dateFromLine = extractDate(line);
-            
-            if (dateFromLine) {
-                detectedDate = dateFromLine;
-                previewHTML += `<div style="background: #d1fae5; padding: 8px; border-radius: 4px; margin-bottom: 8px; margin-top: 8px;"><strong>📅 ${dateFromLine}</strong></div>`;
-                continue;
-            }
-
-            const parsed = parseMessage(line);
-            if (!parsed) {
-                previewHTML += `<div style="background: #fee2e2; padding: 6px; border-radius: 4px; margin-bottom: 4px; color: #991b1b;">❌ 형식 오류: ${line}</div>`;
-                continue;
-            }
-
-            const member = db.members.find(m => m.name === parsed.name);
-            const memberSub = member ? member.sub : null;
-
-            if (member && memberSub !== selectedSub) {
-                previewHTML += `<div style="background: #fee2e2; padding: 6px; border-radius: 4px; margin-bottom: 4px; color: #991b1b;">⚠️ 건너뜀: [${parsed.name}]은(는) ${memberSub}에 속함 (선택된 Sub: ${selectedSub})</div>`;
-                continue;
-            }
-
-            const number = extractSmartNumber(parsed.content);
-            if (number === null) {
-                previewHTML += `<div style="background: #fee2e2; padding: 6px; border-radius: 4px; margin-bottom: 4px; color: #991b1b;">❌ 숫자 없음: ${line}</div>`;
-                continue;
-            }
-
-            const isUnregistered = !member;
-            const revisionBadge = isRevisionMessage(parsed.content) ? '<span style="background: #fbbf24; color: #78350f; padding: 2px 6px; border-radius: 3px; font-size: 11px; margin-left: 6px;">수정</span>' : '';
-
-            previewHTML += `
-                <div style="background: #dbeafe; padding: 6px; border-radius: 4px; margin-bottom: 4px; color: #0c4a6e; border-left: 2px solid #0284c7; padding-left: 12px;">
-                    <strong>${parsed.name}</strong> ${isUnregistered ? '<span class="unregistered-tag">미등록</span>' : ''} [${parsed.timeStr}] → ${formatNumber(number)} ${revisionBadge}
-                </div>
-            `;
-        }
-
-        previewHTML += '</div>';
-        previewDiv.innerHTML = previewHTML;
-    }
-
-    function analyzeMessages() {
-        const selectedChatroomId = parseInt(document.getElementById('analysisChatroomSelect').value);
-        const messageText = document.getElementById('messageInput').value.trim();
-        const successMsg = document.getElementById('successMessage');
-        const errorMsg = document.getElementById('errorMessage');
-        const resultDiv = document.getElementById('analysisResult');
-        const systemTime = getSystemTime();
-
-        successMsg.style.display = 'none';
-        errorMsg.style.display = 'none';
-        resultDiv.innerHTML = '';
-
-        if (!selectedChatroomId || isNaN(selectedChatroomId)) {
-            errorMsg.textContent = '채팅방을 선택해주세요.';
-            errorMsg.style.display = 'block';
-            return;
-        }
-
-        const selectedChatroom = db.chatrooms.find(c => c.id === selectedChatroomId);
-        const selectedSub = selectedChatroom.sub;
-
-        if (!messageText) {
-            errorMsg.textContent = '메시지를 입력해주세요.';
-            errorMsg.style.display = 'block';
-            return;
-        }
-
-        const lines = messageText.split('\n').filter(l => l.trim());
-        const resultsByDate = {};
-        let currentDate = null;
-        let parseErrors = [];
-        let skippedMessages = [];
-        let totalMessages = 0;
-        let revisionCount = 0;
-
-        for (let i = 0; i < lines.length; i++) {
-            const line = lines[i];
-            const dateFromLine = extractDate(line);
-            
-            if (dateFromLine) {
-                currentDate = dateFromLine;
-                if (!resultsByDate[currentDate]) {
-                    resultsByDate[currentDate] = {
-                        messages: [],
-                        analysisByPerson: {},
-                        date: currentDate,
-                        systemTime,
-                        sub: selectedSub,
-                        chatroomId: selectedChatroomId
-                    };
-                }
-                continue;
-            }
-
-            if (!currentDate) {
-                currentDate = new Date().toISOString().split('T')[0];
-                if (!resultsByDate[currentDate]) {
-                    resultsByDate[currentDate] = {
-                        messages: [],
-                        analysisByPerson: {},
-                        date: currentDate,
-                        systemTime,
-                        sub: selectedSub,
-                        chatroomId: selectedChatroomId
-                    };
-                }
-            }
-
-            const parsed = parseMessage(line);
-            if (!parsed) {
-                parseErrors.push(`${i + 1}번: 형식 오류`);
-                continue;
-            }
-
-            const normalizedTime = normalizeTime(parsed.timeStr);
-            if (!normalizedTime) {
-                parseErrors.push(`${i + 1}번: 시간 형식 오류`);
-                continue;
-            }
-
-            const member = db.members.find(m => m.name === parsed.name);
-            const memberSub = member ? member.sub : null;
-
-            if (member && memberSub !== selectedSub) {
-                skippedMessages.push(`${i + 1}번: [${parsed.name}]은(는) ${memberSub}에 속함 (${selectedSub}와 불일치)`);
-                continue;
-            }
-
-            const number = extractSmartNumber(parsed.content);
-            if (number === null) {
-                parseErrors.push(`${i + 1}번: 숫자 없음`);
-                continue;
-            }
-
-            const isRevision = isRevisionMessage(parsed.content);
-            if (isRevision) revisionCount++;
-
-            const msg = {
-                name: parsed.name,
-                time: normalizedTime,
-                content: parsed.content,
-                number,
-                isRevision
-            };
-
-            resultsByDate[currentDate].messages.push(msg);
-            resultsByDate[currentDate].analysisByPerson[parsed.name] = number;
-            totalMessages++;
-        }
-
-        let allErrors = [];
-        if (skippedMessages.length > 0) {
-            allErrors.push('건너뛴 메시지:\n' + skippedMessages.join('\n'));
-        }
-        if (parseErrors.length > 0) {
-            allErrors.push('분석 오류:\n' + parseErrors.join('\n'));
-        }
-
-        if (allErrors.length > 0) {
-            errorMsg.textContent = allErrors.join('\n\n');
-            errorMsg.style.display = 'block';
-        }
-
-        if (totalMessages === 0) {
-            if (allErrors.length === 0) {
-                errorMsg.textContent = '분석할 수 있는 메시지가 없습니다.';
-                errorMsg.style.display = 'block';
-            }
-            return;
-        }
-
-        if (!Array.isArray(db.analysis)) {
-            db.analysis = [];
-        }
-
-        Object.values(resultsByDate).forEach(result => {
-            result.id = Date.now() + Math.random();
-            db.analysis.push(result);
-        });
-
-        saveDB();
-
-        const revisionText = revisionCount > 0 ? `수정 ${revisionCount}개 감지 - ` : '';
-        successMsg.textContent = `✓ 분석 완료! (${revisionText}메시지 ${totalMessages}개)`;
-        successMsg.style.display = 'block';
-
-        document.getElementById('messageInput').value = '';
-        renderAnalysisDetail(resultsByDate);
-        renderDashboard();
-    }
-
-    function renderAnalysisDetail(resultsByDate) {
-        const resultDiv = document.getElementById('analysisResult');
-        
-        let html = '';
-
-        Object.keys(resultsByDate).sort().reverse().forEach(date => {
-            const result = resultsByDate[date];
-            let totalVolume = 0;
-            Object.values(result.analysisByPerson).forEach(val => {
-                totalVolume += val;
-            });
-
-            html += `
-                <div style="background: #f0f4ff; border-left: 4px solid #1e3a8a; padding: 16px; border-radius: 8px; margin-bottom: 24px; font-size: 14px;">
-                    <strong style="color: #1e3a8a;">📅 ${result.date}</strong> | <strong style="color: #1e3a8a;">⏰ ${result.systemTime}</strong><br>
-                    <strong style="color: #1e3a8a;">Sub:</strong> ${result.sub}<br>
-                    <strong style="color: #1e3a8a;">총 물량: ${formatNumber(totalVolume)}</strong><br>
-                    <strong style="color: #1e3a8a;">멤버별 물량:</strong>
-            `;
-
-            Object.keys(result.analysisByPerson).sort().forEach(name => {
-                const value = result.analysisByPerson[name];
-                const member = db.members.find(m => m.name === name);
-                const location = member ? member.location : '미등록';
-                html += `<div style="margin-top: 6px; margin-left: 16px;"><strong>${name}</strong> ${!member ? '<span class="unregistered-tag">미등록</span>' : ''} (${location}) → ${formatNumber(value)}</div>`;
-            });
-
-            html += '</div>';
-        });
-
-        resultDiv.innerHTML = html;
-    }
-
-    function renderDashboard() {
-        const dashboardContent = document.getElementById('dashboardContent');
-        const selectedDate = document.getElementById('dashboardDate').value || getTodayDate();
-
-        // 선택된 날짜의 분석 데이터만 필터링
-        const filteredAnalysis = db.analysis.filter(a => a.date === selectedDate);
-
-        if (!filteredAnalysis || filteredAnalysis.length === 0) {
-            dashboardContent.innerHTML = `
-                <div class="empty-state">
-                    <p>분석 데이터가 없습니다.</p>
-                    <p style="font-size: 14px;">분석 탭에서 메시지를 입력하면 여기에 결과가 표시됩니다.</p>
-                </div>
-            `;
-            return;
-        }
-
-        // 모든 사업담당/지사/Sub 구조 생성
-        let structure = {};
-        Object.keys(hierarchyData).forEach(level1 => {
-            structure[level1] = {};
-            hierarchyData[level1].forEach(level2 => {
-                structure[level1][level2] = [];
-                const subsList = subsByLevel2[level2] || [];
-                subsList.forEach(subName => {
-                    structure[level1][level2].push({
-                        name: subName,
-                        volume: 0,
-                        members: {},
-                        isRegistered: false
-                    });
-                });
-            });
-        });
-
-        // 선택된 날짜의 분석 데이터만 적용
-        filteredAnalysis.forEach(result => {
-            const sub = db.subs.find(s => s.name === result.sub);
-            if (sub && structure[sub.level1] && structure[sub.level1][sub.level2]) {
-                const subItem = structure[sub.level1][sub.level2].find(s => s.name === result.sub);
-                if (subItem) {
-                    subItem.isRegistered = true;
-                    Object.keys(result.analysisByPerson).forEach(name => {
-                        const value = result.analysisByPerson[name];
-                        subItem.volume += value;
-                        const member = db.members.find(m => m.name === name);
-                        if (!subItem.members[name]) {
-                            subItem.members[name] = {
-                                volume: 0,
-                                location: member ? member.location : '미등록',
-                                isRegistered: !!member
-                            };
-                        }
-                        subItem.members[name].volume += value;
-                    });
-                }
-            }
-        });
-
-        // 렌더링
-        let html = '';
-        Object.keys(structure).sort().forEach(level1 => {
-            let level1Total = 0;
-            Object.values(structure[level1]).forEach(level2Array => {
-                level2Array.forEach(sub => {
-                    level1Total += sub.volume;
-                });
-            });
-
-            html += `<div class="level1-section">
-                <div class="level1-title">🏢 ${level1}
-                    <span style="float: right; font-size: 14px; color: white;">합계: ${formatNumber(level1Total)}</span>
-                </div>
-                <div class="level2-container">
-            `;
-
-            Object.keys(structure[level1]).sort().forEach(level2 => {
-                const subs = structure[level1][level2];
-                let level2Total = 0;
-                subs.forEach(sub => {
-                    level2Total += sub.volume;
-                });
-
-                html += `<div class="level2-card">
-                    <div class="level2-title">
-                        ${level2}
-                        <span style="float: right; font-size: 12px; color: #0369a1; font-weight: 700;">${formatNumber(level2Total)}</span>
-                    </div>
-                `;
-
-                subs.forEach(sub => {
-                    const volumeClass = sub.volume === 0 ? 'zero' : '';
-                    html += `<div class="sub-item ${!sub.isRegistered ? 'unregistered' : ''}" style="margin-bottom: 12px;">
-                        <div style="flex: 1;">
-                            <div style="font-weight: 700; color: #0c4a6e; margin-bottom: 4px;">${sub.name}</div>
-                    `;
-
-                    Object.keys(sub.members).sort().forEach(memberName => {
-                        const memberData = sub.members[memberName];
-                        html += `<div class="member-item" style="margin-bottom: 4px;">
-                            <strong>${memberName}</strong> 
-                            ${!memberData.isRegistered ? '<span class="unregistered-tag">미등록</span>' : ''} 
-                            (${memberData.location}) → <strong>${formatNumber(memberData.volume)}</strong>
-                        </div>`;
-                    });
-
-                    html += `</div><div class="volume-display ${volumeClass}">${formatNumber(sub.volume)}</div></div>`;
-                });
-
-                html += `</div>`;
-            });
-
-            html += `</div></div>`;
-        });
-
-        dashboardContent.innerHTML = html;
-    }
-
-    function loadTestData() {
-        const today = getTodayDate();
-        const dongseoulSubs = [
-            { id: 1, name: "강동Sub", level1: "동서울", level2: "강동" },
-            { id: 2, name: "송파B Sub", level1: "동서울", level2: "송파" },
-            { id: 3, name: "경기광주Sub", level1: "동서울", level2: "경기광주" },
-            { id: 4, name: "분당A Sub", level1: "동서울", level2: "경기광주" },
-            { id: 5, name: "양평 Sub", level1: "동서울", level2: "경기광주" }
-        ];
-
-        db.subs = dongseoulSubs;
-        db.members = [
-            { id: 1, name: "거거너", role: "배차담당자", sub: "강동Sub", location: "강동집배점" },
-            { id: 2, name: "사랑하는엄마", role: "지역사업담당", sub: "송파B Sub", location: "CJ대한통운" },
-            { id: 3, name: "테스트1", role: "배차담당자", sub: "강동Sub", location: "강동배송센터" },
-            { id: 4, name: "테스트2", role: "배차담당자", sub: "경기광주Sub", location: "경기광주고객사" }
-        ];
-        db.chatrooms = [
-            { id: 100, name: "강동배송팀", sub: "강동Sub" },
-            { id: 101, name: "송파배송팀", sub: "송파B Sub" },
-            { id: 102, name: "경기광주팀", sub: "경기광주Sub" }
-        ];
-        db.analysis = [
-            {
-                id: 1001,
-                date: today,
-                systemTime: getSystemTime(),
-                sub: "강동Sub",
-                chatroomId: 100,
-                analysisByPerson: { "거거너": 20000, "테스트1": 15000 }
-            },
-            {
-                id: 1002,
-                date: today,
-                systemTime: getSystemTime(),
-                sub: "송파B Sub",
-                chatroomId: 101,
-                analysisByPerson: { "사랑하는엄마": 25000 }
-            }
-        ];
-        saveDB();
-        renderSubHierarchy(db.subs);
-        displayAllMembers();
-        displayAllChatrooms();
-        updateAnalysisSelects();
-        updateMemberSubSelect();
-        updateChatroomSubSelect();
-        document.getElementById('dashboardDate').value = today;
-        renderDashboard();
-        const msg = document.getElementById('successMessageMember');
-        msg.textContent = '✓ 테스트 데이터 로드 완료!';
-        msg.style.display = 'block';
-    }
-
-    // 초기화
-    window.addEventListener('load', () => {
-        loadDB();
-        document.getElementById('subLevel1').addEventListener('change', updateLevel2Select);
-        document.getElementById('dashboardDate').value = getTodayDate();
-        renderSubHierarchy(db.subs);
-        displayAllMembers();
-        displayAllChatrooms();
-        updateAnalysisSelects();
-        updateMemberSubSelect();
-        updateChatroomSubSelect();
-        renderDashboard();
-    });
-</script>
-</body>
-</html>
+const screens=[{"category": "공통", "name": "범용 브라우저 사용", "screenId": "공통", "path": "공통"}, {"category": "공통", "name": "로그인", "screenId": "CMCMLI0001M", "path": "로그인"}, {"category": "공통", "name": "비밀번호 초기화/변경", "screenId": "CMCMLI0001M", "path": "로그인"}, {"category": "공통", "name": "MO 2단계 인증", "screenId": "공통", "path": "로그인"}, {"category": "공통", "name": "이메일 2단계 인증", "screenId": "공통", "path": "로그인"}, {"category": "예약", "name": "기업고객 파일접수", "screenId": "DCRVAP1005M", "path": "예약 > 기업고객 파일접수"}, {"category": "예약", "name": "파일접수 상세현황", "screenId": "DCRVAP1013P", "path": "예약"}, {"category": "예약", "name": "파일접수 오류수정", "screenId": "DCRVAP1010/11P", "path": "예약"}, {"category": "예약", "name": "합포장기준 등록", "screenId": "DCCUCR0004P2", "path": "예약"}, {"category": "예약", "name": "고객사 LAYOUT", "screenId": "DCRVAP1007P", "path": "예약"}, {"category": "예약", "name": "일반고객 파일접수", "screenId": "DCRVAP1006M", "path": "예약"}, {"category": "예약", "name": "시스템접수 오류수정", "screenId": "DCRVAP1019M", "path": "예약"}, {"category": "예약", "name": "기업고객 건별접수", "screenId": "DCRVAP1003M", "path": "예약"}, {"category": "예약", "name": "일반/반품 예약", "screenId": "DCRVAP1001M", "path": "예약"}, {"category": "예약", "name": "집화요청", "screenId": "DCRVAP1024M", "path": "예약"}, {"category": "예약", "name": "기업고객 재접수/취소", "screenId": "DCRVAP1023M", "path": "예약"}, {"category": "예약", "name": "예약현황", "screenId": "DCRVAP1020M", "path": "예약"}, {"category": "예약", "name": "고객의소리 등록", "screenId": "DCRVVC1001M", "path": "예약"}, {"category": "집배", "name": "집배점 집배 처리", "screenId": "DCPDDR0001M", "path": "집배 > 집배등록"}, {"category": "집배", "name": "집배출발 등록", "screenId": "DCPDDR0007M", "path": "집배"}, {"category": "집배", "name": "미집화 사유등록", "screenId": "DCPDDR0012M", "path": "집배"}, {"category": "집배", "name": "미배송 사유등록", "screenId": "DCPDDR0014M", "path": "집배"}, {"category": "집배", "name": "인수자 등록", "screenId": "DCPDDR0008M", "path": "집배"}, {"category": "집배", "name": "운송장 분류코드 등록", "screenId": "DCPDDR0019M", "path": "집배"}, {"category": "집배", "name": "미집화 현황", "screenId": "DCPDDS0034M", "path": "집배"}, {"category": "집배", "name": "미배송 현황", "screenId": "DCPDDS0036M", "path": "집배"}, {"category": "집배", "name": "전월 미배송관리", "screenId": "DCPDDS0043M", "path": "집배"}, {"category": "집배", "name": "편의점 집화현황", "screenId": "DCPDCV0004M", "path": "집배"}, {"category": "집배", "name": "운송장출력", "screenId": "DCCSWB0001M", "path": "집배"}, {"category": "집배", "name": "사용자정의 운송장", "screenId": "DCWBWP0032M", "path": "집배"}, {"category": "집배", "name": "기업고객운송장등록", "screenId": "DCWBWR0007M", "path": "집배"}, {"category": "집배", "name": "일반고객운송장등록", "screenId": "DCWBWR0006M", "path": "집배"}, {"category": "집배", "name": "이미지운송장등록", "screenId": "DCWBWR0013M", "path": "집배"}, {"category": "집배", "name": "반송/연결 운송장등록", "screenId": "DCWBWR0011M", "path": "집배"}, {"category": "집배", "name": "복수운송장출력", "screenId": "DCWBWP0014M", "path": "집배"}, {"category": "집배", "name": "운송장 미등록현황", "screenId": "DCWBWS0013M", "path": "집배"}, {"category": "집배", "name": "운송장 일괄수정", "screenId": "DCWBWC0004M", "path": "집배"}, {"category": "집배", "name": "운송장 건별수정", "screenId": "DCWBWC0001M", "path": "집배"}, {"category": "집배", "name": "운송장일괄수정 excel", "screenId": "DCWBWC0006M", "path": "집배"}, {"category": "집배", "name": "운송장별 마감해제", "screenId": "DCWBWF0003M", "path": "집배"}, {"category": "상품추적", "name": "상품추적(운송장정보)", "screenId": "TRTRTR0001M", "path": "상품추적"}, {"category": "상품추적", "name": "상품추적(과거데이터)", "screenId": "TRTRTR0024P", "path": "상품추적"}, {"category": "상품추적", "name": "상품추적 조건검색", "screenId": "TRTRTR0015M", "path": "상품추적"}, {"category": "분류", "name": "행낭 IN/OUT 추적", "screenId": "DCNWMP0020M", "path": "분류"}, {"category": "분류", "name": "행낭 IN/OUT 내역", "screenId": "DCNWMP0010M", "path": "분류"}, {"category": "분류", "name": "중계현황등록", "screenId": "DCNWIC0501M", "path": "분류"}, {"category": "분류", "name": "간선 상차/하차 현황", "screenId": "DCNWIC0110M", "path": "분류"}, {"category": "사고", "name": "사고등록", "screenId": "DCCLCL1003M", "path": "사고/클레임"}, {"category": "사고", "name": "사고재판정 등록", "screenId": "DCCLCL1013M", "path": "사고"}, {"category": "사고", "name": "무적상품 등록", "screenId": "DCCLUR1001M", "path": "사고"}, {"category": "사고", "name": "무적상품 내역", "screenId": "DCCLUR1002M", "path": "사고"}, {"category": "정산", "name": "세금계산서 요청 현황", "screenId": "DCBMTI0001M", "path": "정산관리"}, {"category": "정산", "name": "기업고객 정산현황", "screenId": "DCBMSC0011M", "path": "정산"}, {"category": "정산", "name": "SM 수수료 현황", "screenId": "DCBMSM0001M", "path": "정산"}, {"category": "일반", "name": "용품신청등록", "screenId": "DCBSAT0003M", "path": "일반 > 용품관리"}, {"category": "일반", "name": "운송장사용대역등록", "screenId": "DCBSWB0001M", "path": "일반"}, {"category": "일반", "name": "투자사전검토의뢰", "screenId": "DCBS0006M", "path": "일반"}, {"category": "일반", "name": "차량등록", "screenId": "DCBSCA0010M", "path": "일반"}, {"category": "일반", "name": "차량 운행일지", "screenId": "DCBSCA0030M", "path": "일반"}, {"category": "기준", "name": "점소현황", "screenId": "DCBSBR0007M", "path": "기준"}, {"category": "기준", "name": "점소등록", "screenId": "DCBSBR0001M", "path": "기준"}, {"category": "기준", "name": "집배점개설승인", "screenId": "DCBSBR0002M", "path": "기준"}, {"category": "기준", "name": "집배점재계약승인", "screenId": "DCBSBR0003M", "path": "기준"}, {"category": "기준", "name": "집배점폐점승인", "screenId": "DCBSBR0004M", "path": "기준"}, {"category": "기준", "name": "사용자기준정보관리", "screenId": "DCBSUS0301M", "path": "기준"}, {"category": "기준", "name": "문자무제한 등록", "screenId": "DCBSUS0901M", "path": "기준"}, {"category": "기준", "name": "도로명 집배구역등록", "screenId": "DCBSPA0570M", "path": "기준"}, {"category": "고객", "name": "기업고객등록", "screenId": "DCCUCR0001M", "path": "고객관리 > 기업고객관리"}, {"category": "고객", "name": "기업고객일별배송현황", "screenId": "DCCRMI0001M", "path": "고객관리"}, {"category": "고객", "name": "ITS 불일치현황", "screenId": "DCCRPA0009M", "path": "고객관리"}, {"category": "고객", "name": "장기미회수", "screenId": "DCCRHS0019M", "path": "고객관리"}, {"category": "영업지원", "name": "TA고객등록", "screenId": "SSTACU0003M", "path": "고객관리 > TA고객등록"}, {"category": "영업지원", "name": "TA수주등록", "screenId": "SSTAOO0002M", "path": "영업지원"}, {"category": "영업지원", "name": "예상견적산출", "screenId": "SSTAOO0001M", "path": "영업지원"}, {"category": "시스템", "name": "사용자접근관리", "screenId": "DCBSSY3002M", "path": "시스템"}, {"category": "시스템", "name": "기업고객 사용자 계정관리", "screenId": "DCCSCS0003M", "path": "시스템"}, {"category": "시스템", "name": "대용량Data조회", "screenId": "CMCMIF0006M", "path": "시스템"}];
+const menus=[['input','📝 요구사항 입력'],['status','📊 요구사항 현황'],['capacity','👥 Capacity 관리'],['assets','🧩 지식 자산'],['dashboard','📈 Dashboard']];
+let active='input',step=1,selected=null,reqType='기능개선',detailReq=null,assignReq=null,draftDesc='';
+const team=[
+{name:'송동철님',modules:['Interface','C2C'],load:80,remain:8},
+{name:'김희동님',modules:['배송','Batch'],load:62,remain:15.2},
+{name:'권진아님',modules:['정산','고객','영업지원'],load:48,remain:20.8},
+{name:'김수빈님',modules:['C2C','Interface','예약'],load:55,remain:18}
+];
+function recommend(req){
+ return team.map(m=>{let moduleScore=m.modules.includes(req.module)?60:20;let capaScore=Math.round((100-m.load)*0.4);return {...m,score:moduleScore+capaScore,reason:`${m.modules.includes(req.module)?'담당 모듈 일치':'유관 모듈'} · 현재 가동률 ${m.load}% · 잔여 ${m.remain}H`}}).sort((a,b)=>b.score-a.score)
+}
+
+function assignTo(name){let r=reqs.find(x=>x.id===assignReq.id);r.owner=name;r.status='검토중';r.assignDate='2026-10-01';r.stage=7;assignReq=null;normalizeLifecycle(r);render()}
+let crDraft=null;
+const itOpsApprovers=['고건호님','권진아님','김희동님','송동철님','김수빈님'];
+function openCR(reqId){
+ const r=reqs.find(x=>x.id===reqId);
+ crDraft={reqId:r.id,change:'',reason:'',impact:null,effort:null,approver:r.owner||'고건호님',status:'작성중',versionFrom:r.version,versionTo:nextVersion(r.version)};
+ active='status'; nav(); document.getElementById('title').textContent='📊 요구사항 현황'; detailReq=null; render();
+}
+function nextVersion(v){let m=/V(\d+)\.(\d+)/.exec(v||'V1.0');return m?`V${m[1]}.${Number(m[2])+1}`:'V1.1'}
+function analyzeCR(){
+ if(!crDraft.change.trim()){alert('변경되어야 하는 내용을 작성해주세요.');return}
+ const r=reqs.find(x=>x.id===crDraft.reqId), t=crDraft.change.toLowerCase();
+ let areas=[];
+ const rules=[
+ ['Application / 화면',/화면|노출|버튼|조회|검색|ui/],
+ ['DB / 기준정보',/db|테이블|컬럼|데이터|기준정보|저장/],
+ ['Interface / API',/interface|i\/f|api|연동|필드|전송/],
+ ['Batch / Scheduler',/batch|배치|scheduler|스케줄|job|대량/],
+ ['계약·운임·정산',/계약|운임|정산|요율|금액/],
+ ['정보분석 / KPI',/분석|kpi|통계|리포트|집계/]
+ ];
+ rules.forEach(([n,re])=>{if(re.test(t)||re.test((r.content||'').toLowerCase()))areas.push(n)});
+ if(!areas.length)areas=['Application / 화면','DB / 기준정보'];
+ let base=areas.length*1.5;
+ if(/신규|추가/.test(t))base+=2;
+ if(/interface|i\/f|api|연동/.test(t))base+=2.5;
+ if(/db|테이블|컬럼/.test(t))base+=1.5;
+ if(/batch|배치|scheduler/.test(t))base+=2;
+ let dev=Math.max(1,Math.round(base*10)/10), test=Math.max(0.5,Math.round(dev*.45*10)/10), analysis=Math.max(0.5,Math.round(dev*.25*10)/10);
+ crDraft.impact=areas;
+ crDraft.effort={analysis,dev,test,total:Math.round((analysis+dev+test)*10)/10,grade:(analysis+dev+test)>=10?'대':(analysis+dev+test)>=6?'중':'소'};
+ crDraft.status='영향도 분석완료'; render();
+}
+function submitCR(){
+ if(!crDraft?.impact){alert('먼저 변경 영향도 분석을 진행해주세요.');return}
+ crDraft.status='O-NE IT운영 승인대기';
+ const id=`CR-2026-${String(crs.length+1).padStart(3,'0')}`;
+ crs.push({id,reqId:crDraft.reqId,title:crDraft.change.slice(0,28),status:crDraft.status,from:crDraft.versionFrom,to:crDraft.versionTo,owner:crDraft.approver,change:crDraft.change,impact:crDraft.impact,effort:crDraft.effort});
+ crDraft=null; active='status'; render();
+}
+function approveCR(id){
+ let c=crs.find(x=>x.id===id); c.status='승인완료';
+ let r=reqs.find(x=>x.id===c.reqId); if(r){r.version=c.to;r.status='변경요구 승인';}
+ render();
+}
+function rejectCR(id){let c=crs.find(x=>x.id===id);c.status='보완요청';render()}
+ const reqs=[
+{id:'REQ-2026-0001',title:'배송예정시간 노출조건 변경',requester:'박성필님',screen:'DCPDDR0001M',owner:'김희동님',status:'요구사항 확정',version:'V1.0',requestDate:'2026-09-02',assignDate:'2026-09-08',customerTestDate:'2026-10-06',deployDate:'2026-10-09',module:'배송',priority:'High',content:'배송예정시간이 배송출발 전에도 노출되어 고객 문의가 발생하고 있습니다. 배송출발 이후에만 예상시간을 노출하고, 이전에는 미노출 처리해 주세요.',pain:'배송출발 전 부정확한 예상시간 노출로 고객 문의 발생',asis:'배송출발 여부와 무관하게 배송예정시간 노출',tobe:'배송출발 완료 이후에만 배송예정시간 노출',acceptance:'배송출발 전 미노출 / 배송출발 후 정상 노출 / 기존 상품추적 영향 없음'},
+{id:'REQ-2026-0002',title:'신규 배송상태 화면 추가',requester:'서성빈님',screen:'DCCSWB0001M',owner:'김수빈님',status:'검토중',version:'V1.1',requestDate:'2026-09-11',assignDate:'-',customerTestDate:'2026-10-09',deployDate:'2026-10-11',module:'C2C',priority:'Medium',content:'C2C 신규 서비스의 배송상태를 별도 화면에서 조회할 수 있도록 신규 화면이 필요합니다. 고객코드와 서비스유형 기준으로 검색 가능해야 합니다.',pain:'서비스별 배송현황을 기존 화면에서 구분하기 어려움',asis:'고객코드 중심 조회',tobe:'고객/서비스유형 기준 통합 조회',acceptance:'서비스유형 검색 / 고객코드 검색 / 조회결과 정합성 확인'},
+{id:'REQ-2026-0003',title:'Interface 데이터 연동 개선',requester:'나원상님',screen:'-',owner:null,status:'미배정',version:'V0.9',requestDate:'2026-09-18',assignDate:'-',customerTestDate:'-',deployDate:'-',module:'Interface',priority:'High',content:'고객사 Interface에서 서비스유형 정보를 추가 전달할 수 있도록 필드를 확장하고 기존 고객사 영향 여부를 확인해 주세요.',pain:'서비스유형 식별 정보가 고객코드에 종속됨',asis:'고객코드로 서비스 구분',tobe:'Interface 데이터에 서비스유형 속성 추가 검토',acceptance:'기존 I/F 하위호환 / 신규 필드 정의 / 미전송 고객 기본값 처리'},
+{id:'REQ-2026-0004',title:'기업고객 정산 조회 개선',requester:'손남준님',screen:'DCBMSC0011M',owner:'권진아님',status:'개발중',version:'V1.0',requestDate:'2026-09-21',assignDate:'2026-09-25',customerTestDate:'2026-10-13',deployDate:'2026-10-15',module:'정산',priority:'Medium',content:'기업고객 정산현황에서 서비스별 물량과 정산금액을 함께 조회할 수 있도록 조회조건과 결과 컬럼을 추가해 주세요.',pain:'고객 전체 정산만 보여 서비스별 손익 확인이 어려움',asis:'기업고객 단위 정산 조회',tobe:'기업고객 + 서비스유형 단위 정산 조회',acceptance:'기존 총액 일치 / 서비스별 합계 일치 / 엑셀 다운로드 반영'},
+{id:'REQ-2026-0005',title:'당일배송 집화 Batch 처리 개선',requester:'박성필님',screen:'-',owner:null,status:'미배정',version:'V0.8',requestDate:'2026-09-29',assignDate:'-',customerTestDate:'-',deployDate:'-',module:'Batch',priority:'High',content:'당일배송 물량 증가에 대비해 집화 Batch의 처리량과 예외처리 기준을 개선하고 대량 물량 시 OOM 위험을 낮춰 주세요.',pain:'대량 물량 시 처리시간 증가 및 OOM 위험',asis:'공통 집화 Batch 처리',tobe:'대량 물량 대응 처리단위/전용 Batch 검토',acceptance:'대량 데이터 성능검증 / OOM 미발생 / 실패 알림 정상 발송'}
+];
+const stageMap={
+'REQ-2026-0001':8,
+'REQ-2026-0002':6,
+'REQ-2026-0003':2,
+'REQ-2026-0004':8,
+'REQ-2026-0005':4
+};
+reqs.forEach(r=>r.stage=stageMap[r.id]||1);
+const integrationMap={
+'REQ-2026-0001':{servin:'SR-2026-10482',jira:'ONE-8421',jiraStatus:'고객테스트 요청',lastSync:'2026-10-01 14:22',testRequest:'2026-10-01',testResult:'대기',deployTicket:'ONE-8460'},
+'REQ-2026-0002':{servin:'SR-2026-10511',jira:'ONE-8453',jiraStatus:'개발중',lastSync:'2026-10-01 13:05',testRequest:'-',testResult:'-',deployTicket:'-'},
+'REQ-2026-0003':{servin:'임시저장',jira:'-',jiraStatus:'임시저장',lastSync:'-',testRequest:'-',testResult:'-',deployTicket:'-'},
+'REQ-2026-0004':{servin:'SR-2026-10539',jira:'ONE-8498',jiraStatus:'개발중',lastSync:'2026-10-01 12:40',testRequest:'-',testResult:'-',deployTicket:'-'},
+'REQ-2026-0005':{servin:'미등록',jira:'-',jiraStatus:'임시저장',lastSync:'-',testRequest:'-',testResult:'-',deployTicket:'-'}
+};
+reqs.forEach(r=>r.integration=integrationMap[r.id]||{servin:'미등록',jira:'-',jiraStatus:'임시저장',lastSync:'-',testRequest:'-',testResult:'-',deployTicket:'-'});
+const sampleSeed=[["기업고객 파일접수 오류 재처리 개선", "박성필님", "DCRVAP1005M", "권진아님", "요구사항 확정", "고객", "High"], ["집배점 집배 처리 스캔 예외 개선", "송동철님", "DCPDDR0001M", "김희동님", "개발중", "배송", "High"], ["상품추적 배송예정시간 노출 기준 개선", "이숙현님", "TRTRTR0001M", "김희동님", "고객테스트 요청", "배송", "Medium"], ["기업고객등록 계약정보 검증 강화", "나원상님", "DCCUCR0001M", "권진아님", "검토중", "고객", "Medium"], ["대용량 Data 조회 성능 개선", "손남준님", "CMCMIF0006M", "김수빈님", "개발중", "Interface", "Medium"], ["OPEN API 인증 Token 재발급 안정화", "강혁님", "-", "김수빈님", "테스트중", "Interface", "High"], ["주소정제 API 오류 재처리 및 알림", "원용익님", "-", "송동철님", "개발중", "Interface", "High"], ["당근 집화지시 Batch 대량처리 개선", "박성필님", "-", "김희동님", "요구사항 확정", "Batch", "High"], ["운송장 번호대역 신청 기준 통제", "서성빈님", "-", "권진아님", "검토중", "영업지원", "Medium"], ["위탁이미지 조회 API 성능 개선", "이하현님", "-", "김수빈님", "개발중", "Interface", "Medium"], ["C2C QR 접수 상태조회 개선", "박성필님", "-", "송동철님", "고객테스트 요청", "C2C", "High"], ["착불 카드결제 정산정보 연계", "권진아님", "-", "권진아님", "요구사항 확정", "정산", "High"], ["고가품 접수 제한 기준 관리", "이숙현님", "-", "김희동님", "검토중", "예약", "Medium"], ["이형상품 서비스코드 관리 개선", "나원상님", "-", "송동철님", "요구사항 제출", "C2C", "Medium"], ["집화예정 물량 변경이력 조회", "박성필님", "-", "김희동님", "개발중", "배송", "Medium"], ["Sub 당일물량 입력 마감 기능", "서성빈님", "-", "송동철님", "테스트중", "C2C", "Medium"], ["고객사 Interface 전문 검증 자동화", "강혁님", "-", "김수빈님", "요구사항 확정", "Interface", "High"], ["EAI 전송 실패 재처리 현황 조회", "원용익님", "-", "김수빈님", "개발중", "Interface", "High"], ["Scheduler 미기동 탐지 알림", "손남준님", "-", "김희동님", "고객테스트 요청", "Batch", "High"], ["Batch Lifecycle 종료일 관리", "고건호님", "-", "김희동님", "검토중", "Batch", "Medium"], ["배송완료 이미지 보관정책 관리", "이숙현님", "-", "권진아님", "요구사항 제출", "배송", "Low"], ["사고접수 OCR 결과 검증 화면", "나원상님", "-", "권진아님", "개발중", "사고", "Medium"], ["고객별 서비스 유형 통합 조회", "박성필님", "-", "송동철님", "요구사항 확정", "고객", "High"], ["계약별 운임 적용이력 조회", "권진아님", "-", "권진아님", "테스트중", "정산", "High"], ["집배점 미상차 잔류 알림", "손남준님", "-", "김희동님", "개발중", "배송", "High"], ["허브 Visibility 미상차 정합성 개선", "고건호님", "-", "김희동님", "고객테스트 요청", "배송", "High"], ["API 신규 고객 INPUT 자체점검", "강혁님", "-", "김수빈님", "검토중", "Interface", "Medium"], ["상품추적 외부지도 API 전환", "원용익님", "TRTRTR0001M", "송동철님", "개발중", "상품추적", "Medium"], ["고객센터 상담용 배송정보 요약 API", "이숙현님", "-", "김수빈님", "요구사항 제출", "Interface", "Medium"], ["배포 전후 서비스 Health Check 자동화", "고건호님", "-", "김수빈님", "요구사항 확정", "시스템", "High"]];
+sampleSeed.forEach((s,i)=>{
+ const n=6+i,id=`REQ-2026-${String(n).padStart(4,'0')}`,status=s[4];
+ const servin=i%4===0?'미등록':`SR-2026-${10600+i}`;
+ const jira=['개발중','테스트중','고객테스트 요청'].includes(status)?`ONE-${8520+i}`:'-';
+ const jiraStatus=jira==='-'?'임시저장':status;
+ reqs.push({id,title:s[0],requester:s[1],screen:s[2],owner:(i%11===0?null:s[3]),status,version:['요구사항 제출','검토중'].includes(status)?'V0.9':'V1.0',requestDate:`2026-${String(7+Math.floor(i/10)).padStart(2,'0')}-${String(2+(i*3)%26).padStart(2,'0')}`,assignDate:['요구사항 확정','개발중','테스트중','고객테스트 요청'].includes(status)?`2026-09-${String(2+(i*2)%26).padStart(2,'0')}`:'-',customerTestDate:status==='고객테스트 요청'?`2026-10-${String(2+i%20).padStart(2,'0')}`:'-',deployDate:'-',module:s[5],priority:s[6],content:s[0]+' 관련 업무 요구사항 및 처리기준 개선',pain:'현행 처리과정의 수작업/예외/가시성 개선 필요',asis:'기존 LoIS Parcel 업무 기준 및 처리방식 사용',tobe:'요구사항 기준으로 처리기준 표준화 및 운영 가시성 확보',acceptance:'정상/예외 Case 검증 및 기존 기능 Regression 확인',stage:status==='요구사항 제출'?1:status==='검토중'?5:status==='요구사항 확정'?6:status==='개발중'?8:status==='테스트중'?8:8,integration:{servin,jira,jiraStatus,lastSync:jira==='-'?'-':`2026-10-01 ${String(9+i%7).padStart(2,'0')}:${String((i*7)%60).padStart(2,'0')}`,testRequest:status==='고객테스트 요청'?'2026-10-01':'-',testResult:status==='고객테스트 요청'?'대기':'-',deployTicket:'-'}});
+});
+
+function normalizeLifecycle(r){
+ if(r.integration.servin==='미등록') r.integration.servin='임시저장';
+ if(r.integration.jira==='-') r.integration.jiraStatus='임시저장';
+ if(r.status==='임시저장'){r.owner=null;r.assignDate='-';}
+ if(!r.owner) r.assignDate='-';
+ else if(!r.assignDate||r.assignDate==='-') r.assignDate=r.requestDate;
+ if(['고객테스트 요청','테스트중','개발중','검토중','요구사항 제출','요구사항 확정','임시저장','반려'].includes(r.status)) r.deployDate='-';
+ if(r.status!=='고객테스트 요청'&&r.integration.jiraStatus!=='고객테스트 요청'){r.customerTestDate='-';r.integration.testRequest='-';}
+ if(r.status==='반려'){r.integration.jira='-';r.integration.jiraStatus='임시저장';r.customerTestDate='-';r.deployDate='-';}
+ return r;
+}
+reqs.forEach(normalizeLifecycle);
+function syncJira(reqId){
+ let r=reqs.find(x=>x.id===reqId);
+ if(!r||r.integration.jira==='-'){alert('연계된 Jira 티켓이 없습니다.');return}
+ r.integration.jiraStatus='고객테스트 요청';
+ r.integration.testRequest='2026-10-01';
+ r.integration.lastSync='2026-10-01 15:51';
+ r.customerTestDate='2026-10-02';
+ r.status='고객테스트 요청';
+ r.stage=8;
+ alert('Jira 고객테스트 요청 상태를 요구사항 현황에 반영했습니다.');
+ render();
+}
+const stageNames=['신규 SR 접수','Agent 업무 분석','Capacity 수집','적합도 분석','담당자 추천','팀장 승인','Assign & 통보','수행/모니터링'];
+let statusStageFilter=null,statusQuickFilter=null;
+function stageExactCount(n){return reqs.filter(r=>r.stage===n).length}
+function stageCumulativeCount(n){return reqs.filter(r=>r.stage>=n).length}
+function openStageList(n){
+ statusStageFilter=n; active='status'; nav(); document.getElementById('title').textContent='📊 요구사항 현황'; render();
+}
+function clearStageFilter(){statusStageFilter=null;statusQuickFilter=null;render()}
+function openStatusFilter(kind){statusStageFilter=null;statusQuickFilter=kind;active='status';nav();document.getElementById('title').textContent='📊 요구사항 현황';render()}
+function nav(){document.getElementById('nav').innerHTML=menus.map(x=>`<button class="${active===x[0]?'on':''}" onclick="show('${x[0]}')">${x[1]}</button>`).join('')}
+function show(id){active=id;nav();document.getElementById('title').textContent=menus.find(x=>x[0]===id)[1];render()}
+function render(){
+ let v=document.getElementById('view');
+ if(active==='input')v.innerHTML=inputHtml();
+ else if(active==='status')v.innerHTML=statusHtml();
+ else if(active==='capacity')v.innerHTML=capacityHtml();
+ else if(active==='assets')v.innerHTML=assetsHtml();
+ else if(active==='dashboard')v.innerHTML=dashboardHtml();
+ if(active==='input')renderScreens();
+ renderTeamSummary();
+}
+function renderTeamSummary(){
+ let el=document.getElementById('teamSummary'); if(!el)return;
+ let activeCount=reqs.filter(r=>r.status!=='배포완료').length;
+ let unassigned=reqs.filter(r=>!r.owner).length;
+ let confirmed=reqs.filter(r=>['요구사항 확정','개발중','테스트중','고객테스트 요청','배포완료'].includes(r.status)).length;
+ el.innerHTML=`<div class="stat"><span>활성 요구사항</span><b>${activeCount}건</b></div><div class="stat"><span>미배정</span><b>${unassigned}건</b></div><div class="stat"><span>ServIN 연계</span><b>${reqs.filter(r=>r.integration.servin.startsWith('SR-')).length}건</b></div><div class="stat"><span>확정/진행</span><b>${confirmed}건</b></div>`;
+}
+function buildNewRequirement(status='임시저장'){
+ let title=(draftDesc||'').trim().split(/[.!?\n]/)[0].slice(0,34)||`${reqType} 신규 요구사항`;
+ let seq=Math.max(...reqs.map(r=>Number(r.id.split('-').pop())||0))+1,id=`REQ-2026-${String(seq).padStart(4,'0')}`;
+ return {id,title,requester:'고건호님',screen:selected?.screenId||'-',owner:null,status,version:status==='임시저장'?'Draft':'V0.9',requestDate:'2026-10-01',assignDate:'-',customerTestDate:'-',deployDate:'-',module:reqType==='Interface'?'Interface':reqType==='Batch/기타'?'Batch':(selected?.category||reqType),priority:'Medium',content:draftDesc||`${reqType} 신규 요구사항`,pain:'Agent 추가 분석 필요',asis:'작성 내용 기반 분석 예정',tobe:'AI 분석/보완 후 확정',acceptance:'검토 후 정의',stage:1,integration:{servin:'임시저장',jira:'-',jiraStatus:'임시저장',lastSync:'-',testRequest:'-',testResult:'-',deployTicket:'-'},rejectReason:'',rejectedBy:'',rejectedAt:''};
+}
+function finishNewRequirement(status){
+ let r=buildNewRequirement(status);reqs.unshift(r);normalizeLifecycle(r);
+ draftDesc='';selected=null;reqType='기능개선';step=1;statusQuickFilter=null;statusStageFilter=null;active='status';nav();document.getElementById('title').textContent='📊 요구사항 현황';render();
+ setTimeout(()=>alert(`${r.id} ${status==='임시저장'?'임시저장':'IT운영팀 제출'} 완료`),30);
+}
+function saveDraft(){finishNewRequirement('임시저장')}
+function submitToIT(){finishNewRequirement('요구사항 제출')}
+function inputHtml(){return `<div class="card"><div class="row"><b>작성 화면 (요구사항 작성)</b><div class="steps">${['요구사항 작성','AI 분석·보완','Mock-up·검토·제출'].map((x,i)=>`<span class="pill ${step===i+1?'on':''}">${i+1} ${x}</span>`).join('')}</div></div>${step===1?step1():step===2?step2():step3()}</div>`}
+function step1(){return `<div class="grid g2" style="margin-top:18px"><div><label>기능분류</label><div class="grid g2">${['기능개선','신규화면','Interface','Batch/기타'].map(x=>`<button class="type ${reqType===x?'on':''}" onclick="reqType='${x}';render()">${x}</button>`).join('')}</div></div><div><label>대상 시스템 / 화면 선택</label>${reqType==='Interface'?`<div class="mock">Interface는 화면 선택 없이 진행할 수 있습니다.</div>`:`<div class="drop"><button class="btn gray" style="width:100%;text-align:left" onclick="document.getElementById('drop').classList.toggle('show')">${selected?selected.name+' ('+selected.screenId+')':'화면 선택...'}</button><div id="drop" class="dropmenu"><div style="padding:8px"><input id="q" oninput="renderScreens()" placeholder="화면명, ID, 카테고리 검색..."></div><div id="screenList"></div></div></div>`}</div></div>
+<div style="margin-top:18px"><label>요구사항 개요</label><textarea id="desc" oninput="draftDesc=this.value" style="min-height:150px" placeholder="현행 Pain Point, 왜 필요한지, 원하는 결과, 조건/예외를 자유롭게 입력하세요.">${draftDesc}</textarea><div style="font-size:12px;color:#64748b;margin-top:5px">※ 처음부터 완벽하게 작성하지 않아도 됩니다. 부족한 내용은 다음 단계에서 Agent가 질문합니다.</div></div>
+<div style="text-align:right;margin-top:18px"><button class="btn blue" onclick="step=2;render()">AI 분석 →</button></div>`}
+function renderScreens(){let q=(document.getElementById('q')?.value||'').toLowerCase(),list=document.getElementById('screenList'); if(!list)return; let a=screens.filter(s=>[s.name,s.screenId,s.category,s.path].join(' ').toLowerCase().includes(q));list.innerHTML=a.map((s,i)=>`<div class="item" onclick='selected=${JSON.stringify(s)};render()'><b>${s.name}</b><div>${s.screenId} | ${s.category} | ${s.path}</div></div>`).join('')}
+function step2(){return `<div class="grid g4"><div class="kpi"><b>72%</b><div>작성 완성도</div></div><div class="kpi"><b>3개</b><div>Requirement</div></div><div class="kpi"><b>4개</b><div>추가질의</div></div><div class="kpi"><b>6개</b><div>영향영역</div></div></div>
+<div class="card"><b>AI 분석 요약</b><p>입력한 요구사항을 기준으로 목적, AS-IS/TO-BE, 예외조건과 시스템 영향도를 구조화했습니다.</p></div>
+<div class="card"><b>Requirement</b><div class="mock">REQ-01 · 변경 목적 및 Pain Point 정의</div><div class="mock">REQ-02 · AS-IS / TO-BE 처리기준 정의</div><div class="mock">REQ-03 · 예외 및 운영조건 정의</div></div>
+<div class="card"><b>추가 확인 필요사항</b><p>• 적용 조건/기준은 무엇인가요?</p><input placeholder="답변 입력"><p>• 예외상황 처리 방식은 무엇인가요?</p><input placeholder="답변 입력"><p>• 영향받는 기존 기능/인터페이스가 있나요?</p><input placeholder="답변 입력"><p>• 완료 여부를 판단할 검증 기준은 무엇인가요?</p><input placeholder="답변 입력"></div>
+<div class="card"><b>영향도 확인 대상</b><p>Application / 화면 · DB / 기준정보 · Interface / API · Batch / Scheduler · 계약/정산 · 정보분석/KPI</p></div>
+<div class="row"><button class="btn gray" onclick="step=1;render()">작성내용 수정</button><div><button class="btn gray" onclick="render()">답변 반영·재분석</button> <button class="btn purple" onclick="step=3;render()">Mock-up / 최종검토 →</button></div></div>`}
+function step3(){return `<div class="grid g2">${['요청 개요','대상 화면','업무조건·예외','영향도','Acceptance Criteria','Decision / Action'].map(x=>`<div class="mock"><b>${x}</b><p style="font-size:13px;color:#64748b">AI 분석 및 추가 답변을 반영한 최종 요구사항</p></div>`).join('')}</div>
+<div class="card"><div class="row"><b>최종 제출 정보</b><span class="tag">Baseline V1.0 생성 예정</span></div><label>추가 메모 / 협의사항</label><textarea placeholder="필요한 경우에만 입력하세요."></textarea><div style="margin-top:10px;font-size:13px;color:#64748b">제출 시: 요구사항정의서 · 영향도 분석 · Mock-up · Baseline V1.0 · O-NE IT운영 검토 Queue 생성</div></div>
+<div class="row"><button class="btn gray" onclick="step=2;render()">AI 분석으로</button><div><button class="btn gray" onclick="saveDraft()">임시저장</button> <button class="btn green" onclick="submitToIT()">IT운영팀 제출</button></div></div>`}
+function statusHtml(){let rows=statusStageFilter?reqs.filter(r=>r.stage===statusStageFilter):reqs;
+if(statusQuickFilter==='unassigned')rows=rows.filter(r=>!r.owner);
+if(statusQuickFilter==='servin')rows=rows.filter(r=>r.integration.servin.startsWith('SR-'));
+if(statusQuickFilter==='jira')rows=rows.filter(r=>r.integration.jira!=='-');
+if(statusQuickFilter==='test')rows=rows.filter(r=>r.integration.jiraStatus==='고객테스트 요청');
+if(statusQuickFilter==='confirmed')rows=rows.filter(r=>['요구사항 확정','개발중','테스트중','고객테스트 요청','배포완료'].includes(r.status));
+return `${statusStageFilter?`<div class="card" style="border:2px solid #93c5fd"><div class="row"><div><b>배정 프로세스 필터</b><p style="margin:4px 0;color:#64748b">${statusStageFilter}단계 · ${stageNames[statusStageFilter-1]}에 현재 위치한 요구사항 ${rows.length}건</p></div><button class="btn gray" onclick="clearStageFilter()">전체보기</button></div></div>`:''}
+${statusQuickFilter?`<div class="card" style="border:2px solid #93c5fd"><div class="row"><b>${statusQuickFilter==='unassigned'?'미배정':statusQuickFilter==='servin'?'ServIN 연계':statusQuickFilter==='jira'?'Jira 연계':statusQuickFilter==='test'?'고객테스트 요청':'확정/진행'} 요구사항 ${rows.length}건</b><button class="btn gray" onclick="clearStageFilter()">전체보기</button></div></div>`:''}
+<div class="grid g4"><div class="kpi clickkpi" onclick="clearStageFilter()"><b>${reqs.length}</b><div>전체 요구사항</div></div><div class="kpi clickkpi" onclick="openStatusFilter('unassigned')"><b>${reqs.filter(r=>!r.owner).length}</b><div>미배정 · 클릭 조회</div></div><div class="kpi clickkpi" onclick="openStatusFilter('servin')"><b>${reqs.filter(r=>r.integration.servin.startsWith('SR-')).length}</b><div>ServIN 연계 · 클릭 조회</div></div><div class="kpi clickkpi" onclick="openStatusFilter('jira')"><b>${reqs.filter(r=>r.integration.jira!=='-').length}</b><div>Jira 연계 · 클릭 조회</div></div></div>
+<div class="card"><div class="row"><div><b>요구사항 Lifecycle 현황</b><div style="font-size:12px;color:#64748b;margin-top:4px">신규 작성은 좌측 ‘요구사항 입력’에서 진행합니다. 현황에서는 Requirement ↔ ServIN SR ↔ Jira Ticket을 연결해 추적합니다.</div></div><input id="statusQ" oninput="filterStatus()" placeholder="ID, 제목, 요청자, ServIN ID, Jira Ticket 검색" style="max-width:430px"></div>
+<div style="overflow:auto;margin-top:12px"><table class="tbl" id="statusTable"><thead><tr><th>Requirement</th><th>제목</th><th>요청자</th><th>담당자</th><th>ServIN 요청 ID</th><th>Jira Ticket</th><th>개발/테스트 상태</th><th>요청일</th><th>배정일</th><th>고객테스트</th><th>배포일</th></tr></thead><tbody>${rows.map(r=>`<tr data-search="${[r.id,r.title,r.requester,r.owner||'',r.integration.servin,r.integration.jira,r.integration.jiraStatus].join(' ').toLowerCase()}"><td><button style="border:0;background:none;color:#2563eb;font-weight:800;cursor:pointer" onclick="openDetail('${r.id}')">${r.id}</button><div style="font-size:10px;color:#64748b">${r.version}</div></td><td><button style="border:0;background:none;color:#0f172a;font-weight:700;cursor:pointer;text-align:left" onclick="openDetail('${r.id}')">${r.title}</button></td><td>${r.requester}</td><td>${r.owner||`<button class="btn" style="padding:6px 9px;background:#fff7ed;color:#c2410c;border:1px solid #fed7aa" onclick="openAssign('${r.id}')">미배정 · 배정</button>`}</td><td><b style="color:${r.integration.servin.startsWith('SR-')?'#2563eb':'#64748b'}">${r.integration.servin}</b></td><td><b style="color:${r.integration.jira!=='-'?'#7c3aed':'#64748b'}">${r.integration.jira}</b></td><td><span class="tag">${r.integration.jiraStatus}</span><div style="font-size:10px;color:#64748b;margin-top:4px">Sync ${r.integration.lastSync}</div></td><td>${r.requestDate}</td><td>${r.assignDate}</td><td>${r.customerTestDate}</td><td>${r.deployDate}</td></tr>`).join('')}</tbody></table></div></div>
+${detailReq?detailHtml():''}${assignReq?assignHtml():''}${rejectReq?rejectHtml():''}${crDraft?crEditorHtml():''}`}
+function filterStatus(){let q=(document.getElementById('statusQ')?.value||'').toLowerCase();document.querySelectorAll('#statusTable tbody tr').forEach(tr=>tr.style.display=tr.dataset.search.includes(q)?'':'none')}
+function openDetail(id){detailReq=reqs.find(r=>r.id===id);assignReq=null;render()}
+function closeDetail(){detailReq=null;render()}
+function openAssign(id){assignReq=reqs.find(r=>r.id===id);detailReq=null;render()}
+function closeAssign(){assignReq=null;render()}
+let rejectReq=null;
+function openReject(id){rejectReq=reqs.find(r=>r.id===id);render()}
+function cancelReject(){rejectReq=null;render()}
+function confirmReject(id){
+ let r=reqs.find(x=>x.id===id),reason=(document.getElementById('rejectReason')?.value||'').trim();
+ if(!reason){alert('반려 사유를 입력해주세요.');return}
+ r.status='반려';r.rejectReason=reason;r.rejectedBy=r.owner||'O-NE IT운영팀';r.rejectedAt='2026-10-01';r.stage=1;normalizeLifecycle(r);rejectReq=null;detailReq=r;render();
+}
+function rejectHtml(){let r=rejectReq;if(!r)return '';return `<div class="card" style="border:2px solid #fecaca"><div class="row"><div><b>요구사항 반려</b><p style="margin:4px 0;color:#64748b">${r.id} · ${r.title}</p></div><span class="tag">${r.owner} 검토</span></div><label>반려 사유</label><textarea id="rejectReason" placeholder="요구사항이 반려되는 사유와 보완이 필요한 내용을 구체적으로 입력하세요."></textarea><div class="row"><button class="btn gray" onclick="cancelReject()">취소</button><button class="btn" style="background:#dc2626;color:white" onclick="confirmReject('${r.id}')">사유 입력 후 반려</button></div></div>`}
+function detailHtml(){let r=detailReq;return `<div class="card" style="border:2px solid #bfdbfe"><div class="row"><div><div style="font-size:12px;color:#64748b">요구사항 상세 / Lifecycle</div><h2 style="margin:4px 0">${r.id} · ${r.title}</h2></div><button class="btn gray" onclick="closeDetail()">닫기</button></div>
+<div class="grid g4" style="margin-top:14px"><div class="mock"><b>요청자</b><p>${r.requester}</p></div><div class="mock"><b>O-NE IT운영 담당자</b><p>${r.owner||'미배정'}</p></div><div class="mock"><b>모듈 / 화면</b><p>${r.module} / ${r.screen}</p></div><div class="mock"><b>Requirement</b><p>${r.version} / ${r.status}</p></div></div>
+<div class="grid g4" style="margin-top:12px"><div class="mock"><b>요청일자</b><p>${r.requestDate}</p></div><div class="mock"><b>배정일자</b><p>${r.assignDate}</p></div><div class="mock"><b>고객테스트일자</b><p>${r.customerTestDate}</p></div><div class="mock"><b>배포일자</b><p>${r.deployDate}</p></div></div>
+<div class="card"><b>최초 작성 내용</b><p style="white-space:pre-wrap;line-height:1.7">${r.content}</p></div>
+<div class="grid g3"><div class="mock"><b>Pain Point</b><p>${r.pain}</p></div><div class="mock"><b>AS-IS</b><p>${r.asis}</p></div><div class="mock"><b>TO-BE</b><p>${r.tobe}</p></div></div>
+<div class="card"><b>Acceptance Criteria</b><p>${r.acceptance}</p></div>
+<div class="card" style="border-color:#ddd6fe"><div class="row"><b>ServIN / Jira 연계</b><span style="font-size:11px;color:#64748b">Last Sync ${r.integration.lastSync}</span></div><div class="grid g3" style="margin-top:12px"><div class="mock"><b>ServIN 요청 ID</b><p style="color:#2563eb;font-weight:700">${r.integration.servin}</p><small>정식 SR 요청/승인 식별자</small></div><div class="mock"><b>Jira Ticket</b><p style="color:#7c3aed;font-weight:700">${r.integration.jira}</p><small>${r.integration.jiraStatus}</small></div><div class="mock"><b>고객테스트</b><p>${r.integration.testRequest==='-'?'요청 전':r.integration.testRequest+' 요청'}</p><small>결과: ${r.integration.testResult}</small></div></div>${r.integration.jira!=='-'?`<button class="btn purple" style="margin-top:12px" onclick="syncJira('${r.id}')">Jira 상태 동기화 Demo</button>`:''}</div>
+${r.status==='반려'?`<div class="card" style="border:2px solid #fecaca;background:#fff7f7"><b>반려 사유</b><p>${r.rejectReason||'-'}</p><small>${r.rejectedBy||'-'} · ${r.rejectedAt||'-'}</small></div>`:''}
+<div class="row"><div><span class="tag">Baseline ${r.version}</span> <span class="tag">${r.priority}</span></div><div>${!r.owner?`<button class="btn purple" onclick="openAssign('${r.id}')">담당자 배정</button>`:''}${r.owner&&!['배포완료','반려'].includes(r.status)?` <button class="btn" style="background:#fee2e2;color:#b91c1c" onclick="openReject('${r.id}')">반려</button>`:''} <button class="btn blue" onclick="openCR('${r.id}')">수정 요청</button></div></div></div>`}
+function assignHtml(){let r=assignReq, recs=recommend(r);return `<div class="card" style="border:2px solid #c4b5fd"><div class="row"><div><div style="font-size:12px;color:#64748b">미배정 요구사항 담당자 추천</div><h2 style="margin:4px 0">${r.id} · ${r.title}</h2><p style="margin:4px 0;color:#64748b">요청 모듈: <b>${r.module}</b> / 우선순위: <b>${r.priority}</b></p></div><button class="btn gray" onclick="closeAssign()">닫기</button></div>
+<div class="card"><b>Agent 추천 기준</b><p style="font-size:13px;color:#64748b">① 담당 모듈 적합도 60% + ② 현재 Capacity 40% 기준으로 추천합니다. 실제 배정은 팀장이 확정합니다.</p></div>
+<table class="tbl"><thead><tr><th>추천</th><th>담당자</th><th>담당 모듈</th><th>현재 가동률</th><th>잔여 CAPA</th><th>추천점수</th><th>추천사유</th><th>배정</th></tr></thead><tbody>${recs.map((m,i)=>`<tr><td>${i===0?'<span class="tag" style="background:#dcfce7;color:#166534">1순위 추천</span>':(i+1)+'순위'}</td><td><b>${m.name}</b></td><td>${m.modules.join(', ')}</td><td>${m.load}%</td><td>${m.remain}H</td><td><b>${m.score}점</b></td><td>${m.reason}</td><td><button class="btn ${i===0?'green':'gray'}" onclick="assignTo('${m.name}')">배정</button></td></tr>`).join('')}</tbody></table>
+<div class="card"><b>배정 후 처리</b><p style="font-size:13px">담당자 Assign → 상태 ‘검토중’ 변경 → 담당자 Notification → Capacity 재계산 → Workflow 반영</p></div></div>`}
+function changeHtml(){return `${crDraft?crEditorHtml():''}<div class="card"><div class="row"><div><b>🔄 Change Request 관리</b><p style="font-size:13px;color:#64748b">기존 Baseline 요구사항을 기준으로 변경사항 → 영향도 → 추가공수 → O-NE IT운영 승인 → Version 반영</p></div><button class="btn blue" onclick="crDraft={reqId:reqs[0].id,change:'',reason:'',impact:null,effort:null,approver:reqs[0].owner||'고건호님',status:'작성중',versionFrom:reqs[0].version,versionTo:nextVersion(reqs[0].version)};render()">+ Change Request</button></div>
+${crs.map(c=>`<div class="mock" style="margin-top:12px"><div class="row"><div><b>${c.id} · ${c.title}</b><p style="margin:5px 0">${c.reqId} / ${c.from} → ${c.to}</p></div><span class="tag">${c.status}</span></div>
+${c.impact?`<div style="font-size:12px;color:#64748b">영향: ${c.impact.join(' · ')} / 추가공수: 약 ${c.effort.total} M/D (${c.effort.grade})</div>`:''}
+${c.status==='O-NE IT운영 승인대기'?`<div class="row" style="margin-top:10px"><span style="font-size:12px">승인담당: <b>${c.owner}</b></span><div><button class="btn gray" onclick="rejectCR('${c.id}')">보완요청</button> <button class="btn green" onclick="approveCR('${c.id}')">승인</button></div></div>`:''}</div>`).join('')}</div>`}
+function crEditorHtml(){let r=reqs.find(x=>x.id===crDraft.reqId);return `<div class="card" style="border:2px solid #c4b5fd"><div class="row"><div><div style="font-size:12px;color:#64748b">Change Request 작성</div><h2 style="margin:4px 0">${r.id} · ${r.title}</h2></div><button class="btn gray" onclick="crDraft=null;render()">닫기</button></div>
+<div style="margin-top:15px;padding:16px;border-radius:10px;background:#f8fafc;border:1px solid #e2e8f0"><div class="row"><b>① 기존 요구사항 Baseline</b><span class="tag">${r.version}</span></div>
+<div class="grid g4" style="margin-top:12px"><div class="mock"><b>요청자</b><p>${r.requester}</p></div><div class="mock"><b>담당자</b><p>${r.owner||'미배정'}</p></div><div class="mock"><b>모듈/화면</b><p>${r.module} / ${r.screen}</p></div><div class="mock"><b>현재 상태</b><p>${r.status}</p></div></div>
+<div class="card"><b>최초 작성 내용</b><p style="white-space:pre-wrap;line-height:1.7">${r.content}</p></div>
+<div class="grid g3"><div class="mock"><b>AS-IS</b><p>${r.asis}</p></div><div class="mock"><b>TO-BE</b><p>${r.tobe}</p></div><div class="mock"><b>Acceptance Criteria</b><p>${r.acceptance}</p></div></div></div>
+<div style="margin-top:18px"><b>② 변경되어야 하는 부분</b><label>변경 사유</label><input value="${crDraft.reason||''}" oninput="crDraft.reason=this.value" placeholder="왜 기존 확정 요구사항을 변경해야 하는지 입력"><label>변경 내용</label><textarea oninput="crDraft.change=this.value" placeholder="기존 요구사항에서 무엇을 어떻게 변경/추가/삭제해야 하는지 구체적으로 작성">${crDraft.change||''}</textarea><button class="btn purple" style="margin-top:10px" onclick="analyzeCR()">AI 변경 영향도 분석</button></div>
+${crDraft.impact?`<div style="margin-top:18px"><b>③ 변경 영향도</b><div class="grid g3" style="margin-top:10px">${crDraft.impact.map(x=>`<div class="mock"><b>${x}</b><p>기존 Baseline 대비 재검토 필요</p></div>`).join('')}</div>
+<div class="card"><b>④ 추가 예상 공수</b><div class="grid g4" style="margin-top:10px"><div class="kpi"><b>${crDraft.effort.analysis}</b><div>분석/설계 M/D</div></div><div class="kpi"><b>${crDraft.effort.dev}</b><div>개발 M/D</div></div><div class="kpi"><b>${crDraft.effort.test}</b><div>테스트 M/D</div></div><div class="kpi"><b>${crDraft.effort.total}</b><div>총 추가 M/D · ${crDraft.effort.grade}</div></div></div><p style="font-size:12px;color:#64748b">※ PoC 추정치. 실제 공수는 ONS/개발조직 영향도 분석 후 확정.</p></div>
+<div class="card"><b>⑤ O-NE IT운영 승인</b><label>승인 담당자</label><select style="width:100%;padding:10px;border:1px solid #cbd5e1;border-radius:8px" onchange="crDraft.approver=this.value">${itOpsApprovers.map(x=>`<option ${crDraft.approver===x?'selected':''}>${x}</option>`).join('')}</select><div class="row" style="margin-top:12px"><span style="font-size:13px;color:#64748b">승인 후 ${r.version} → <b>${crDraft.versionTo}</b> Baseline 변경 및 관련자 Notification</span><button class="btn green" onclick="submitCR()">승인 요청</button></div></div></div>`:''}</div>`}
+function meetingHtml(){return `<div class="grid g2"><div class="card"><b>회의/협의 입력</b><textarea>배송예정시간은 배송출발 이후에만 노출하기로 협의. ONS에서 데이터 생성 가능 여부 확인 후 10/5까지 회신.</textarea><button class="btn blue">AI 구조화</button></div><div class="card"><b>Requirement / Decision / Action</b><div class="mock"><b>Requirement</b><p>배송예정시간 노출조건 변경</p></div><div class="mock"><b>Decision</b><p>배송출발 이전 예상시간 미노출</p></div><div class="mock"><b>Action</b><p>ONS 데이터 생성 가능 여부 확인 / Due 10/5</p></div></div></div>`}
+function capacityHtml(){return `<div class="grid g4"><div class="kpi"><b>${team.length}명</b><div>팀 인원</div></div><div class="kpi"><b>40H</b><div>인당 주간 가용</div></div><div class="kpi"><b>${Math.round(team.reduce((a,b)=>a+b.load,0)/team.length)}%</b><div>평균 가동률</div></div><div class="kpi"><b>${team.reduce((a,b)=>a+b.remain,0).toFixed(1)}H</b><div>총 잔여 CAPA</div></div></div>
+<div class="card"><div class="row"><div><b>신규 SR 배정 프로세스</b><div class="flowlegend">각 단계의 큰 숫자는 <b>현재 단계 건수</b>, 하단은 해당 단계까지 도달한 <b>누적 건수</b>입니다. 클릭하면 해당 단계 요구사항 현황으로 이동합니다.</div></div><span class="tag">전체 ${reqs.length}건</span></div>
+<div class="flow">${stageNames.map((name,i)=>{let n=i+1,exact=stageExactCount(n),cum=stageCumulativeCount(n);return `<div class="flowstep ${exact?'active':''}" onclick="openStageList(${n})"><div class="n">STEP ${n}</div><div class="count">${exact}건</div><div class="name">${name}</div><div class="cum">누적 ${cum}건</div></div>`}).join('')}</div></div>
+<div class="card"><b>인원별 Capacity / 담당 모듈</b>${team.map(m=>`<div style="margin:16px 0"><div class="row"><div><b>${m.name}</b><div style="font-size:12px;color:#64748b">${m.modules.join(' · ')}</div></div><span>${m.load}% 가동 / 잔여 ${m.remain}H</span></div><div class="bar"><div style="width:${m.load}%"></div></div></div>`).join('')}</div>`}
+function workflowHtml(){return `<div class="card"><b>Workflow 상태 트랙</b><div class="steps" style="margin-top:16px">${['작성중','요구사항 제출','검토중','요구사항 확정','개발중','테스트중','배포완료'].map(x=>`<span class="pill">${x}</span>`).join('')}</div><div class="grid g3" style="margin-top:18px"><div class="mock"><b>Communication Agent</b><p>Requirement / Mock-up / Version / Decision / Action</p></div><div class="mock"><b>LoIS ServIN</b><p>SR 임시저장 / 정식등록 / 승인</p></div><div class="mock"><b>CJL Jira</b><p>개발 / 리뷰 / 테스트 / 배포</p></div></div></div>`}
+function assetsHtml(){return `<div class="grid g2"><div class="card"><b>시스템 자산</b><div class="grid g2" style="margin-top:12px"><div class="mock">Screen<br><b>77</b></div><div class="mock">ERD / Table<br><b>연계예정</b></div><div class="mock">Field 정의<br><b>연계예정</b></div><div class="mock">기존 SR/History<br><b>4</b></div></div></div><div class="card"><b>Agent 분석 활용</b><p>• 기존·유사 기능 검색</p><p>• 중복 요청 방지</p><p>• 영향도 분석 Context</p><p>• Version 비교</p></div></div><div class="card"><b>Lifecycle 연계 구조</b><div class="flow"><div class="flowstep active"><div class="name">Requirement</div><div class="cum">Communication Agent</div></div><div class="flowstep active"><div class="name">ServIN SR</div><div class="cum">요청/승인 ID</div></div><div class="flowstep active"><div class="name">Jira Ticket</div><div class="cum">개발/테스트/배포</div></div><div class="flowstep active"><div class="name">현황 자동반영</div><div class="cum">고객테스트/배포</div></div></div></div>`}
+function goStatusDashboard(kind){
+ statusStageFilter=null;statusQuickFilter=null;
+ if(kind==='unassigned')statusQuickFilter='unassigned';
+ if(kind==='servin')statusQuickFilter='servin';
+ if(kind==='jira')statusQuickFilter='jira';
+ if(kind==='test')statusQuickFilter='test';
+ if(kind==='confirmed')statusQuickFilter='confirmed';
+ active='status';nav();document.getElementById('title').textContent='📊 요구사항 현황';render();
+}
+function goCapacity(){active='capacity';nav();document.getElementById('title').textContent='👥 Capacity 관리';render()}
+
+function lifecycleAudit(){
+ let errors=[];
+ reqs.forEach(r=>{
+  if(!r.owner && r.assignDate!=='-') errors.push(`${r.id}: 미배정인데 배정일 존재`);
+  if(['고객테스트 요청','테스트중','개발중','검토중','요구사항 제출','요구사항 확정','임시저장','반려'].includes(r.status)&&r.deployDate!=='-') errors.push(`${r.id}: ${r.status}인데 배포일 존재`);
+  if(r.integration.jira==='-' && r.integration.jiraStatus!=='임시저장') errors.push(`${r.id}: Jira 미연계 상태 불일치`);
+  if(r.status==='임시저장' && r.owner) errors.push(`${r.id}: 임시저장인데 담당자 배정됨`);
+ });
+ return errors;
+}
+function dashboardHtml(){let statusData=[['작성/접수',reqs.filter(r=>r.stage<=2).length],['분석/배정',reqs.filter(r=>r.stage>=3&&r.stage<=6).length],['Assign',reqs.filter(r=>r.stage===7).length],['수행/모니터링',reqs.filter(r=>r.stage===8).length]],max=Math.max(1,...statusData.map(x=>x[1]));return `<div class="grid g4"><div class="kpi clickkpi" onclick="goStatusDashboard('confirmed')"><b>3.2일</b><div>요구사항 확정 Lead Time · 현황보기</div></div><div class="kpi clickkpi" onclick="goStatusDashboard('confirmed')"><b>68%</b><div>First Pass 확정률 · 현황보기</div></div><div class="kpi clickkpi" onclick="goStatusDashboard('jira')"><b>12%</b><div>개발 후 변경률 · Jira 현황</div></div><div class="kpi clickkpi" onclick="goStatusDashboard('unassigned')"><b>8%</b><div>요구사항 재작성률 · 현황보기</div></div></div>
+<div class="grid g2"><div class="card"><b>요구사항 Lifecycle 현황</b><div class="chartbox">${statusData.map((x,i)=>`<div class="barcol" style="cursor:pointer" onclick="${i===0?"openStageList(1)":i===1?"openStageList(4)":i===2?"openStageList(7)":"openStageList(8)"}"><div class="barval">${x[1]}건</div><div class="barv" style="height:${Math.max(6,x[1]/max*160)}px"></div><div class="barlabel">${x[0]}</div></div>`).join('')}</div></div><div class="card"><div class="row"><b>요청 유형 비중</b><span class="tag">Sample 포함</span></div><div class="donut"></div><div class="grid g2" style="font-size:12px"><div>● 기능개선 34%</div><div>● 신규화면 24%</div><div>● Interface 18%</div><div>● Batch/기타 13%</div><div>● 기타 11%</div></div></div></div>
+<div class="grid g2"><div class="card"><b>Agent Usage 현황</b><div class="grid g4" style="margin-top:12px"><div class="kpi"><b>1,248회</b><div>총 사용횟수</div></div><div class="kpi"><b>28.6M</b><div>Token</div></div><div class="kpi"><b>₩1,342</b><div>SR당 평균 비용</div></div><div class="kpi"><b>4.2분</b><div>평균 처리시간</div></div></div><div class="chartbox">${[['요구분석',420],['추가질의',315],['영향도',245],['Mock-up',168],['CR분석',100]].map(x=>`<div class="barcol"><div class="barval">${x[1]}</div><div class="barv" style="height:${x[1]/420*150}px"></div><div class="barlabel">${x[0]}</div></div>`).join('')}</div></div><div class="card clickkpi" onclick="goCapacity()"><div class="row"><b>팀 Capacity</b><span class="tag">Capacity 관리로 이동</span></div>${team.map(m=>`<div style="margin:14px 0"><div class="row"><span><b>${m.name}</b> · ${m.modules.join('/')}</span><span>${m.load}% / 잔여 ${m.remain}H</span></div><div class="bar"><div style="width:${m.load}%"></div></div></div>`).join('')}</div></div>
+<div class="grid g2"><div class="card"><b>ServIN / Jira 연계 현황</b><div class="grid g3" style="margin-top:12px"><div class="kpi clickkpi" onclick="goStatusDashboard('servin')"><b>${reqs.filter(r=>r.integration.servin.startsWith('SR-')).length}</b><div>ServIN 정식 SR · 현황보기</div></div><div class="kpi clickkpi" onclick="goStatusDashboard('jira')"><b>${reqs.filter(r=>r.integration.jira!=='-').length}</b><div>Jira 연계 · 현황보기</div></div><div class="kpi clickkpi" onclick="goStatusDashboard('test')"><b>${reqs.filter(r=>r.integration.jiraStatus==='고객테스트 요청').length}</b><div>고객테스트 요청 · 현황보기</div></div></div></div><div class="card"><b>지연 Risk / 확인 필요</b>${reqs.filter(r=>!r.owner||r.integration.jiraStatus==='고객테스트 요청').slice(0,5).map(r=>`<div class="mock" style="margin-top:9px"><div class="row"><b>${r.id}</b><span class="tag">${!r.owner?'미배정':r.integration.jiraStatus}</span></div><p>${r.title}</p></div>`).join('')||'<p>현재 확인 필요 건 없음</p>'}</div></div>
+<div class="card"><b>최근 6개월 요구사항 처리 추이</b><div class="chartbox">${[['5월',18],['6월',24],['7월',31],['8월',29],['9월',42],['10월',reqs.length]].map(x=>`<div class="barcol"><div class="barval">${x[1]}</div><div class="barv" style="height:${x[1]/42*160}px"></div><div class="barlabel">${x[0]}</div></div>`).join('')}</div><div style="font-size:11px;color:#64748b;margin-top:10px">※ 5~9월은 화면 구성 확인용 Demo 데이터이며 실제 연계 시 운영 실데이터로 대체합니다.</div></div>`}
+nav();render();
+</script></body></html>
